@@ -4,16 +4,11 @@ Created on Aug 22, 2017
 @author: Brendan Drackley
 '''
 
-import tkinter as tk
-from tkinter import filedialog
-
 if __name__ == '__main__':
     pass
 
-root = tk.Tk()
-root.withdraw()
-chromReport = filedialog.askopenfilename()
-snpFasta = filedialog.askopenfilename()
+chromReport = "test.txt"
+snpFasta = "rs_test.fasta"
 
 refInfo = []
 with open(chromReport) as f:
@@ -37,7 +32,6 @@ with open(snpFasta) as f:
             rsNum = headerSplt[2].split(" ")
             rsNum = rsNum[0][2:]
             gate = (int(refInfo[index][1])==2)
-            #gate = True
                 
             pos = headerSplt[3]
             pos = int(pos[4:])
