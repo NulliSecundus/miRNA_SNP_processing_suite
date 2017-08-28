@@ -7,8 +7,8 @@ Created on Aug 22, 2017
 if __name__ == '__main__':
     pass
 
-chromReport = "test.txt"
-snpFasta = "rs_test.fasta"
+chromReport = "chr_1.txt"
+snpFasta = "rs_ch1.fas"
 
 refInfo = []
 with open(chromReport) as f:
