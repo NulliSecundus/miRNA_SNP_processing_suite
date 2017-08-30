@@ -1,28 +1,27 @@
-'''
-Created on Aug 22, 2017
-
-@author: Brendan Drackley
-'''
 import click
 
-chromReport = "chr_Y.txt"
-snpFasta = "rs_chY.fas"
-outputFile = "output.fasta"
+chromReport = ''
+snpFasta = ''
+outputFile = ''
 
 @click.command()
-@click.argument('reportFile')
-@click.argument('snpFile')
-@click.argument('output')
-def init(reportFile, snpFile, output):
+@click.argument('reportFile', default='chr_test.txt', required=False)
+@click.argument('snpFile', default='rs_test.fas', required=False)
+@click.argument('output', default='output.fasta', required=False)
+def cli(reportFile, snpFile, output):
     global chromReport 
     chromReport = reportFile
+    click.echo('%s' % reportFile)
     
     global snpFasta
     snpFasta = snpFile
+    click.echo('%s' % snpFile)
+
     
     global outputFile
     outputFile = output
-    
+    click.echo('%s' % output)
+
 
 if __name__ == '__main__':
     pass
