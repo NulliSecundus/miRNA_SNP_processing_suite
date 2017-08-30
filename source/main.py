@@ -3,12 +3,29 @@ Created on Aug 22, 2017
 
 @author: Brendan Drackley
 '''
+import click
+
+chromReport = "chr_Y.txt"
+snpFasta = "rs_chY.fas"
+outputFile = "output.fasta"
+
+@click.command()
+@click.argument('reportFile')
+@click.argument('snpFile')
+@click.argument('output')
+def init(reportFile, snpFile, output):
+    global chromReport 
+    chromReport = reportFile
+    
+    global snpFasta
+    snpFasta = snpFile
+    
+    global outputFile
+    outputFile = output
+    
 
 if __name__ == '__main__':
     pass
-
-chromReport = "chr_1.txt"
-snpFasta = "rs_ch1.fas"
 
 refInfo = []
 with open(chromReport) as f:
@@ -43,7 +60,7 @@ with open(snpFasta) as f:
             index += 1
         elif line[0]=="\n":
             if gate:
-                with open("snp_list_chrY.fasta", "a") as text_file:
+                with open(outputFile, "a") as text_file:
                     sequence = sequence.replace('\n', '')
                     sequence = sequence.replace(' ', '')
                     sequence += '\n'
