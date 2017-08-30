@@ -1,30 +1,33 @@
 import click
+import copy
 
 chromReport = ''
 snpFasta = ''
 outputFile = ''
 
 @click.command()
-@click.argument('reportFile', default='chr_test.txt', required=False)
-@click.argument('snpFile', default='rs_test.fas', required=False)
-@click.argument('output', default='output.fasta', required=False)
-def cli(reportFile, snpFile, output):
+@click.argument('report')
+@click.argument('snp')
+@click.argument('output')
+def cli(report, snp, output):
     global chromReport 
-    chromReport = reportFile
-    click.echo('%s' % reportFile)
+    chromReport = copy.copy(report)
+    click.echo('%s' % chromReport)
     
     global snpFasta
-    snpFasta = snpFile
-    click.echo('%s' % snpFile)
+    snpFasta = snp[:]
+    #click.echo('%s' % snp)
 
     
     global outputFile
-    outputFile = output
-    click.echo('%s' % output)
+    outputFile = output[:]
+    #click.echo('%s' % output)
 
 
 if __name__ == '__main__':
     pass
+
+print(chromReport)
 
 try:
     refInfo = []
