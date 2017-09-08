@@ -1,12 +1,12 @@
 import click
 
 @click.command()
-@click.argument('report')
-@click.argument('snp')
+@click.argument('reportfile')
+@click.argument('snpfile')
 @click.argument('output')
-def cli(report, snp, output):
+def cli(reportfile, snpfile, output):
     try:
-        processInput(report, snp, output)
+        processInput(reportfile, snpfile, output)
     except:
         pass
 
@@ -29,7 +29,6 @@ def processInput(chromReport, snpFasta, outputFile):
         print('Could not read chromosome report file')
     
     try:
-        # file input name - change as needed
         with open(snpFasta) as f:
             for line in f:
                 if line[0]==">":
