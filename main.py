@@ -8,7 +8,7 @@ def cli(reportfile, snpfile, output):
     try:
         processInput(reportfile, snpfile, output)
     except:
-        pass
+        print('Invalid input')
 
 if __name__ == '__main__':
     pass
@@ -19,12 +19,13 @@ def processInput(chromReport, snpFasta, outputFile):
         with open(chromReport) as f:
             for line in f:
                 lineSplit = line.split("\t")
-                refInfo.append(lineSplit[:2])
+                refInfo.append(lineSplit[:13])
         refInfo = refInfo[7:]
         sequence = ""
         header = ""
-        gate = False
         index = 0
+        unique = False
+        gene = False
     except:
         print('Could not read chromosome report file')
     
@@ -38,8 +39,9 @@ def processInput(chromReport, snpFasta, outputFile):
                     headerSplt = header.split("|")
                     rsNum = headerSplt[2].split(" ")
                     rsNum = rsNum[0][2:]
-                    gate = (int(refInfo[index][1])==2)
-                        
+                    unique = (int(refInfo[index][1])==2)
+                    gene = (float(refInfo[index][12]) > 0.0)
+
                     pos = headerSplt[3]
                     pos = int(pos[4:])
                         
@@ -49,7 +51,7 @@ def processInput(chromReport, snpFasta, outputFile):
                     alleles = alleles.split('/')
                     index += 1
                 elif line[0]=="\n":
-                    if gate:
+                    if unique:
                         with open(outputFile, "a") as text_file:
                             sequence = sequence.replace('\n', '')
                             sequence = sequence.replace(' ', '')
