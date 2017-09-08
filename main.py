@@ -8,7 +8,7 @@ def cli(reportfile, snpfile, output):
     try:
         processInput(reportfile, snpfile, output)
     except:
-        pass
+        print('Invalid input')
 
 if __name__ == '__main__':
     pass
@@ -19,12 +19,14 @@ def processInput(chromReport, snpFasta, outputFile):
         with open(chromReport) as f:
             for line in f:
                 lineSplit = line.split("\t")
-                refInfo.append(lineSplit[:2])
+                refInfo.append(lineSplit[:13])
         refInfo = refInfo[7:]
         sequence = ""
         header = ""
-        gate = False
         index = 0
+        unique = False
+        gene = False
+        stdSNP = False
     except:
         print('Could not read chromosome report file')
     
@@ -38,10 +40,16 @@ def processInput(chromReport, snpFasta, outputFile):
                     headerSplt = header.split("|")
                     rsNum = headerSplt[2].split(" ")
                     rsNum = rsNum[0][2:]
-                    gate = (int(refInfo[index][1])==2)
-                        
+                    unique = (int(refInfo[index][1])==2)
+                    gene = (len(refInfo[index][12])>1)
+                    #print(gene)
+
                     pos = headerSplt[3]
                     pos = int(pos[4:])
+
+                    snpClass = headerSplt[7]
+                    snpClass = snpClass[6:]
+                    stdSNP = (snpClass == '1')
                         
                     alleles = headerSplt[8]
                     alleles = alleles[8:]
@@ -49,7 +57,9 @@ def processInput(chromReport, snpFasta, outputFile):
                     alleles = alleles.split('/')
                     index += 1
                 elif line[0]=="\n":
-                    if gate:
+                    if unique and gene and stdSNP:
+                        print(refInfo[index-1][12])
+                        print(len(refInfo[index-1][12]))
                         with open(outputFile, "a") as text_file:
                             sequence = sequence.replace('\n', '')
                             sequence = sequence.replace(' ', '')
