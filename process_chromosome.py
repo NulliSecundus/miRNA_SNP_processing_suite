@@ -60,7 +60,6 @@ def processInput(chromReport, snpFasta, outputFile):
                     index += 1
                 elif line[0]=="\n":
                     if unique and gene and stdSNP:
-                        count += 1
                         with open(outputFile, "a") as text_file:
                             sequence = sequence.replace('\n', '')
                             sequence = sequence.replace(' ', '')
@@ -79,6 +78,7 @@ def processInput(chromReport, snpFasta, outputFile):
                                 seqChop += "\n"
                                 print("{}".format(header), file=text_file)
                                 print("{}".format(seqChop), file=text_file)
+                                count += 1
                                 if count%1000==0:
                                     print(count)
                 elif line[0]=="#":
