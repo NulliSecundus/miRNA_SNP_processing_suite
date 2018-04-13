@@ -37,8 +37,16 @@ def parsemir(mirandaFile, outputFile, v):
 				else:
 					# determine top score line
 					# print top score line to output file
-					print("TODO") 
-				# since end case reached
+					topLine = ""
+					topScore = -1
+					
+					for line in container:
+						splitline = line.split("\t")
+						if splitline[2] > topScore :
+							topScore = splitline[2]
+							topLine = line
+					
+					output_container.append(topLine)
 				# reset the container
 				container = [] 
 					
