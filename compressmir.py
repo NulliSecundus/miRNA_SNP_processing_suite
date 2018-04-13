@@ -42,8 +42,9 @@ def parsemir(mirandaFile, outputFile, v):
 					
 					for line in container:
 						splitline = line.split("\t")
-						if splitline[2] > topScore :
-							topScore = splitline[2]
+						compare = float(splitline[2])
+						if compare > topScore :
+							topScore = compare
 							topLine = line
 					
 					output_container.append(topLine)
