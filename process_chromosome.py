@@ -82,7 +82,7 @@ def processInput(chromReport, snpFasta, outputFile):
                                 if count%1000==0:
                                     print(count)
                 elif line[0]=="#":
-                    #Do nothing, it's a comment
+                    #Do nothing, it's a comment line
                     pass
                 else:
                     sequence += line
