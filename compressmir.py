@@ -50,7 +50,16 @@ def parsemir(mirandaFile, outputFile, v):
 					output_container.append(topLine)
 				# reset the container
 				container = [] 
-					
+	
+	'''
+	TODO: second round of processing to take top score 
+	from two distinct miranda clusters of the same pairing
+		- for each SNP-miRNA pairing, create group of all outputs
+		- determine top score from each pair group 
+		- retain only the top score 
+	'''
+	
+	
 	with open(outputFile, 'a') as out:
 		if v:
 			print('Writing to output file')
