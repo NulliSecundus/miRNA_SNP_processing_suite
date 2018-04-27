@@ -6,6 +6,7 @@ import click
 @click.option('--verbose', is_flag=True, help='''Output additional information to
 	the console, such as a count of the number of scores processed''')
 def cli(mirandafile, output, verbose):
+	# command line interface setup
 	try:
 		parsemir(mirandafile, output, verbose)
 	except:
@@ -14,8 +15,8 @@ def cli(mirandafile, output, verbose):
 def parsemir(mirandaFile, outputFile, v):
 	print('Started Compressing Miranda File')
 	
-	output_container = []
-	container = [] 
+	output_container = [] # container for lines of final output
+	container = [] # temporary container for comparison within a group
 	
 	with open(mirandaFile) as f:
 		if v:
@@ -23,32 +24,47 @@ def parsemir(mirandaFile, outputFile, v):
 		
 		count = 0
 		for line in f:
+			# for each line in the miranda output file
 			if line[0:2]=='>h':
+				# if line is a data line
 				container.append(line.rstrip())
 				count += 1
 				if v: 
 					if count%10000==0:
 						print("Processed " + str(count) + " scores")
 			elif line[0:2]=='>>':
-				# end case
+				# if line is a summary line
+				# end case for a grouping
 				# copy top score from from container
 				if len(container)==1 :
+					# if the group only has one data line 
 					output_container.append(container[0])
 				else:
+					# if multiple data lines in grouping
 					# determine top score line
-					# print top score line to output file
+					# send top score line to output_container
 					topLine = ""
 					topScore = -1
 					
-					for line in container:
-						splitline = line.split("\t")
-						compare = float(splitline[2])
+					# get strand number from summary line 
+					splitline = line.split("\t")
+					strand = int(splitline[6])
+					
+					for dataline in container:
+						# for each data line in the grouping
+						splitdline = dataline.split("\t")
+						compare = float(splitdline[2])
 						if compare > topScore :
 							topScore = compare
-							topLine = line
+							topLine = dataline
+							
+					# add strand number to topLine
+					topLine = topLine + "\t" + str(strand)
 					
+					# append topLine to output_container
 					output_container.append(topLine)
-				# reset the container
+					
+				# reset the temporary container
 				container = [] 
 	
 	'''
@@ -65,4 +81,5 @@ def parsemir(mirandaFile, outputFile, v):
 			print('Writing to output file')
 			
 		for line in output_container:
+			# write each topLine to the output file 
 			print('{}'.format(line), file=out)
