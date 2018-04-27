@@ -38,6 +38,11 @@ def parsemir(mirandaFile, outputFile, v):
 				# copy top score from from container
 				topLine = ""
 				
+				# get strand number from summary line 
+				splitline = line.split("\t")
+				strand = splitline[6]
+				print(strand)
+				
 				if len(container)==1 :
 					# if the group only has one data line 
 					topLine = str(container[0])
@@ -48,11 +53,6 @@ def parsemir(mirandaFile, outputFile, v):
 					# send top score line to output_container
 					topScore = -1
 					
-					# get strand number from summary line 
-					splitline = line.split("\t")
-					strand = int(splitline[6])
-					print(strand)
-					
 					for dataline in container:
 						# for each data line in the grouping
 						splitdline = dataline.split("\t")
@@ -62,7 +62,7 @@ def parsemir(mirandaFile, outputFile, v):
 							topLine = dataline
 							
 				# add strand number to topLine
-				topLine = topLine + "\t" + str(strand)
+				topLine = topLine + "\t" + strand
 				
 				# append topLine to output_container
 				output_container.append(topLine)
