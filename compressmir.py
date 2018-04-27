@@ -36,15 +36,16 @@ def parsemir(mirandaFile, outputFile, v):
 				# if line is a summary line
 				# end case for a grouping
 				# copy top score from from container
+				topLine = ""
+				
 				if len(container)==1 :
 					# if the group only has one data line 
-					topLine = container[0]
+					topLine = str(container[0])
 					#output_container.append(container[0])
 				else:
 					# if multiple data lines in grouping
 					# determine top score line
 					# send top score line to output_container
-					topLine = ""
 					topScore = -1
 					
 					# get strand number from summary line 
