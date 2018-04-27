@@ -9,7 +9,7 @@ Primary Commands:
 		the 5' or 3' UTR or CDS of any gene. Trims rs_chrN.fas entries to 25 bp
 		each side of SNP and creates separate FASTA entries for each allele.
 
-    parsemir [OPTIONS] MIRANDAFILE OUTPUT
+    compressmir [OPTIONS] MIRANDAFILE OUTPUT
 		Compresses a miranda output file by only retaining the top scoring hit 
 		from each miRNA-SNP pair and outputting to a text file. 
 		
@@ -36,7 +36,7 @@ Utility Commands:
 
 Files:
 
-	compressmir.py - python source file for parsemir command
+	compressmir.py - python source file for compressmir command
 	
 	parse_mir.py - [DEPRECIATED] python source file for parsemir command
 	

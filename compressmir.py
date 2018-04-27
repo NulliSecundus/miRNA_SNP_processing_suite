@@ -13,7 +13,7 @@ def cli(mirandafile, output, verbose):
 		print('Error parsing miranda output file')
 
 def parsemir(mirandaFile, outputFile, v):
-	print('Started Compressing Miranda File')
+	print('Compressing Miranda File')
 	
 	output_container = [] # container for lines of final output
 	container = [] # temporary container for comparison within a group
@@ -38,7 +38,8 @@ def parsemir(mirandaFile, outputFile, v):
 				# copy top score from from container
 				if len(container)==1 :
 					# if the group only has one data line 
-					output_container.append(container[0])
+					topLine = container[0]
+					#output_container.append(container[0])
 				else:
 					# if multiple data lines in grouping
 					# determine top score line
@@ -49,6 +50,7 @@ def parsemir(mirandaFile, outputFile, v):
 					# get strand number from summary line 
 					splitline = line.split("\t")
 					strand = int(splitline[6])
+					print(strand)
 					
 					for dataline in container:
 						# for each data line in the grouping
@@ -58,11 +60,11 @@ def parsemir(mirandaFile, outputFile, v):
 							topScore = compare
 							topLine = dataline
 							
-					# add strand number to topLine
-					topLine = topLine + "\t" + str(strand)
-					
-					# append topLine to output_container
-					output_container.append(topLine)
+				# add strand number to topLine
+				topLine = topLine + "\t" + str(strand)
+				
+				# append topLine to output_container
+				output_container.append(topLine)
 					
 				# reset the temporary container
 				container = [] 
