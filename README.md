@@ -1,4 +1,13 @@
-miRNA SNP Processing Suite V1.0
+miRNA SNP Processing Suite
+
+Copyright (C) (2018) Yang Laboratory, University of Wisconsin - Madison
+
+See the file 'INSTALLATION' for installation details
+
+Author: Brendan Drackley
+Email: brendandrackley@gmail.com
+ 
+Please send bug reports to: jyang75@wisc.edu
 
 Primary Commands:
 
