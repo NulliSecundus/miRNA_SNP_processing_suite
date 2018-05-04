@@ -41,7 +41,9 @@ def parsemir(mirandaFile, outputFile, v):
 				# get strand number from summary line 
 				splitline = line.split("\t")
 				strand = splitline[6]
-				print(strand)
+				
+				if int(strand) < 0 :
+					print(strand)
 				
 				if len(container)==1 :
 					# if the group only has one data line 
@@ -69,15 +71,6 @@ def parsemir(mirandaFile, outputFile, v):
 					
 				# reset the temporary container
 				container = [] 
-	
-	'''
-	TODO: second round of processing to take top score 
-	from two distinct miranda clusters of the same pairing
-		- for each SNP-miRNA pairing, create group of all outputs
-		- determine top score from each pair group 
-		- retain only the top score 
-	'''
-	
 	
 	with open(outputFile, 'a') as out:
 		if v:
