@@ -44,6 +44,8 @@ def parsemir(mirandaFile, outputFile, v):
 				
 				if int(strand) < 0 :
 					print(strand)
+					print(line)
+					return
 				
 				if len(container)==1 :
 					# if the group only has one data line 
