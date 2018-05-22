@@ -46,9 +46,11 @@ def parsemir(mirandaFile, outputFile, v):
 				strand = splitline[6]
 				
 				if (int(strand) * sign) < 0 :
+					print("sign change")
 					base = 2 * 2147483647 + 2
 					sign = -1
-					print(base + strand)
+					temp = base + strand
+					print(temp)
 					print(line)
 					return
 				
