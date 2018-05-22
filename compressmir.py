@@ -17,7 +17,6 @@ def parsemir(mirandaFile, outputFile, v):
 	
 	output_container = [] # container for lines of final output
 	container = [] # temporary container for comparison within a group
-	strand = 0
 	sign = 1
 	base = 0
 	
