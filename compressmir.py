@@ -17,6 +17,9 @@ def parsemir(mirandaFile, outputFile, v):
 	
 	output_container = [] # container for lines of final output
 	container = [] # temporary container for comparison within a group
+	strand = 0
+	sign = 1
+	base = 0
 	
 	with open(mirandaFile) as f:
 		if v:
@@ -42,8 +45,10 @@ def parsemir(mirandaFile, outputFile, v):
 				splitline = line.split("\t")
 				strand = splitline[6]
 				
-				if int(strand) < 0 :
-					print(strand)
+				if (int(strand) * sign) < 0 :
+					base = 2 * 2147483647 + 2
+					sign = -1
+					print(base + strand)
 					print(line)
 					return
 				
@@ -65,8 +70,11 @@ def parsemir(mirandaFile, outputFile, v):
 							topScore = compare
 							topLine = dataline
 							
+				# calculate modified strand number
+				mod_strand = base + strand
+				
 				# add strand number to topLine
-				topLine = topLine + "\t" + strand
+				topLine = topLine + "\t" + mod_strand
 				
 				# append topLine to output_container
 				output_container.append(topLine)
