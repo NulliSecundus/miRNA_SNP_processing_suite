@@ -50,12 +50,12 @@ def parsemir(mirandaFile, outputFile, v):
 					print("sign change")
 					base = 2 * 2147483647 + 2
 					sign = -1
-					temp = base + strand
+					temp = base + int(strand)
 					print(temp)
 					print(line)
 					return
 				
-				print("finish sign flip check")
+				#print("finish sign flip check")
 				
 				if len(container)==1 :
 					# if the group only has one data line 
