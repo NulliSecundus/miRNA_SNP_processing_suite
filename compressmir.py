@@ -55,6 +55,8 @@ def parsemir(mirandaFile, outputFile, v):
 					print(line)
 					return
 				
+				print("finish sign flip check")
+				
 				if len(container)==1 :
 					# if the group only has one data line 
 					topLine = str(container[0])
