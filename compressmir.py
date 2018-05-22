@@ -35,6 +35,7 @@ def parsemir(mirandaFile, outputFile, v):
 					if count%10000==0:
 						print("Processed " + str(count) + " scores")
 			elif line[0:2]=='>>':
+				print("summary line")
 				# if line is a summary line
 				# end case for a grouping
 				# copy top score from from container
@@ -44,6 +45,7 @@ def parsemir(mirandaFile, outputFile, v):
 				splitline = line.split("\t")
 				strand = splitline[6]
 				
+				print("check for sign flip")
 				if (int(strand) * sign) < 0 :
 					print("sign change")
 					base = 2 * 2147483647 + 2
