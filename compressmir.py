@@ -17,14 +17,14 @@ def parsemir(mirandaFile, outputFile, v):
 	
 	output_container = [] # container for lines of final output
 	container = [] # temporary container for comparison within a group
-	sign = 1
-	base = 0
 	
 	with open(mirandaFile) as f:
 		if v:
 			print('Opened miranda file')
 		
 		count = 0
+		sumcount = 0
+		
 		for line in f:
 			# for each line in the miranda output file
 			if line[0:2]=='>h':
@@ -34,28 +34,13 @@ def parsemir(mirandaFile, outputFile, v):
 				if v: 
 					if count%10000==0:
 						print("Processed " + str(count) + " scores")
+						
 			elif line[0:2]=='>>':
-				#print("summary line")
 				# if line is a summary line
 				# end case for a grouping
 				# copy top score from from container
+				sumcount += 1
 				topLine = ""
-				
-				# get strand number from summary line 
-				splitline = line.split("\t")
-				strand = splitline[6]
-				
-				#print("check for sign flip")
-				if (int(strand) * sign) < 0 :
-					print("sign change")
-					base = 2 * 2147483647 + 2
-					sign = -1
-					temp = base + int(strand)
-					print(temp)
-					print(line)
-					return
-				
-				#print("finish sign flip check")
 				
 				if len(container)==1 :
 					# if the group only has one data line 
@@ -74,12 +59,6 @@ def parsemir(mirandaFile, outputFile, v):
 						if compare > topScore :
 							topScore = compare
 							topLine = dataline
-							
-				# calculate modified strand number
-				mod_strand = base + int(strand)
-				
-				# add strand number to topLine
-				topLine = topLine + "\t" + str(mod_strand)
 				
 				# append topLine to output_container
 				output_container.append(topLine)
