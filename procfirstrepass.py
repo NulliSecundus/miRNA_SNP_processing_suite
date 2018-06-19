@@ -30,7 +30,7 @@ def processInput(mirandaFile, procSnpFasta):
 		snpName = ""
 		alleleNum = 0
 		alleleIndex = 0
-		sequence =  ""
+		sequence = ""
 		
 		with open(procSnpFasta) as f:
 			for line in f:
@@ -73,6 +73,7 @@ def processInput(mirandaFile, procSnpFasta):
 					sequence = line
 	except:
 		print('Could not parse processed snp fasta file')
+		print(snpInfo[0])
 
 def iterateMiranda():
 	try: 
