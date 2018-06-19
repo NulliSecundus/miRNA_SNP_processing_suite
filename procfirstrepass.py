@@ -7,12 +7,22 @@ import click
 @click.argument('output')
 def cli(mirandafile, procsnpfile, mirna, output):
 	try:
-		# Run processInput on original miranda output
+		# Run loadsnp
 		loadsnp(procsnpfile)
 	except:
-		print("Failed to parse snp file")
+		print("Failed to load snp file")
 	try:
-		# Run iterateMiranda on reprocess list
+		# Run loadrna
+		loadrna(mirna)
+	except:
+		print("Failed to load miRNA file")
+	try:
+		# Run buildReproc on original miranda output
+		buildReproc(mirandafile)
+	except:
+		print("Failed to parse miranda file")
+	try:
+		# Run iterateMiranda to reprocess list
 		iterateMiranda()
 	except:
 		printo("Failed to re-process with miranda")
@@ -84,6 +94,48 @@ def loadsnp(procSnpFasta):
 
 	except:
 		print('Could not parse processed snp fasta file')
+	
+def loadrna(miRNA):
+	mirnaInfo = []
+	
+	try:
+		count = 0
+		header = ""
+		sequence = ""
+		
+		with open(miRNA) as f:
+			for line in f:
+				if line[0]==">":
+					header = line
+					
+				else:
+					# Sequence line 
+					sequence = line
+					
+					temp = [header, sequence]
+					mirnaInfo.append(temp)
+					
+					if count%10000 == 10:
+						print(count)
+						print(mirnaInfo[0])
+						print(mirnaInfo[1])
+						print(mirnaInfo[2])
+						print(mirnaInfo[3])
+						print(mirnaInfo[4])
+						print(mirnaInfo[5])
+						print(mirnaInfo[6])
+						return
+					
+					count = count+1
+
+	except:
+		print('Could not parse miRNA file')
+
+def buildReproc(mirandaFile):
+	try: 
+		print("success")
+	except:
+		print("error")
 
 def iterateMiranda():
 	try: 
