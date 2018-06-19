@@ -35,6 +35,7 @@ def processInput(mirandaFile, procSnpFasta):
 		with open(procSnpFasta) as f:
 			for line in f:
 				if line[0]==">":
+					print("Start")
 					header = line
 					header = header.replace('\n', '')
 					
