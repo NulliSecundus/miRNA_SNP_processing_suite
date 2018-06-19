@@ -67,6 +67,10 @@ def loadsnp(procSnpFasta):
 						print(snpInfo[0])
 						print(snpInfo[1])
 						print(snpInfo[2])
+						print(snpInfo[3])
+						print(snpInfo[4])
+						print(snpInfo[5])
+						print(snpInfo[6])
 						return
 					
 					count = count+1
