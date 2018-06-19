@@ -72,7 +72,7 @@ def processInput(mirandaFile, procSnpFasta):
 				else:
 					# Sequence line 
 					sequence = line
-				print(snpInfo[0])
+
 	except:
 		print('Could not parse processed snp fasta file')
 
