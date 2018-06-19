@@ -59,7 +59,7 @@ def processInput(mirandaFile, procSnpFasta):
 					# End of sequence
 					temp = [snpName, alleleNum, sequence]
 					snpInfo.append(temp)
-					
+					print("Done")
 					if count == 10:
 						print(snpInfo[9])
 					
