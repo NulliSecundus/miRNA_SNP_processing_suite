@@ -64,6 +64,7 @@ def processInput(mirandaFile, procSnpFasta):
 					print("Done")
 					if count == 10:
 						print(snpInfo[0])
+						return
 					
 					count = count+1
 					
