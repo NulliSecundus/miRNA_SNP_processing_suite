@@ -3,13 +3,14 @@ import click
 @click.command()
 @click.argument('mirandafile')
 @click.argument('procsnpfile')
+@click.argument('mirna')
 @click.argument('output')
-def cli(mirandafile, procsnpfile, output):
+def cli(mirandafile, procsnpfile, mirna, output):
 	try:
 		# Run processInput on original miranda output
-		processInput(mirandafile, procsnpfile)
+		loadsnp(procsnpfile)
 	except:
-		print("Failed to parse miranda file")
+		print("Failed to parse snp file")
 	try:
 		# Run iterateMiranda on reprocess list
 		iterateMiranda()
@@ -21,7 +22,7 @@ if __name__ == '__main__':
 
 reprocessList = []
 	
-def processInput(mirandaFile, procSnpFasta):
+def loadsnp(procSnpFasta):
 	snpInfo = []
 	
 	try:
