@@ -32,9 +32,11 @@ def processInput(mirandaFile, procSnpFasta):
 				if line[0]==">":
 					header = line
 					header = header.replace('\n', '')
+					print("header")
 					
 					snpName = header.split(" ")
 					snpName = snpName[0][1:]
+					print("snp name")
                     
 					headerSplt = header.split("|")
 					alleles = headerSplt[8]
@@ -42,8 +44,10 @@ def processInput(mirandaFile, procSnpFasta):
 					alleles = alleles.replace('\"','')
 					alleles = alleles.split('/')
 					alleleNum = len(alleles)
+					print("alleles")
 					
 					snpInfo.append([[snpName][alleleNum]])
+					print("append")
 					
 					if count == 10:
 						print(snpInfo)
