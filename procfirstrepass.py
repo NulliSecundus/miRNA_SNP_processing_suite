@@ -27,6 +27,11 @@ def processInput(mirandaFile, procSnpFasta):
 	try:
 		count = 0
 		header = ""
+		snpName = ""
+		alleleNum = 0
+		alleleIndex = 0
+		sequence =  ""
+		
 		with open(procSnpFasta) as f:
 			for line in f:
 				if line[0]==">":
@@ -43,16 +48,29 @@ def processInput(mirandaFile, procSnpFasta):
 					alleles = alleles.split('/')
 					alleleNum = len(alleles)
 					
-					temp = [snpName, alleleNum]
+					if alleleIndex==alleleNum:
+						alleleIndex = 0
+					
+					snpName = snpName + "|" + alleles[alleleIndex]
+					
+					alleleIndex = alleleIndex + 1
+					
+				elif line[0]=="\n":
+					# End of sequence
+					temp = [snpName, alleleNum, sequence]
 					snpInfo.append(temp)
 					
 					if count == 10:
-						print(snpInfo[0])
-						return
+						print(snpInfo[9]
 					
 					count = count+1
-				else:
+					
+				elif line[0]=="#":
+					#Do nothing, it's a comment line
 					pass
+				else:
+					# Sequence line 
+					sequence = line
 	except:
 		print('Could not parse processed snp fasta file')
 
