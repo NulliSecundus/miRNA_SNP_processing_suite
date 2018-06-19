@@ -62,9 +62,11 @@ def loadsnp(procSnpFasta):
 					temp = [snpName, alleleNum, sequence]
 					snpInfo.append(temp)
 					
-					if count%10000 == 0:
+					if count%10000 == 10:
 						print(count)
 						print(snpInfo[0])
+						print(snpInfo[1])
+						print(snpInfo[2])
 						return
 					
 					count = count+1
