@@ -46,7 +46,7 @@ def processInput(mirandaFile, procSnpFasta):
 					alleleNum = len(alleles)
 					print("alleles")
 					
-					temp = [[snpName][alleleNum]]
+					temp = [snpName, alleleNum]
 					snpInfo.append(temp)
 					print("append")
 					
