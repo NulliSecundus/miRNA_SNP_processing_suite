@@ -134,11 +134,27 @@ def loadrna(miRNA):
 def buildReproc(mirandaFile):
 	try: 
 		print("success")
+		
+		# For each line in cleaned miranda output
+		# Populate temp container with same-name entries
+		# When new name appears, count num in temp container
+		# Search snpInfo for the entry, compare to temp container num
+		# If (available - output) > 0, then add SNP-miRNA pair to reprocess list
+		
 	except:
 		print("error")
 
 def iterateMiranda():
 	try: 
 		print("success")
+		
+		# Iterate through list of SNP-miRNA pairs that need to be reprocessed 
+		# Create input text files for SNP and miRNA fasta seqs
+		# Run miranda on each pair
+		# Output to output text file
+		# Delete input text files
+		# Open output text file, store line, delete output text file
+		# Add line to condensed final output file
+
 	except:
 		print("error")
