@@ -17,8 +17,8 @@ def cli(mirandafile, procsnpfile, mirna, output):
 	except:
 		print("Failed to load miRNA file")
 	try:
-		# Run buildReproc on original miranda output
-		buildReproc(mirandafile)
+		# Run buildReprocList on original miranda output
+		buildReprocList(mirandafile)
 	except:
 		print("Failed to parse miranda file")
 	try:
@@ -63,6 +63,7 @@ def loadsnp(procSnpFasta):
 					alleles = alleles.split('/')
 					alleleNum = len(alleles)
 					
+					snpName = snpName + "|" + str(alleleNum)
 					snpName = snpName + "|" + alleles[alleleIndex]
 					
 					alleleIndex = alleleIndex + 1
@@ -131,9 +132,8 @@ def loadrna(miRNA):
 	except:
 		print('Could not parse miRNA file')
 
-def buildReproc(mirandaFile):
+def buildReprocList(mirandaFile):
 	try: 
-		print("success")
 		
 		# For each line in cleaned miranda output
 		# Populate temp container with same-name entries
@@ -141,8 +141,34 @@ def buildReproc(mirandaFile):
 		# Search snpInfo for the entry, compare to temp container num
 		# If (available - output) > 0, then add SNP-miRNA pair to reprocess list
 		
+		tempCont = []
+		count = 0
+		prevLine = ""
+		
+		with open(mirandaFile) as f:
+			for line in f:
+				if line[0]==">":
+					lineEdit = line.split("\t")
+					refName = lineEdit[1]
+					
+					if refName == prevLine:
+						tempCont.append(refName)
+						prevLine = refName
+					else:
+						print(tempCont)
+						tempCont = [refName]
+						prevLine = refName
+					
+					count = count+1
+				else:
+					pass
+					
+				if count%10000 == 10:
+					print(count)
+					return
+					
 	except:
-		print("error")
+		print('Could not build reprocess list from miranda file')
 
 def iterateMiranda():
 	try: 
