@@ -195,4 +195,8 @@ def iterateMiranda():
 		print("error")
 		
 def checkAlleleCount(name, num):
-	print(name)
+	print(name + " " + str(num))
+	
+	for line in snpInfo:
+		strcmp = line[0][:len(line)-5]
+		print(strcmp)
