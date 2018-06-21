@@ -214,7 +214,8 @@ def checkAlleleCount(name, num, mirandaLine):
 		if strcmp == name:
 			if (line[1] - num) > 0:
 				print("re-process " + name)
-				refSeqName = line[0] + "|" + line[1] + "|" + line[2]
+				refSeqName = line[0] + "|" + str(line[1]) + "|" + line[2]
+				# Add in other alleles 
 				temp = [refSeqName, line[3], mirandaLine[0], mirnaSeq(mirandaLine[0])]
 				reprocessList.append(temp)
 				
