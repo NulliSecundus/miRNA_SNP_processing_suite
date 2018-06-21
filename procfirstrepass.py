@@ -207,26 +207,29 @@ def iterateMiranda():
 		print("error")
 		
 def checkAlleleCount(name, num, mirandaLine):
-	#print(name + " " + str(num))
+	print(name + " " + str(num))
 	
 	for line in snpInfo:
 		strcmp = line[0]
 		if strcmp == name:
 			if (line[1] - num) > 0:
-				#print("re-process " + name)
+				print("re-process " + name)
 				refSeqName = line[0] + "|" + line[1] + "|" + line[2]
 				temp = [refSeqName, line[3], mirandaLine[0], mirnaSeq(mirandaLine[0])]
 				reprocessList.append(temp)
 				
-			'''	
+				
 			else:
 				print("skip  " + name)
-			'''
+			
 			
 			return
 			
 def mirnaSeq(mirnaName):
+	print("Start mirnaSeq")
 	for line in mirnaInfo:
 		mirnaCmp = line[0]
+		print(mirnaCmp)
 		if mirnaCmp == mirnaName:
+			print("Found miRNA")
 			return str(line[1])
