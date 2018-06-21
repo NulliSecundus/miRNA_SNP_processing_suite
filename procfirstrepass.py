@@ -41,7 +41,7 @@ reprocessList = []
 def loadsnp(procSnpFasta):
 	
 	try:
-		print("Loading SNP fasta file")
+		print("Loading SNP fasta file (this step might take a few minutes)")
 		
 		count = 0
 		header = ""
@@ -118,10 +118,12 @@ def loadrna(miRNA):
 			for line in f:
 				if line[0]==">":
 					header = line
+					header = header.replace('\n', '')
 					
 				else:
 					# Sequence line 
 					sequence = line
+					sequence = sequence.replace('\n', '')
 					
 					temp = [header, sequence]
 					mirnaInfo.append(temp)
