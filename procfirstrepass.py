@@ -11,21 +11,25 @@ def cli(mirandafile, procsnpfile, mirna, output):
 		loadsnp(procsnpfile)
 	except:
 		print("Failed to load snp file")
+		return
 	try:
 		# Run loadrna
 		loadrna(mirna)
 	except:
 		print("Failed to load miRNA file")
+		return
 	try:
 		# Run buildReprocList on original miranda output
 		buildReprocList(mirandafile)
 	except:
 		print("Failed to parse miranda file")
+		return
 	try:
 		# Run iterateMiranda to reprocess list
 		iterateMiranda()
 	except:
 		printo("Failed to re-process with miranda")
+		return
 
 if __name__ == '__main__':
 	pass
@@ -157,7 +161,10 @@ def buildReprocList(mirandaFile):
 					else:
 						alleleCount = len(tempCont)
 						print(alleleCount)
-						checkAlleleCount(tempCont[0], alleleCount)
+						
+						if alleleCount > 0:
+							checkAlleleCount(tempCont[0], alleleCount)
+						
 						tempCont = [refName]
 						prevLine = refName
 					
