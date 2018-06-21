@@ -44,6 +44,7 @@ def loadsnp(procSnpFasta):
 		count = 0
 		header = ""
 		snpName = ""
+		allele = ""
 		alleleNum = 0
 		alleleIndex = 0
 		sequence = ""
@@ -67,15 +68,18 @@ def loadsnp(procSnpFasta):
 					alleles = alleles.replace('\"','')
 					alleles = alleles.split('/')
 					alleleNum = len(alleles)
+					allele = alleles[alleleIndex]
 					
+					'''
 					snpName = snpName + "|" + str(alleleNum)
 					snpName = snpName + "|" + alleles[alleleIndex]
+					'''
 					
 					alleleIndex = alleleIndex + 1
 					
 				elif line[0]=="\n":
 					# End of sequence
-					temp = [snpName, alleleNum, sequence]
+					temp = [snpName, allele, alleleNum, sequence]
 					snpInfo.append(temp)
 					
 					if count%10000 == 10:
@@ -128,13 +132,10 @@ def loadrna(miRNA):
 					
 					if count%10000 == 10:
 						print(count)
-						print(mirnaInfo[0])
-						print(mirnaInfo[1])
-						print(mirnaInfo[2])
-						print(mirnaInfo[3])
-						print(mirnaInfo[4])
-						print(mirnaInfo[5])
-						print(mirnaInfo[6])
+						
+						for line in mirnaInfo:
+							print(line)
+						
 						return
 					
 					count = count+1
@@ -204,5 +205,6 @@ def checkAlleleCount(name, num):
 	print(name + " " + str(num))
 	
 	for line in snpInfo:
-		strcmp = line[0][:len(line)-7]
+		#strcmp = line[0][:len(line)-7]
+		strcmp = line[0]
 		print(strcmp)
