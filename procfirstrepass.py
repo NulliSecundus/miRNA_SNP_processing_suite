@@ -188,4 +188,4 @@ def iterateMiranda():
 		print("error")
 		
 def checkAlleleCount(name, num):
-	print(name + str(num))
+	print(name)
