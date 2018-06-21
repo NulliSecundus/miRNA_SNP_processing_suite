@@ -80,6 +80,11 @@ def loadsnp(procSnpFasta):
 					
 					if count%10000 == 10:
 						print(count)
+						
+						for line in snpInfo:
+							print(line)
+						
+						'''
 						print(snpInfo[0])
 						print(snpInfo[1])
 						print(snpInfo[2])
@@ -87,6 +92,7 @@ def loadsnp(procSnpFasta):
 						print(snpInfo[4])
 						print(snpInfo[5])
 						print(snpInfo[6])
+						'''
 						return
 					
 					count = count+1
@@ -198,5 +204,5 @@ def checkAlleleCount(name, num):
 	print(name + " " + str(num))
 	
 	for line in snpInfo:
-		strcmp = line[0][:len(line)-5]
+		strcmp = line[0][:len(line)-7]
 		print(strcmp)
