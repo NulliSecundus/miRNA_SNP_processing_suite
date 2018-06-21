@@ -82,7 +82,7 @@ def loadsnp(procSnpFasta):
 					temp = [snpName, alleleNum, allele, sequence]
 					snpInfo.append(temp)
 					
-					if count%100000 == 0:
+					if count%1000000 == 0:
 						print(count)
 						'''
 						for line in snpInfo:
@@ -122,14 +122,15 @@ def loadrna(miRNA):
 					temp = [header, sequence]
 					mirnaInfo.append(temp)
 					
+					'''
 					if count%100000 == 0:
 						print(count)
-						'''
+						
 						for line in mirnaInfo:
 							print(line)
 						
 						return
-						'''
+					'''
 					
 					count = count+1
 
@@ -160,7 +161,7 @@ def buildReprocList(mirandaFile):
 						prevLine = refName
 					else:
 						alleleCount = len(tempCont)
-						print(alleleCount)
+						#print(tempCont)
 						
 						if alleleCount > 0:
 							checkAlleleCount(tempCont[0], alleleCount)
@@ -172,7 +173,7 @@ def buildReprocList(mirandaFile):
 				else:
 					pass
 					
-				if count%10000 == 100:
+				if count%10000 == 10:
 					print(count)
 					return
 					
@@ -195,7 +196,7 @@ def iterateMiranda():
 		print("error")
 		
 def checkAlleleCount(name, num):
-	#print(name + " " + str(num))
+	print(name + " " + str(num))
 	
 	for line in snpInfo:
 		strcmp = line[0]
