@@ -30,10 +30,11 @@ def cli(mirandafile, procsnpfile, mirna, output):
 if __name__ == '__main__':
 	pass
 
+snpInfo = []
+mirnaInfo = []
 reprocessList = []
 	
 def loadsnp(procSnpFasta):
-	snpInfo = []
 	
 	try:
 		count = 0
@@ -97,7 +98,6 @@ def loadsnp(procSnpFasta):
 		print('Could not parse processed snp fasta file')
 	
 def loadrna(miRNA):
-	mirnaInfo = []
 	
 	try:
 		count = 0
@@ -155,7 +155,9 @@ def buildReprocList(mirandaFile):
 						tempCont.append(refName)
 						prevLine = refName
 					else:
-						print(tempCont)
+						alleleCount = len(tempCont)
+						print(alleleCount)
+						checkAlleleCount(tempCont[0], alleleCount)
 						tempCont = [refName]
 						prevLine = refName
 					
@@ -184,3 +186,6 @@ def iterateMiranda():
 
 	except:
 		print("error")
+		
+def checkAlleleCount(name, num):
+	print(name + str(num))
