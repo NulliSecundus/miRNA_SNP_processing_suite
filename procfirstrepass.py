@@ -234,5 +234,5 @@ def mirnaSeq(mirnaName):
 		mirnaCmp = mirnaCmp[0]
 		#print(mirnaCmp)
 		if mirnaCmp == mirnaName:
-			print("Found miRNA")
+			#print("Found miRNA")
 			return str(line[1])
