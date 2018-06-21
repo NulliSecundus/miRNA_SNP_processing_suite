@@ -41,7 +41,7 @@ reprocessList = []
 def loadsnp(procSnpFasta):
 	
 	try:
-		print("Loading SNP fasta file (this step might take a few minutes)")
+		print("Loading SNP fasta file (might take a few minutes)")
 		
 		count = 0
 		header = ""
@@ -227,10 +227,12 @@ def checkAlleleCount(name, num, mirandaLine):
 			return
 			
 def mirnaSeq(mirnaName):
-	print("Start mirnaSeq")
+	#print("Start mirnaSeq")
 	for line in mirnaInfo:
 		mirnaCmp = line[0]
-		print(mirnaCmp)
+		mirnaCmp = mirnaCmp.split(" ")
+		mirnaCmp = mirnaCmp[0]
+		#print(mirnaCmp)
 		if mirnaCmp == mirnaName:
 			print("Found miRNA")
 			return str(line[1])
