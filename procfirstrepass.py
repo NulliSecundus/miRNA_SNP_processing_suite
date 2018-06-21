@@ -41,6 +41,8 @@ reprocessList = []
 def loadsnp(procSnpFasta):
 	
 	try:
+		print("Loading SNP fasta file")
+		
 		count = 0
 		header = ""
 		snpName = ""
@@ -106,6 +108,8 @@ def loadsnp(procSnpFasta):
 def loadrna(miRNA):
 	
 	try:
+		print("Loading miRNA file")
+		
 		count = 0
 		header = ""
 		sequence = ""
@@ -139,6 +143,7 @@ def loadrna(miRNA):
 
 def buildReprocList(mirandaFile):
 	try: 
+		print('Building reprocess list from miranda file')
 		
 		# For each line in cleaned miranda output
 		# Populate temp container with same-name entries
@@ -164,7 +169,7 @@ def buildReprocList(mirandaFile):
 						#print(tempCont)
 						
 						if alleleCount > 0:
-							checkAlleleCount(tempCont[0], alleleCount)
+							checkAlleleCount(tempCont[0], alleleCount, lineEdit)
 						
 						tempCont = [refName]
 						prevLine = refName
@@ -175,6 +180,10 @@ def buildReprocList(mirandaFile):
 					
 				if count%10000 == 10:
 					print(count)
+					
+					for entry in reprocessList:
+						print(entry)
+					
 					return
 					
 	except:
@@ -195,14 +204,27 @@ def iterateMiranda():
 	except:
 		print("error")
 		
-def checkAlleleCount(name, num):
-	print(name + " " + str(num))
+def checkAlleleCount(name, num, mirandaLine):
+	#print(name + " " + str(num))
 	
 	for line in snpInfo:
 		strcmp = line[0]
 		if strcmp == name:
 			if (line[1] - num) > 0:
-				print("re-process " + name)
+				#print("re-process " + name)
+				refSeqName = line[0] + "|" + line[1] + "|" + line[2]
+				temp = [refSeqName, line[3], mirandaLine[0], mirnaSeq(mirandaLine[0])]
+				reprocessList.append(temp)
+				
+			'''	
 			else:
 				print("skip  " + name)
+			'''
+			
 			return
+			
+def mirnaSeq(mirnaName):
+	for line in mirnaInfo:
+		mirnaCmp = line[0]
+		if mirnaCmp == mirnaName:
+			return str(line[1])
