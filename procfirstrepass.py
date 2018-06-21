@@ -82,7 +82,7 @@ def loadsnp(procSnpFasta):
 					temp = [snpName, alleleNum, allele, sequence]
 					snpInfo.append(temp)
 					
-					if count%10000 == 10:
+					if count%100000 == 0:
 						print(count)
 						'''
 						for line in snpInfo:
@@ -122,7 +122,7 @@ def loadrna(miRNA):
 					temp = [header, sequence]
 					mirnaInfo.append(temp)
 					
-					if count%10000 == 10:
+					if count%100000 == 0:
 						print(count)
 						'''
 						for line in mirnaInfo:
@@ -172,7 +172,7 @@ def buildReprocList(mirandaFile):
 				else:
 					pass
 					
-				if count%10000 == 10:
+				if count%10000 == 100:
 					print(count)
 					return
 					
