@@ -167,8 +167,10 @@ def buildReprocList(mirandaFile):
 					refName = lineEdit[1]
 					
 					if refName != current:
-						if current != "":
-							checkAlleleCount(current, alleleCount, mirnaName)
+						if (current != "") and (alleleCount==1):
+							#checkAlleleCount(current, alleleCount, mirnaName)
+							temp = [mirnaName, current]
+							reprocessList.append(temp)
 						alleleCount = 1
 						current = refName
 					else:
