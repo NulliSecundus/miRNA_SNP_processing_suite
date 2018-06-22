@@ -182,19 +182,20 @@ def buildReprocList(mirandaFile):
 				else:
 					pass
 					
-				if count%10000 == 30:
+				if count%50 == 0:
 					print(count)
-					
+					'''
 					for entry in reprocessList:
 						print(entry)
 					
 					return
-					
+					'''
 	except:
 		print('Could not build reprocess list from miranda file')
 
 def iterateMiranda():
 	try: 
+		print(reprocessList[0])
 		print("success")
 		
 		# Iterate through list of SNP-miRNA pairs that need to be reprocessed 
