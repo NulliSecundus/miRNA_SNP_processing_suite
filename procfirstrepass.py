@@ -25,6 +25,12 @@ def cli(mirandafile, procsnpfile, mirna, output):
 		print("Failed to parse miranda file")
 		return
 	try:
+		# Run addSequences to add sequences to reprocess list 
+		addSequences()
+	except:
+		print("Failed to add sequences to re-process list")
+		return
+	try:
 		# Run iterateMiranda to reprocess list
 		iterateMiranda()
 	except:
@@ -179,10 +185,10 @@ def buildReprocList(mirandaFile):
 					count = count+1
 				else:
 					pass
-					
-				if count%50 == 0:
+				'''	
+				if count%1000000 == 0:
 					print(count)
-					'''
+					
 					for entry in reprocessList:
 						print(entry)
 					
@@ -191,6 +197,16 @@ def buildReprocList(mirandaFile):
 	except:
 		print('Could not build reprocess list from miranda file')
 
+def addSequences():
+	mirnaName = ""
+	snpName = ""
+	
+	for line in reprocessList:
+		mirnaName = line[0]
+		snpName = line[1]
+		line.insert(1, mirnaSeq(mirnaName))
+		line.extend(3, snpSeq(snpName))
+		
 def iterateMiranda():
 	try: 
 		print(reprocessList[0])
@@ -208,6 +224,7 @@ def iterateMiranda():
 	except:
 		print("error")
 		
+# DEPRECIATED: checks the available vs. found allele num for a given SNP seq 
 def checkAlleleCount(name, num, mirna):
 	#print(name + " " + str(num))
 	#startSig = False 
@@ -239,14 +256,19 @@ def checkAlleleCount(name, num, mirna):
 				return
 		'''
 	return False
-			
+
+# Returns the sequence associated with the given SNP name
+def snpSeq(snpName):
+	for line in snpInfo:
+		snpCmp = line[0]
+		if snpCmp == snpName:
+			return str(line[3])
+	
+# Returns the sequence associated with the given miRNA name	
 def mirnaSeq(mirnaName):
-	#print("Start mirnaSeq")
 	for line in mirnaInfo:
 		mirnaCmp = line[0]
 		mirnaCmp = mirnaCmp.split(" ")
 		mirnaCmp = mirnaCmp[0]
-		#print(mirnaCmp)
 		if mirnaCmp == mirnaName:
-			#print("Found miRNA")
 			return str(line[1])
