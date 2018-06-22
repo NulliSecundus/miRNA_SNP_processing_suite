@@ -196,6 +196,7 @@ def buildReprocList(mirandaFile):
 def iterateMiranda():
 	try: 
 		print(reprocessList[0])
+		print(len(reprocessList))
 		print("success")
 		
 		# Iterate through list of SNP-miRNA pairs that need to be reprocessed 
