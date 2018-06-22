@@ -101,6 +101,7 @@ def loadsnp(procSnpFasta):
 				else:
 					# Sequence line 
 					sequence = line
+					sequence = sequence.replace('\n', '')
 
 	except:
 		print('Could not parse processed snp fasta file')
@@ -180,7 +181,7 @@ def buildReprocList(mirandaFile):
 				else:
 					pass
 					
-				if count%10000 == 20:
+				if count%10000 == 30:
 					print(count)
 					
 					for entry in reprocessList:
@@ -222,7 +223,6 @@ def checkAlleleCount(name, num, mirandaLine):
 				temp += [refSeqName, line[3]]
 					
 		else: 
-			#TODO
 			if startSig:
 				reprocessList.append(temp)
 				return
