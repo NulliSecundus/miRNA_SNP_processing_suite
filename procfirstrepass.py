@@ -213,18 +213,21 @@ def iterateMiranda():
 def checkAlleleCount(name, num, mirna):
 	#print(name + " " + str(num))
 	startSig = False 
-	temp = [mirna, mirnaSeq(mirna)]
+	#temp = [mirna, mirnaSeq(mirna)]
 	
 	for line in snpInfo:
 		strcmp = line[0]
 		if strcmp == name:
 			if (line[1] - num) > 0:
 				startSig = True 
+				temp = [mirna, mirnaSeq(mirna)]
 				#print("re-process " + name)
 				refSeqName = line[0] + "|" + str(line[1]) + "|" + line[2]
 				# Add in other alleles 
 				temp += [refSeqName, line[3]]
 				reprocessList.append(temp)
+				return
+			else:
 				return
 		else: 
 			if startSig:
