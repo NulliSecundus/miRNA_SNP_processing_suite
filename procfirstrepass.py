@@ -154,9 +154,10 @@ def buildReprocList(mirandaFile):
 		# Search snpInfo for the entry, compare to temp container num
 		# If (available - output) > 0, then add SNP-miRNA pair to reprocess list
 		
-		tempCont = []
+		#tempCont = []
 		count = 0
-		prevLine = ""
+		current = ""
+		alleleCount = 1
 		
 		with open(mirandaFile) as f:
 			for line in f:
@@ -165,18 +166,13 @@ def buildReprocList(mirandaFile):
 					mirnaName = lineEdit[0]
 					refName = lineEdit[1]
 					
-					if refName == prevLine:
-						tempCont.append(refName)
-						prevLine = refName
+					if refName != current:
+						if current != "":
+							checkAlleleCount(current, alleleCount, mirnaName)
+						alleleCount = 1
+						current = refName
 					else:
-						alleleCount = len(tempCont)
-						#print(tempCont)
-						
-						if alleleCount > 0:
-							checkAlleleCount(tempCont[0], alleleCount, mirnaName)
-						
-						tempCont = [refName]
-						prevLine = refName
+						alleleCount += 1
 					
 					count = count+1
 				else:
