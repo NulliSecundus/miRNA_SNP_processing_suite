@@ -224,7 +224,8 @@ def checkAlleleCount(name, num, mirna):
 				refSeqName = line[0] + "|" + str(line[1]) + "|" + line[2]
 				# Add in other alleles 
 				temp += [refSeqName, line[3]]
-					
+				reprocessList.append(temp)
+				return
 		else: 
 			if startSig:
 				reprocessList.append(temp)
