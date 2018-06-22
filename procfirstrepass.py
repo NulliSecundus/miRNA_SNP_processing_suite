@@ -180,7 +180,7 @@ def buildReprocList(mirandaFile):
 				else:
 					pass
 					
-				if count%10000 == 10:
+				if count%10000 == 20:
 					print(count)
 					
 					for entry in reprocessList:
@@ -207,24 +207,25 @@ def iterateMiranda():
 		print("error")
 		
 def checkAlleleCount(name, num, mirandaLine):
-	print(name + " " + str(num))
+	#print(name + " " + str(num))
+	startSig = False 
+	temp = [mirandaLine[0], mirnaSeq(mirandaLine[0])]
 	
 	for line in snpInfo:
 		strcmp = line[0]
 		if strcmp == name:
 			if (line[1] - num) > 0:
-				print("re-process " + name)
+				startSig = True 
+				#print("re-process " + name)
 				refSeqName = line[0] + "|" + str(line[1]) + "|" + line[2]
 				# Add in other alleles 
-				temp = [refSeqName, line[3], mirandaLine[0], mirnaSeq(mirandaLine[0])]
+				temp += [refSeqName, line[3]]
+					
+		else: 
+			#TODO
+			if startSig:
 				reprocessList.append(temp)
-				
-				
-			else:
-				print("skip  " + name)
-			
-			
-			return
+				return
 			
 def mirnaSeq(mirnaName):
 	#print("Start mirnaSeq")
