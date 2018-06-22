@@ -198,7 +198,7 @@ def buildReprocList(mirandaFile):
 		print('Could not build reprocess list from miranda file')
 
 def addSequences():
-	print('Adding sequences to reprocess list')
+	print('Loading sequences into reprocess list')
 	mirnaName = ""
 	snpName = ""
 	
@@ -206,7 +206,8 @@ def addSequences():
 		mirnaName = line[0]
 		snpName = line[1]
 		line.insert(1, mirnaSeq(mirnaName))
-		line.extend(3, snpSeq(snpName))
+		temp = [snpSeq(snpName)]
+		line.extend(temp)
 		
 def iterateMiranda():
 	try: 
