@@ -201,6 +201,7 @@ def addSequences():
 	print('Loading sequences into reprocess list')
 	mirnaName = ""
 	snpName = ""
+	count = 0
 	
 	for line in reprocessList:
 		mirnaName = line[0]
@@ -208,6 +209,10 @@ def addSequences():
 		line.insert(1, mirnaSeq(mirnaName))
 		temp = [snpSeq(snpName)]
 		line.extend(temp)
+		count += 1
+		
+		if count%50==0:
+			print(count)
 		
 def iterateMiranda():
 	try: 
