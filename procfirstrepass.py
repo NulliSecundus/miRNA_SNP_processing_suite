@@ -47,7 +47,7 @@ reprocessList = []
 def loadsnp(procSnpFasta):
 	
 	try:
-		print("Loading SNP fasta file (might take a few minutes)")
+		print("Loading SNP fasta file")
 		
 		count = 0
 		header = ""

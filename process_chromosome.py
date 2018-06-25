@@ -4,16 +4,18 @@ import click
 @click.argument('reportfile')
 @click.argument('snpfile')
 @click.argument('output')
-def cli(reportfile, snpfile, output):
+@click.option('--verbose', is_flag=True, help='''Output additional information to
+	the console''')
+def cli(reportfile, snpfile, output, verbose):
     try:
-        processInput(reportfile, snpfile, output)
+        processInput(reportfile, snpfile, output, verbose)
     except:
-        print('Invalid input')
+        print('Error processing the chromosome fasta file.')
 
 if __name__ == '__main__':
     pass
 
-def processInput(chromReport, snpFasta, outputFile):
+def processInput(chromReport, snpFasta, outputFile, v):
     try:
         refInfo = []
         with open(chromReport) as f:
@@ -56,6 +58,7 @@ def processInput(chromReport, snpFasta, outputFile):
                     alleles = alleles[8:]
                     alleles = alleles.replace('\"','')
                     alleles = alleles.split('/')
+					alleleNum = len(alleles)
 
                     index += 1
                 elif line[0]=="\n":
@@ -76,11 +79,22 @@ def processInput(chromReport, snpFasta, outputFile):
                                     #seqChop += " "
                                 seqChop += sequence[pos:pos+25]
                                 seqChop += "\n"
-                                print("{}".format(header), file=text_file)
+								
+								# Modify header with allele info
+								label = header.split(" ")
+								label = label[0]
+								label += "|" + str(alleleNum)
+								label += "|" + allele
+								
+								# Print each header/sequence to file 
+                                print("{}".format(label), file=text_file)
                                 print("{}".format(seqChop), file=text_file)
+								
+								# Increment counter
                                 count += 1
-                                if count%1000==0:
-                                    print(count)
+								if v:
+									if count%10000==0:
+										print(count)
                 elif line[0]=="#":
                     #Do nothing, it's a comment line
                     pass
