@@ -302,13 +302,13 @@ def snpSeq(snpName):
 	for line in snpInfo:
 		rsStart = line[0][0]
 		rsEnd = line[0][1]
-		'''
+		
 		print(rsStart)
 		print(rsEnd)
 		print((rsNum > rsStart) and (rsNum <= rsEnd))
 		return
-		'''
-		if ((rsNum > rsStart) and (rsNum >= rsEnd)):
+		
+		if ((rsNum > rsStart) and (rsNum <= rsEnd)):
 			print("found sublist")
 			for entry in line[1:]:
 				'''
