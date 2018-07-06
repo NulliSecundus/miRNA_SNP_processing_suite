@@ -297,11 +297,19 @@ def snpSeq(snpName):
 	nameSplit = snpName.split("|")
 	rsText = nameSplit[2]
 	rsNum = int(rsText[2:])
+	print(rsNum)
 
 	for line in snpInfo:
 		rsStart = line[0][0]
 		rsEnd = line[0][1]
-		if (rsNum > rsStart) and (rsNum >= rsEnd):
+		'''
+		print(rsStart)
+		print(rsEnd)
+		print((rsNum > rsStart) and (rsNum <= rsEnd))
+		return
+		'''
+		if ((rsNum > rsStart) and (rsNum >= rsEnd)):
+			print("found sublist")
 			for entry in line[1:]:
 				'''
 				snpCmp = entry[0]
