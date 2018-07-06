@@ -238,7 +238,7 @@ def addSequences():
 		line.extend(temp)
 		count += 1
 		
-		if count%500==0:
+		if count%5000==0:
 			print(count)
 			print(reprocessList[count-1])
 		
@@ -327,6 +327,8 @@ def snpSeq(snpName):
 					return str(entry[3])
 					
 	print("Failed to locate SNP Sequence")
+	print(snpName)
+	print(rsNum)
 	
 # Returns the sequence associated with the given miRNA name	
 def mirnaSeq(mirnaName):
