@@ -15,7 +15,7 @@ def cli(mirandafile, procsnpfile, mirna, output):
 		print(snpInfo[0][0])
 		print(snpInfo[1][0])
 		print(snpInfo[2][0])
-		return
+		
 	except:
 		print("Failed to load snp file")
 		return
@@ -241,7 +241,6 @@ def addSequences():
 		if count%50==0:
 			print(count)
 			print(reprocessList[count-1])
-			return
 		
 def iterateMiranda():
 	try: 
