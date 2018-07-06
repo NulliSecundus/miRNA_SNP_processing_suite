@@ -122,7 +122,7 @@ def loadsnp(procSnpFasta):
 						
 						# Reset sub-list and rsStart number
 						snpSubInfo = []
-						rsStart = rsNum
+						rsStart = rsEnd
 					
 				elif line[0]=="#":
 					#Do nothing, it's a comment line
