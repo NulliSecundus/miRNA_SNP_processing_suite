@@ -238,7 +238,7 @@ def addSequences():
 		line.extend(temp)
 		count += 1
 		
-		if count%50==0:
+		if count%500==0:
 			print(count)
 			print(reprocessList[count-1])
 		
@@ -309,9 +309,11 @@ def snpSeq(snpName):
 		return
 		'''
 		if ((rsNum > rsStart) and (rsNum <= rsEnd)):
+			'''
 			print("found sublist")
 			print(rsStart)
 			print(rsEnd)
+			'''
 			for entry in line[1:]:
 				'''
 				snpCmp = entry[0]
@@ -321,7 +323,7 @@ def snpSeq(snpName):
 				'''
 				cmpRsNum = entry[4]
 				if cmpRsNum == rsNum:
-					print("found entry")
+					#print("found entry")
 					return str(entry[3])
 					
 	print("Failed to locate SNP Sequence")
