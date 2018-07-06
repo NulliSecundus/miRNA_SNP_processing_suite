@@ -10,6 +10,7 @@ def cli(mirandafile, procsnpfile, mirna, output):
 		# Run loadsnp
 		loadsnp(procsnpfile)
 		print(len(snpInfo))
+		print(len(snpInfo[0]))
 	except:
 		print("Failed to load snp file")
 		return
@@ -50,6 +51,7 @@ def loadsnp(procSnpFasta):
 	try:
 		print("Loading SNP fasta file")
 		
+		snpSubInfo = []
 		count = 0
 		header = ""
 		snpName = ""
@@ -57,6 +59,8 @@ def loadsnp(procSnpFasta):
 		alleleNum = 0
 		alleleIndex = 0
 		sequence = ""
+		rsStart = 0
+		rsEnd = 0
 		
 		with open(procSnpFasta) as f:
 			for line in f:
@@ -72,6 +76,10 @@ def loadsnp(procSnpFasta):
 					snpName = snpName[0][1:]
                     
 					headerSplt = header.split("|")
+					
+					rsNum = headerSplt[2].split(" ")
+					rsNum = rsNum[0][2:]
+					
 					alleles = headerSplt[8]
 					alleles = alleles[8:]
 					alleles = alleles.replace('\"','')
@@ -88,8 +96,8 @@ def loadsnp(procSnpFasta):
 					
 				elif line[0]=="\n": 
 					# End of sequence
-					temp = [snpName, alleleNum, allele, sequence]
-					snpInfo.append(temp)
+					temp = [snpName, alleleNum, allele, sequence, rsNum]
+					snpSubInfo.append(temp)
 					'''
 					if count%1000000 == 0:
 						print(count)
@@ -99,8 +107,11 @@ def loadsnp(procSnpFasta):
 						
 						return
 						'''
-					
 					count = count+1
+					
+					if count%50000 == 0:
+						snpInfo.append(snpSubInfo)
+						snpSubInfo = []
 					
 				elif line[0]=="#":
 					#Do nothing, it's a comment line
