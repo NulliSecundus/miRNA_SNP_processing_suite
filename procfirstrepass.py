@@ -11,6 +11,8 @@ def cli(mirandafile, procsnpfile, mirna, output):
 		loadsnp(procsnpfile)
 		print(len(snpInfo))
 		print(len(snpInfo[0]))
+		print(len(snpInfo[0][0]))
+		return
 	except:
 		print("Failed to load snp file")
 		return
