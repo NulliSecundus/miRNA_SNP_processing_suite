@@ -12,6 +12,8 @@ def cli(mirandafile, procsnpfile, mirna, output):
 		print(len(snpInfo))
 		print(len(snpInfo[0]))
 		print(snpInfo[0][0])
+		print(snpInfo[1][0])
+		print(snpInfo[2][0])
 		return
 	except:
 		print("Failed to load snp file")
@@ -112,8 +114,11 @@ def loadsnp(procSnpFasta):
 					count = count+1
 					
 					if count%50000 == 0:
+						headerLine = [rsStart, rsNum]
+						snpSubInfo.insert(0, headerLine)
 						snpInfo.append(snpSubInfo)
 						snpSubInfo = []
+						rsStart = rsNum
 					
 				elif line[0]=="#":
 					#Do nothing, it's a comment line
