@@ -199,6 +199,7 @@ def buildReprocList(mirandaFile):
 
 def addSequences():
 	print('Loading sequences into reprocess list')
+	print(len(reprocessList))
 	mirnaName = ""
 	snpName = ""
 	count = 0
