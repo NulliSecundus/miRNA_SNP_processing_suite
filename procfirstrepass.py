@@ -9,6 +9,7 @@ def cli(mirandafile, procsnpfile, mirna, output):
 	try:
 		# Run loadsnp
 		loadsnp(procsnpfile)
+		print(len(snpInfo))
 	except:
 		print("Failed to load snp file")
 		return
@@ -194,6 +195,9 @@ def buildReprocList(mirandaFile):
 					
 					return
 					'''
+					
+		# TODO: reorganize reprocessList into twenty subsections
+		
 	except:
 		print('Could not build reprocess list from miranda file')
 
