@@ -85,7 +85,7 @@ def loadsnp(procSnpFasta):
 					
 					alleleIndex = alleleIndex + 1
 					
-				elif line[0]=="\n":
+				elif line[0]=="\n": 
 					# End of sequence
 					temp = [snpName, alleleNum, allele, sequence]
 					snpInfo.append(temp)
@@ -213,6 +213,7 @@ def addSequences():
 		
 		if count%50==0:
 			print(count)
+			print(reprocessList[count-1])
 		
 def iterateMiranda():
 	try: 
