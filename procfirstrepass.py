@@ -114,7 +114,7 @@ def loadsnp(procSnpFasta):
 						'''
 					count = count+1
 					
-					if count%50000 == 0:
+					if count%10000 == 0:
 						rsEnd = int(rsNum)
 						headerLine = [rsStart, rsEnd]
 						snpSubInfo.insert(0, headerLine)
@@ -241,6 +241,7 @@ def addSequences():
 		if count%50==0:
 			print(count)
 			print(reprocessList[count-1])
+			return
 		
 def iterateMiranda():
 	try: 
@@ -294,10 +295,26 @@ def checkAlleleCount(name, num, mirna):
 
 # Returns the sequence associated with the given SNP name
 def snpSeq(snpName):
+	nameSplit = snpName.split("|")
+	rsText = nameSplit[2]
+	rsNum = int(rsText[2:])
+
 	for line in snpInfo:
-		snpCmp = line[0]
-		if snpCmp == snpName:
-			return str(line[3])
+		rsStart = line[0][0]
+		rsEnd = line[0][1]
+		if (rsNum > rsStart) and (rsNum >= rsEnd):
+			for entry in line[1:]:
+				'''
+				snpCmp = entry[0]
+				cmpNameSplit = snpCmp.split("|")
+				cmpRsText = cmpNameSplit[2]
+				cmpRsNum = int(cmpRsText[2:])
+				'''
+				cmpRsNum = entry[4]
+				if cmpRsNum == rsNum:
+					return str(entry[3])
+					
+	print("Failed to locate SNP Sequence")
 	
 # Returns the sequence associated with the given miRNA name	
 def mirnaSeq(mirnaName):
