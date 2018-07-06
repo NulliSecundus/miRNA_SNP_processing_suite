@@ -84,6 +84,7 @@ def loadsnp(procSnpFasta):
 					
 					rsNum = headerSplt[2].split(" ")
 					rsNum = rsNum[0][2:]
+					rsEnd = int(rsNum)
 					
 					alleles = headerSplt[8]
 					alleles = alleles[8:]
@@ -101,7 +102,7 @@ def loadsnp(procSnpFasta):
 					
 				elif line[0]=="\n": 
 					# End of sequence
-					temp = [snpName, alleleNum, allele, sequence, int(rsNum)]
+					temp = [snpName, alleleNum, allele, sequence, rsEnd]
 					snpSubInfo.append(temp)
 					'''
 					if count%1000000 == 0:
@@ -115,7 +116,6 @@ def loadsnp(procSnpFasta):
 					count = count+1
 					
 					if count%10000 == 0:
-						rsEnd = int(rsNum)
 						headerLine = [rsStart, rsEnd]
 						snpSubInfo.insert(0, headerLine)
 						snpInfo.append(snpSubInfo)
@@ -131,7 +131,10 @@ def loadsnp(procSnpFasta):
 					# Sequence line 
 					sequence = line
 					sequence = sequence.replace('\n', '')
-
+					
+			headerLine = [rsStart, rsEnd]
+			snpSubInfo.insert(0, headerLine)
+			snpInfo.append(snpSubInfo)
 	except:
 		print('Could not parse processed snp fasta file')
 	
