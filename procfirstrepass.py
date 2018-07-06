@@ -14,7 +14,7 @@ def cli(mirandafile, procsnpfile, mirna, output):
 		print(snpInfo[0][1])
 		print(snpInfo[0][0])
 		print(snpInfo[1][0])
-		print(snpInfo[2][0])
+		print(snpInfo[2900][0])
 		
 	except:
 		print("Failed to load snp file")
@@ -297,19 +297,21 @@ def snpSeq(snpName):
 	nameSplit = snpName.split("|")
 	rsText = nameSplit[2]
 	rsNum = int(rsText[2:])
-	print(rsNum)
+	#print(rsNum)
 
 	for line in snpInfo:
 		rsStart = line[0][0]
 		rsEnd = line[0][1]
-		
+		'''
 		print(rsStart)
 		print(rsEnd)
 		print((rsNum > rsStart) and (rsNum <= rsEnd))
 		return
-		
+		'''
 		if ((rsNum > rsStart) and (rsNum <= rsEnd)):
 			print("found sublist")
+			print(rsStart)
+			print(rsEnd)
 			for entry in line[1:]:
 				'''
 				snpCmp = entry[0]
@@ -319,6 +321,7 @@ def snpSeq(snpName):
 				'''
 				cmpRsNum = entry[4]
 				if cmpRsNum == rsNum:
+					print("found entry")
 					return str(entry[3])
 					
 	print("Failed to locate SNP Sequence")
