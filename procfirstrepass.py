@@ -14,10 +14,10 @@ def cli(mirandafile, procsnpfile, mirna, output):
 		print(snpInfo[0][1])
 		print(snpInfo[0][0])
 		print(snpInfo[1][0])
-		print(snpInfo[2][0])
+		print(snpInfo[1458][0])
 		
 	except:
-		print("Failed to load snp file")
+		print("Failed to load SNP file")
 		return
 	try:
 		# Run loadrna
@@ -111,16 +111,18 @@ def loadsnp(procSnpFasta):
 					else:
 						if count != 0:
 							snpSubInfo.append(temp)
+							if rsSet==960618749:
+								print(temp)
 						temp = [snpName, rsEnd, alleleNum, allele, sequence]
 						rsSet = rsEnd
 						
 						count = count+1
-						if count%10000 == 0:
+						if count%5000 == 0:
 							headerLine = [rsStart, rsEnd]
 							snpSubInfo.insert(0, headerLine)
 							snpInfo.append(snpSubInfo)
 							
-							# Reset sub-list and rsStart number
+							# Reset SNP sub-list and rsStart number
 							snpSubInfo = []
 							rsStart = rsEnd
 							
