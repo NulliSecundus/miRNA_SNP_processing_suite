@@ -257,7 +257,7 @@ def addSequences():
 		line[2] = snpSeq(snpName)
 		count += 1
 		
-		if count%10000==0:
+		if count%100000==0:
 			print(count)
 			#print(reprocessList[count-1])
 		
