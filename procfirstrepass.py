@@ -66,6 +66,7 @@ def loadsnp(procSnpFasta):
 		sequence = ""
 		rsStart = 0
 		rsEnd = 0
+		rsSet = 0
 		
 		with open(procSnpFasta) as f:
 			for line in f:
@@ -102,8 +103,21 @@ def loadsnp(procSnpFasta):
 					
 				elif line[0]=="\n": 
 					# End of sequence
-					temp = [snpName, alleleNum, allele, sequence, rsEnd]
-					snpSubInfo.append(temp)
+					# TODO populate each temp line with 
+					# [snpName, rsEnd, alleleNum, allele, sequence, allele, sequence, etc...]
+					
+					if rsSet == rsEnd:
+						#TODO
+						temp.extend([allele, sequence])
+					else:
+						#TODO
+						if count != 0:
+							snpSubInfo.append(temp)
+							print(temp)
+							return
+						temp = [snpName, rsEnd, alleleNum, allele, sequence]
+						rsSet = rsEnd
+					
 					'''
 					if count%1000000 == 0:
 						print(count)
@@ -220,8 +234,6 @@ def buildReprocList(mirandaFile):
 					
 					return
 					'''
-					
-		# TODO: reorganize reprocessList into twenty subsections
 		
 	except:
 		print('Could not build reprocess list from miranda file')
@@ -237,13 +249,15 @@ def addSequences():
 		mirnaName = line[0]
 		snpName = line[1]
 		line.insert(1, mirnaSeq(mirnaName))
-		temp = [snpSeq(snpName)]
-		line.extend(temp)
+		#temp = [snpSeq(snpName)]
+		#line.extend(temp)
+		line[2] = snpSeq(snpName)
 		count += 1
 		
-		if count%5000==0:
+		if count%10000==0:
 			print(count)
 			print(reprocessList[count-1])
+			return
 		
 def iterateMiranda():
 	try: 
@@ -327,11 +341,15 @@ def snpSeq(snpName):
 				cmpRsNum = entry[4]
 				if cmpRsNum == rsNum:
 					#print("found entry")
+					'''
+					seqArray = [[seq1]
+								[seq2]
+								[seq3]]
+								'''
 					return str(entry[3])
 					
 	print("Failed to locate SNP Sequence")
 	print(snpName)
-	print(rsNum)
 	
 # Returns the sequence associated with the given miRNA name	
 def mirnaSeq(mirnaName):
