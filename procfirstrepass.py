@@ -259,8 +259,7 @@ def addSequences():
 		
 		if count%10000==0:
 			print(count)
-			print(reprocessList[count-1])
-			return
+			#print(reprocessList[count-1])
 		
 def iterateMiranda():
 	try: 
