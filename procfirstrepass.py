@@ -113,7 +113,17 @@ def loadsnp(procSnpFasta):
 							snpSubInfo.append(temp)
 						temp = [snpName, rsEnd, alleleNum, allele, sequence]
 						rsSet = rsEnd
-					
+						
+						count = count+1
+						if count%10000 == 0:
+							headerLine = [rsStart, rsEnd]
+							snpSubInfo.insert(0, headerLine)
+							snpInfo.append(snpSubInfo)
+							
+							# Reset sub-list and rsStart number
+							snpSubInfo = []
+							rsStart = rsEnd
+							
 					'''
 					if count%1000000 == 0:
 						print(count)
@@ -123,16 +133,7 @@ def loadsnp(procSnpFasta):
 						
 						return
 						'''
-					count = count+1
-					
-					if count%10000 == 0:
-						headerLine = [rsStart, rsEnd]
-						snpSubInfo.insert(0, headerLine)
-						snpInfo.append(snpSubInfo)
 						
-						# Reset sub-list and rsStart number
-						snpSubInfo = []
-						rsStart = rsEnd
 					
 				elif line[0]=="#":
 					#Do nothing, it's a comment line
