@@ -103,18 +103,14 @@ def loadsnp(procSnpFasta):
 					
 				elif line[0]=="\n": 
 					# End of sequence
-					# TODO populate each temp line with 
+					# populate each temp line with 
 					# [snpName, rsEnd, alleleNum, allele, sequence, allele, sequence, etc...]
 					
 					if rsSet == rsEnd:
-						#TODO
 						temp.extend([allele, sequence])
 					else:
-						#TODO
 						if count != 0:
 							snpSubInfo.append(temp)
-							print(temp)
-							return
 						temp = [snpName, rsEnd, alleleNum, allele, sequence]
 						rsSet = rsEnd
 					
@@ -338,7 +334,7 @@ def snpSeq(snpName):
 				cmpRsText = cmpNameSplit[2]
 				cmpRsNum = int(cmpRsText[2:])
 				'''
-				cmpRsNum = entry[4]
+				cmpRsNum = entry[1]
 				if cmpRsNum == rsNum:
 					#print("found entry")
 					'''
@@ -346,7 +342,13 @@ def snpSeq(snpName):
 								[seq2]
 								[seq3]]
 								'''
-					return str(entry[3])
+					seqArray = []
+					snpIndex = 1
+					for n in range(entry[2]):
+						temp = [entry[snpIndex+2], entry[snpIndex+3]
+						seqArray.append(temp)
+						snpIndex += 2
+					return seqArray
 					
 	print("Failed to locate SNP Sequence")
 	print(snpName)
