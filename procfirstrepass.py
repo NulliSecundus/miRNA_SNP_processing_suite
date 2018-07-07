@@ -345,7 +345,7 @@ def snpSeq(snpName):
 					seqArray = []
 					snpIndex = 1
 					for n in range(entry[2]):
-						temp = [entry[snpIndex+2], entry[snpIndex+3]
+						temp = [entry[snpIndex+2], entry[snpIndex+3]]
 						seqArray.append(temp)
 						snpIndex += 2
 					return seqArray
