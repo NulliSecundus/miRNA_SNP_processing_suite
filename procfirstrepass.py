@@ -14,7 +14,7 @@ def cli(mirandafile, procsnpfile, mirna, output):
 		print(snpInfo[0][1])
 		print(snpInfo[0][0])
 		print(snpInfo[1][0])
-		print(snpInfo[2900][0])
+		print(snpInfo[2][0])
 		
 	except:
 		print("Failed to load snp file")
