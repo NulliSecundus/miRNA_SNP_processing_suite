@@ -126,7 +126,7 @@ def loadsnp(procSnpFasta):
 							
 							# Reset SNP sub-list and rsStart number
 							snpSubInfo = []
-							rsStart = rsEnd
+							rsStart = rsSet
 						
 						rsSet = rsEnd
 					'''
@@ -322,25 +322,11 @@ def snpSeq(snpName):
 	for line in snpInfo:
 		rsStart = line[0][0]
 		rsEnd = line[0][1]
-		'''
-		print(rsStart)
-		print(rsEnd)
-		print((rsNum > rsStart) and (rsNum <= rsEnd))
-		return
-		'''
+
 		if ((rsNum > rsStart) and (rsNum <= rsEnd)):
-			'''
-			print("found sublist")
-			print(rsStart)
-			print(rsEnd)
-			'''
+
 			for entry in line[1:]:
-				'''
-				snpCmp = entry[0]
-				cmpNameSplit = snpCmp.split("|")
-				cmpRsText = cmpNameSplit[2]
-				cmpRsNum = int(cmpRsText[2:])
-				'''
+
 				cmpRsNum = entry[1]
 				if cmpRsNum == rsNum:
 					#print("found entry")
@@ -352,7 +338,10 @@ def snpSeq(snpName):
 					seqArray = []
 					snpIndex = 1
 					for n in range(entry[2]):
-						temp = [entry[snpIndex+2], entry[snpIndex+3]]
+						label = snpName + "|" + str(entry[2])
+						label += "|" + entry[snpIndex+2]
+						temp = [label, entry[snpIndex+3]]
+						
 						seqArray.append(temp)
 						snpIndex += 2
 					return seqArray
