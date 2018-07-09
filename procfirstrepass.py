@@ -270,6 +270,9 @@ def iterateMiranda():
 		# Clear memory of unused variables
 		snpInfo = None
 		mirnaInfo = None
+		
+		count = 0
+		
 		'''
 		print(reprocessList[0])
 		print(len(reprocessList))
@@ -286,6 +289,11 @@ def iterateMiranda():
 			with open(outputFile, "a") as text_file:
 				# Print to file 
 				print("{}".format(scoreLine), file=text_file)
+			
+			count += 1
+			
+			if count%10000==0:
+				print(count)
 
 	except:
 		print("Failed to run miranda on reprocess list")
