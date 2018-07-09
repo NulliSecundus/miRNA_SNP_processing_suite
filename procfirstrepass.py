@@ -277,23 +277,24 @@ def iterateMiranda():
 		print(reprocessList[0])
 		print(len(reprocessList))
 		'''
-		print("Running miranda on reprocess list")
+		print("Success: reprocess list complete, running miranda")
 		
 		# Iterate through list of SNP-miRNA pairs that need to be reprocessed 
-		# Add line to condensed final output file
+		# Add score line to condensed final output file
 		
-		for line in reprocessList:
-			scoreLine = runMiranda(line)
-			
-			outputFile = "condensed_chr1_pass1.txt"
-			with open(outputFile, "a") as text_file:
+		outputFile = "condensed_chr1_pass1.txt"
+		with open(outputFile, "a") as final_output:
+			for line in reprocessList:
+				scoreLine = runMiranda(line)
+				return
+				
 				# Print to file 
-				print("{}".format(scoreLine), file=text_file)
-			
-			count += 1
-			
-			if count%10000==0:
-				print(count)
+				print("{}".format(scoreLine), file=final_output)
+				
+				count += 1
+				
+				if count%10000==0:
+					print(count)
 
 	except:
 		print("Failed to run miranda on reprocess list")
@@ -412,30 +413,29 @@ def runMiranda(reprocessLine):
 		"miranda", 
 		"temp_mirna_input.fasta", 
 		"temp_snp_input.fasta", 
-		"-out",
-		"temp_miranda_output.txt",
+		#"-out",
+		#"temp_miranda_output.txt",
 		"-sc",
 		"206.0",
 		"-noenergy",
 		"-quiet",
 		"-keyval"
 	]
-	subprocess.run(toRun, check=True)
+	completedProcess = subprocess.run(toRun, stdout=subprocess.PIPE, encoding="utf-8")
+	mirandaText = completedProcess.stdout
 	
 	# Delete temp input files
 	toRun = ["rm", "temp_mirna_input.fasta", "temp_snp_input.fasta"]
 	subprocess.run(toRun, check=True)
 	
-	# Open and retrieve data score line from output file 
-	outputFile = "temp_miranda_output.txt"
-	with open(outputFile) as f:
-		for line in f:
-			if line[0:2]=='>h':
-				toReturn = line.rstrip()
-				
-	# Delete temp output file
-	toRun = ["rm", "temp_miranda_output.txt"]
-	subprocess.run(toRun, check=True)
+	print(mirandaText)
+	return
+	
+	'''
+	for line in f:
+		if line[0:2]=='>h':
+			toReturn = line.rstrip()
+	'''
 	
 	# Return the score line
 	return toReturn
