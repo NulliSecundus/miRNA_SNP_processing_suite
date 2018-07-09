@@ -259,7 +259,7 @@ def addSequences():
 		count += 1
 		
 		#if count%100000==0:
-		if count%10=0:
+		if count%10==0:
 			print(count)
 			#print(reprocessList[count-1])
 			return
