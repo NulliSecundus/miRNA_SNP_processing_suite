@@ -268,6 +268,8 @@ def iterateMiranda():
 		
 		# Iterate through list of SNP-miRNA pairs that need to be reprocessed 
 		# Add score line to condensed final output file
+		# TODO: implement file for error output 
+		# TODO: implement file input/output naming variation
 		
 		outputFile = "condensed_chr1_pass1.txt"
 		with open(outputFile, "a") as final_output:
