@@ -1,4 +1,5 @@
 import click
+import subprocess
 
 @click.command()
 @click.argument('mirandafile')
@@ -257,9 +258,11 @@ def addSequences():
 		line[2] = snpSeq(snpName)
 		count += 1
 		
-		if count%100000==0:
+		#if count%100000==0:
+		if count%10=0:
 			print(count)
 			#print(reprocessList[count-1])
+			return
 		
 def iterateMiranda():
 	try: 
@@ -268,15 +271,46 @@ def iterateMiranda():
 		print("success")
 		
 		# Iterate through list of SNP-miRNA pairs that need to be reprocessed 
-		# Create input text files for SNP and miRNA fasta seqs
-		# Run miranda on each pair
-		# Output to output text file
-		# Delete input text files
+		# Create temp input text files for SNP and miRNA fasta seqs
+		# Run miranda on each pair using temp input files
+		# Output to temp output text file
+		# Delete temp input text files
 		# Open output text file, store line, delete output text file
 		# Add line to condensed final output file
+		
+		outputFile = "temp_mirna_input.fasta"
+		with open(outputFile, "a") as text_file:
+			header = reprocessList[0][0]
+			sequence = reprocessList[0][1]
+			
+			# Print to file 
+			print("{}".format(header), file=text_file)
+			print("{}".format(sequence), file=text_file)
+			
+		outputFile = "temp_snp_input.fasta"
+		with open(outputFile, "a") as text_file:
+			snpArray = reprocessList[0][2]
+			header = snpArray[0][0]
+			sequence = snpArray[0][1]
+			
+			# Print to file 
+			print("{}".format(header), file=text_file)
+			print("{}".format(sequence), file=text_file)
+		
+		toRun = [
+			"miranda", 
+			"temp_mirna_input.fasta", 
+			"temp_snp_input.fasta", 
+			"-out testPythonMirandaOutput.txt",
+			"-sc 206.0",
+			"-noenergy",
+			"-quiet",
+			"-keyval"
+		]
+		subprocess.run(toRun, check=True)
 
 	except:
-		print("error")
+		print("Failed to run miranda on reprocess list")
 		
 # DEPRECIATED: checks the available vs. found allele num for a given SNP seq 
 def checkAlleleCount(name, num, mirna):
@@ -330,9 +364,10 @@ def snpSeq(snpName):
 				if cmpRsNum == rsNum:
 					#print("found entry")
 					'''
-					seqArray = [[seq1]
-								[seq2]
-								[seq3]]
+					seqArray = [[label1, seq1]
+								[label2, seq2]
+								[label3, seq3]]
+								...
 								'''
 					seqArray = []
 					snpIndex = 1
