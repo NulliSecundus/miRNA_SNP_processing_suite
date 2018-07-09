@@ -267,51 +267,24 @@ def addSequences():
 		
 def iterateMiranda():
 	try: 
+		# Clear memory of unused variables
+		snpInfo = None
+		mirnaInfo = None
+		
 		print(reprocessList[0])
 		print(len(reprocessList))
 		print("success")
 		
 		# Iterate through list of SNP-miRNA pairs that need to be reprocessed 
-		# Create temp input text files for SNP and miRNA fasta seqs
-		# Run miranda on each pair using temp input files
-		# Output to temp output text file
-		# Delete temp input text files
-		# Open output text file, store line, delete output text file
 		# Add line to condensed final output file
 		
-		outputFile = "temp_mirna_input.fasta"
-		with open(outputFile, "a") as text_file:
-			header = reprocessList[0][0]
-			sequence = reprocessList[0][1]
+		for line in reprocessList:
+			scoreLine = runMiranda(line)
 			
-			# Print to file 
-			print("{}".format(header), file=text_file)
-			print("{}".format(sequence), file=text_file)
-			
-		outputFile = "temp_snp_input.fasta"
-		with open(outputFile, "a") as text_file:
-			snpArray = reprocessList[0][2]
-			for entry in snpArray:
-				header = entry[0]
-				sequence = entry[1]
-				
+			outputFile = "condensed_chr1_pass1.txt"
+			with open(outputFile, "a") as text_file:
 				# Print to file 
-				print("{}".format(header), file=text_file)
-				print("{}".format(sequence), file=text_file)
-		
-		toRun = [
-			"miranda", 
-			"temp_mirna_input.fasta", 
-			"temp_snp_input.fasta", 
-			"-out",
-			"testPythonMirandaOutput.txt",
-			"-sc",
-			"206.0",
-			"-noenergy",
-			"-quiet",
-			"-keyval"
-		]
-		subprocess.run(toRun, check=True)
+				print("{}".format(scoreLine), file=text_file)
 
 	except:
 		print("Failed to run miranda on reprocess list")
@@ -395,3 +368,65 @@ def mirnaSeq(mirnaName):
 		mirnaCmp = mirnaCmp[0]
 		if mirnaCmp == mirnaName:
 			return str(line[1])
+			
+def runMiranda(reprocessLine):
+	# Create temp input text files for miRNA and SNP fasta seqs
+	# Run miranda on each pair using temp input files
+	# Output to temp output text file
+	# Delete temp input text files
+	# Open output text file, store line, delete output text file
+	
+	toReturn = None
+		
+	outputFile = "temp_mirna_input.fasta"
+	with open(outputFile, "a") as text_file:
+		header = reprocessLine[0]
+		sequence = reprocessLine[1]
+		
+		# Print to file 
+		print("{}".format(header), file=text_file)
+		print("{}".format(sequence), file=text_file)
+		
+	outputFile = "temp_snp_input.fasta"
+	with open(outputFile, "a") as text_file:
+		snpArray = reprocessLine[2]
+		for entry in snpArray:
+			header = entry[0]
+			sequence = entry[1] + "\n"
+			
+			# Print to file 
+			print("{}".format(header), file=text_file)
+			print("{}".format(sequence), file=text_file)
+	
+	# Run miranda
+	toRun = [
+		"miranda", 
+		"temp_mirna_input.fasta", 
+		"temp_snp_input.fasta", 
+		"-out",
+		"temp_miranda_output.txt",
+		"-sc",
+		"206.0",
+		"-noenergy",
+		"-quiet",
+		"-keyval"
+	]
+	subprocess.run(toRun, check=True)
+	
+	# Delete temp input files
+	toRun = ["rm", "temp_mirna_input.fasta", "temp_snp_input.fasta"]
+	subprocess.run(toRun, check=True)
+	
+	# Open and retrieve data score line from output file 
+	outputFile = "temp_miranda_output.txt"
+	with open(outputFile) as f:
+		for line in f:
+			if line[0:2]=='>h':
+				toReturn = line.rstrip()
+				
+	# Delete temp output file
+	toRun = ["rm", "temp_miranda_output.txt"]
+	subprocess.run(toRun, check=True)
+	
+	# Return the score line
+	return toReturn
