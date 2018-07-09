@@ -375,7 +375,7 @@ def snpSeq(snpName):
 					seqArray = []
 					snpIndex = 1
 					for n in range(entry[2]):
-						label = snpName + "|" + str(entry[2])
+						label = ">" + snpName + "|" + str(entry[2])
 						label += "|" + entry[snpIndex+2]
 						temp = [label, entry[snpIndex+3]]
 						
