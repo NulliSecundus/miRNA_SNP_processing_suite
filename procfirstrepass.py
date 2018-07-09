@@ -10,13 +10,14 @@ def cli(mirandafile, procsnpfile, mirna, output):
 	try:
 		# Run loadsnp
 		loadsnp(procsnpfile)
+		'''
 		print(len(snpInfo))
 		print(len(snpInfo[0]))
 		print(snpInfo[0][1])
 		print(snpInfo[0][0])
 		print(snpInfo[1][0])
 		print(snpInfo[2916][0])
-		
+		'''
 	except:
 		print("Failed to load SNP file")
 		return
@@ -268,7 +269,7 @@ def iterateMiranda():
 	try: 
 		print(reprocessList[0])
 		print(len(reprocessList))
-		print("success")
+		#print("success")
 		
 		# Iterate through list of SNP-miRNA pairs that need to be reprocessed 
 		# Create temp input text files for SNP and miRNA fasta seqs
@@ -301,8 +302,10 @@ def iterateMiranda():
 			"miranda", 
 			"temp_mirna_input.fasta", 
 			"temp_snp_input.fasta", 
-			"-out testPythonMirandaOutput.txt",
-			"-sc 206.0",
+			"-out",
+			"testPythonMirandaOutput.txt",
+			"-sc",
+			"206.0",
 			"-noenergy",
 			"-quiet",
 			"-keyval"
