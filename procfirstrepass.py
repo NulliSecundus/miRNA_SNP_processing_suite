@@ -278,6 +278,7 @@ def iterateMiranda():
 				if scoreLine != None:
 					print("{}".format(scoreLine), file=final_output)
 				else:
+					print("Error")
 					print(line)
 				
 				count += 1
@@ -402,8 +403,6 @@ def runMiranda(reprocessLine):
 		"miranda", 
 		"temp_mirna_input.fasta", 
 		"temp_snp_input.fasta", 
-		#"-out",
-		#"temp_miranda_output.txt",
 		"-sc",
 		"206.0",
 		"-noenergy",
@@ -417,6 +416,9 @@ def runMiranda(reprocessLine):
 	for line in mirandaTextArray:
 		if line[0:2]=='>h':
 			toReturn = line.rstrip()
+	
+	if toReturn==None:
+		print(mirandaText)
 	
 	# Delete temp input files
 	toRun = ["rm", "temp_mirna_input.fasta", "temp_snp_input.fasta"]
