@@ -8,42 +8,14 @@ import subprocess
 @click.argument('output')
 def cli(mirandafile, procsnpfile, mirna, output):
 	try:
-		# Run loadsnp
 		loadsnp(procsnpfile)
-		'''
-		print(len(snpInfo))
-		print(len(snpInfo[0]))
-		print(snpInfo[0][1])
-		print(snpInfo[0][0])
-		print(snpInfo[1][0])
-		print(snpInfo[2916][0])
-		'''
-	except:
-		print("Failed to load SNP file")
-		return
-	try:
-		# Run loadrna
 		loadrna(mirna)
-	except:
-		print("Failed to load miRNA file")
-		return
-	try:
-		# Run buildReprocList on original miranda output
 		buildReprocList(mirandafile)
-	except:
-		print("Failed to parse miranda file")
-		return
-	try:
-		# Run addSequences to add sequences to reprocess list 
 		addSequences()
-	except:
-		print("Failed to add sequences to re-process list")
 		return
-	try:
-		# Run iterateMiranda to reprocess list
 		iterateMiranda()
 	except:
-		printo("Failed to re-process with miranda")
+		print("Error")
 		return
 
 if __name__ == '__main__':
@@ -239,13 +211,12 @@ def buildReprocList(mirandaFile):
 					
 					return
 					'''
-		
+				
 	except:
 		print('Could not build reprocess list from miranda file')
 
 def addSequences():
 	print('Loading sequences into reprocess list')
-	#print(len(reprocessList))
 	mirnaName = ""
 	snpName = ""
 	count = 0
@@ -254,16 +225,30 @@ def addSequences():
 		mirnaName = line[0]
 		snpName = line[1]
 		line.insert(1, mirnaSeq(mirnaName))
-		#temp = [snpSeq(snpName)]
-		#line.extend(temp)
 		line[2] = snpSeq(snpName)
 		count += 1
 		
-		#if count%100000==0:
-		if count%10==0:
+		if count%100000==0:
+			#if count%10==0:
 			print(count)
-			#print(reprocessList[count-1])
-			return
+			#return
+			
+	count=0
+	outputFile = "chr1_restrict_file.txt"
+	with open(outputFile, "a") as final_output:
+		for line in reprocessList:	
+			mirnaName = line[0]
+			snpArray = line[2]
+			
+			# Print to file 
+			for entry in snpArray:
+				toPrint = mirnaName + "\t" + entry[0]
+				print("{}".format(toPrint), file=final_output)
+			
+			count += 1
+			
+			if count%100000==0:
+				print(count)
 		
 def iterateMiranda():
 	try: 
