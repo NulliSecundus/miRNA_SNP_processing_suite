@@ -245,7 +245,7 @@ def buildReprocList(mirandaFile):
 
 def addSequences():
 	print('Loading sequences into reprocess list')
-	print(len(reprocessList))
+	#print(len(reprocessList))
 	mirnaName = ""
 	snpName = ""
 	count = 0
@@ -259,21 +259,22 @@ def addSequences():
 		line[2] = snpSeq(snpName)
 		count += 1
 		
-		#if count%100000==0:
-		if count%10==0:
+		if count%100000==0:
+			#if count%10==0:
 			print(count)
 			#print(reprocessList[count-1])
-			return
+			#return
 		
 def iterateMiranda():
 	try: 
 		# Clear memory of unused variables
 		snpInfo = None
 		mirnaInfo = None
-		
+		'''
 		print(reprocessList[0])
 		print(len(reprocessList))
-		print("success")
+		'''
+		print("Running miranda on reprocess list")
 		
 		# Iterate through list of SNP-miRNA pairs that need to be reprocessed 
 		# Add line to condensed final output file
