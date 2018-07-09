@@ -12,7 +12,7 @@ def cli(mirandafile, procsnpfile, mirna, output):
 		loadrna(mirna)
 		buildReprocList(mirandafile)
 		addSequences()
-		return
+		#return
 		iterateMiranda()
 	except:
 		print("Error")
@@ -233,6 +233,7 @@ def addSequences():
 			print(count)
 			#return
 			
+	'''
 	count=0
 	outputFile = "chr1_restrict_file.txt"
 	with open(outputFile, "a") as final_output:
@@ -249,6 +250,7 @@ def addSequences():
 			
 			if count%100000==0:
 				print(count)
+	'''
 		
 def iterateMiranda():
 	try: 
@@ -408,12 +410,13 @@ def runMiranda(reprocessLine):
 	]
 	completedProcess = subprocess.run(toRun, stdout=subprocess.PIPE, encoding="utf-8")
 	mirandaText = completedProcess.stdout
+	mirandaTextArray = mirandaText.split("\n")
 	
 	# Delete temp input files
 	toRun = ["rm", "temp_mirna_input.fasta", "temp_snp_input.fasta"]
 	subprocess.run(toRun, check=True)
 	
-	print(mirandaText)
+	print(mirandaTextArray)
 	return
 	
 	'''
