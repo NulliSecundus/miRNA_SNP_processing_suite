@@ -1,19 +1,21 @@
 import click
 import subprocess
+from random import *
 
 @click.command()
 @click.argument('mirandafile')
 @click.argument('procsnpfile')
-@click.argument('mirna')
+@click.argument('mirnafile')
 @click.argument('output')
-def cli(mirandafile, procsnpfile, mirna, output):
+@click.option('--verbose', is_flag=True, help='''Output additional information to
+	the console''')
+def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 	try:
 		loadsnp(procsnpfile)
-		loadrna(mirna)
+		loadrna(mirnafile)
 		buildReprocList(mirandafile)
 		addSequences()
-		#return
-		iterateMiranda()
+		iterateMiranda(output)
 	except:
 		print("Error")
 		return
@@ -177,7 +179,6 @@ def buildReprocList(mirandaFile):
 		# Search snpInfo for the entry, compare to temp container num
 		# If (available - output) > 0, then add SNP-miRNA pair to reprocess list
 		
-		#tempCont = []
 		count = 0
 		current = ""
 		alleleCount = 1
@@ -205,12 +206,7 @@ def buildReprocList(mirandaFile):
 				'''	
 				if count%1000000 == 0:
 					print(count)
-					
-					for entry in reprocessList:
-						print(entry)
-					
-					return
-					'''
+				'''
 				
 	except:
 		print('Could not build reprocess list from miranda file')
@@ -229,30 +225,9 @@ def addSequences():
 		count += 1
 		
 		if count%100000==0:
-			#if count%10==0:
 			print(count)
-			#return
-			
-	'''
-	count=0
-	outputFile = "chr1_restrict_file.txt"
-	with open(outputFile, "a") as final_output:
-		for line in reprocessList:	
-			mirnaName = line[0]
-			snpArray = line[2]
-			
-			# Print to file 
-			for entry in snpArray:
-				toPrint = mirnaName + "\t" + entry[0]
-				print("{}".format(toPrint), file=final_output)
-			
-			count += 1
-			
-			if count%100000==0:
-				print(count)
-	'''
 		
-def iterateMiranda():
+def iterateMiranda(outputFile):
 	try: 
 		# Clear memory of unused variables
 		snpInfo = None
@@ -261,32 +236,31 @@ def iterateMiranda():
 		count = 0
 		
 		'''
-		print(reprocessList[0])
 		print(len(reprocessList))
 		'''
+		
 		print("Success: reprocess list complete, running miranda")
 		
 		# Iterate through list of SNP-miRNA pairs that need to be reprocessed 
 		# Add score line to condensed final output file
-		# TODO: implement file for error output 
-		# TODO: implement file input/output naming variation
 		
-		outputFile = "condensed_chr1_pass1.txt"
+		#outputFile = "repass1_sc206_chr1.txt"
+		errorFile = outputFile.strip(".txt") + "_error_log.txt"
 		with open(outputFile, "a") as final_output:
-			for line in reprocessList:
-				scoreLine = runMiranda(line)
-				
-				# Print to file 
-				if scoreLine != None:
-					print("{}".format(scoreLine), file=final_output)
-				else:
-					print("Error")
-					print(line)
-				
-				count += 1
-				
-				if count%500==0:
-					print(count)
+			with open(errorFile, "a") as error_log:
+				for line in reprocessList:
+					scoreLine = runMiranda(line)
+					
+					# Print to file 
+					if scoreLine != None:
+						print("{}".format(scoreLine), file=final_output)
+					else:
+						print("{}".format(line), file=error_log)
+					
+					count += 1
+					
+					if count%100000==0:
+						print(count)
 
 	except:
 		print("Failed to run miranda on reprocess list")
@@ -379,9 +353,10 @@ def runMiranda(reprocessLine):
 	# Open output text file, store line, delete output text file
 	
 	toReturn = None
+	sig = str(randint(1,999999999999))
 		
-	outputFile = "temp_mirna_input.fasta"
-	with open(outputFile, "a") as text_file:
+	tempmirna = "temp_mirna_" + sig + "_input.fasta"
+	with open(tempmirna, "a") as text_file:
 		header = reprocessLine[0]
 		sequence = reprocessLine[1]
 		
@@ -389,8 +364,8 @@ def runMiranda(reprocessLine):
 		print("{}".format(header), file=text_file)
 		print("{}".format(sequence), file=text_file)
 		
-	outputFile = "temp_snp_input.fasta"
-	with open(outputFile, "a") as text_file:
+	tempsnp = "temp_snp_" + sig + "_input.fasta"
+	with open(tempsnp, "a") as text_file:
 		snpArray = reprocessLine[2]
 		for entry in snpArray:
 			header = entry[0]
@@ -419,21 +394,14 @@ def runMiranda(reprocessLine):
 		if line[0:2]=='>h':
 			toReturn = line.rstrip()
 	
+	'''
 	if toReturn==None:
 		print(mirandaText)
+	'''
 	
 	# Delete temp input files
-	toRun = ["rm", "temp_mirna_input.fasta", "temp_snp_input.fasta"]
+	toRun = ["rm", tempmirna, tempsnp]
 	subprocess.run(toRun, check=True)
-	
-	'''
-	print(mirandaTextArray)
-	return
-	
-	for line in f:
-		if line[0:2]=='>h':
-			toReturn = line.rstrip()
-	'''
 	
 	# Return the score line
 	return toReturn
