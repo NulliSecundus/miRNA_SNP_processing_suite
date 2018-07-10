@@ -2,11 +2,6 @@ import click
 import subprocess
 from random import *
 
-snpInfo = []
-mirnaInfo = []
-reprocessList = []
-sig = str(randint(1,999999999999))
-
 @click.command()
 @click.argument('mirandafile')
 @click.argument('procsnpfile')
@@ -27,6 +22,10 @@ def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 
 if __name__ == '__main__':
 	pass
+	
+snpInfo = []
+mirnaInfo = []
+reprocessList = []
 	
 def loadsnp(procSnpFasta):
 	
@@ -236,6 +235,7 @@ def iterateMiranda(outputFile):
 		snpInfo = None
 		mirnaInfo = None
 		
+		sig = str(randint(1,999999999999))
 		count = 0
 		
 		'''
@@ -252,7 +252,7 @@ def iterateMiranda(outputFile):
 		with open(outputFile, "a") as final_output:
 			with open(errorFile, "a") as error_log:
 				for line in reprocessList:
-					scoreLine = runMiranda(line)
+					scoreLine = runMiranda(line, sig)
 					
 					# Print to file 
 					if scoreLine != None:
@@ -347,7 +347,7 @@ def mirnaSeq(mirnaName):
 		if mirnaCmp == mirnaName:
 			return str(line[1])
 			
-def runMiranda(reprocessLine):
+def runMiranda(reprocessLine, sig):
 	# Create temp input text files for miRNA and SNP fasta seqs
 	# Run miranda on each pair using temp input files
 	# Output to temp output text file
