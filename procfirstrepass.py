@@ -2,6 +2,11 @@ import click
 import subprocess
 from random import *
 
+snpInfo = []
+mirnaInfo = []
+reprocessList = []
+sig = str(randint(1,999999999999))
+
 @click.command()
 @click.argument('mirandafile')
 @click.argument('procsnpfile')
@@ -22,11 +27,6 @@ def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 
 if __name__ == '__main__':
 	pass
-
-snpInfo = []
-mirnaInfo = []
-reprocessList = []
-sig = str(randint(1,999999999999))
 	
 def loadsnp(procSnpFasta):
 	
