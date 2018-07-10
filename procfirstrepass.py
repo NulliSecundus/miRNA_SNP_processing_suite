@@ -1,6 +1,6 @@
 import click
 import subprocess
-from random import *
+import secrets
 
 @click.command()
 @click.argument('mirandafile')
@@ -235,7 +235,7 @@ def iterateMiranda(outputFile):
 		snpInfo = None
 		mirnaInfo = None
 		
-		sig = str(randint(1,999999999999))
+		sig = str(secrets.randbelow(999999999999))
 		count = 0
 		
 		'''
@@ -357,7 +357,7 @@ def runMiranda(reprocessLine, sig):
 	toReturn = None
 		
 	tempmirna = "temp_mirna_" + sig + "_input.fasta"
-	with open(tempmirna, "a") as text_file:
+	with open(tempmirna, "w") as text_file:
 		header = reprocessLine[0]
 		sequence = reprocessLine[1]
 		
@@ -366,7 +366,7 @@ def runMiranda(reprocessLine, sig):
 		print("{}".format(sequence), file=text_file)
 		
 	tempsnp = "temp_snp_" + sig + "_input.fasta"
-	with open(tempsnp, "a") as text_file:
+	with open(tempsnp, "w") as text_file:
 		snpArray = reprocessLine[2]
 		for entry in snpArray:
 			header = entry[0]
