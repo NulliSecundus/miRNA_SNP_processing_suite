@@ -379,8 +379,8 @@ def runMiranda(reprocessLine, sig):
 	# Run miranda
 	toRun = [
 		"miranda", 
-		"temp_mirna_input.fasta", 
-		"temp_snp_input.fasta", 
+		tempmirna, 
+		tempsnp, 
 		"-sc",
 		"206.0",
 		"-noenergy",
