@@ -26,11 +26,12 @@ if __name__ == '__main__':
 snpInfo = []
 mirnaInfo = []
 reprocessList = []
+sig = str(randint(1,999999999999))
 	
 def loadsnp(procSnpFasta):
 	
 	try:
-		print("Loading SNP fasta file")
+		print("Loading SNP fasta file (may take a few minutes)")
 		
 		snpSubInfo = []
 		count = 0
@@ -212,7 +213,7 @@ def buildReprocList(mirandaFile):
 		print('Could not build reprocess list from miranda file')
 
 def addSequences():
-	print('Loading sequences into reprocess list')
+	print('Loading sequences into reprocess list (may take a few minutes)')
 	mirnaName = ""
 	snpName = ""
 	count = 0
@@ -224,8 +225,10 @@ def addSequences():
 		line[2] = snpSeq(snpName)
 		count += 1
 		
+		'''
 		if count%100000==0:
 			print(count)
+		'''
 		
 def iterateMiranda(outputFile):
 	try: 
@@ -258,9 +261,10 @@ def iterateMiranda(outputFile):
 						print("{}".format(line), file=error_log)
 					
 					count += 1
-					
+					'''
 					if count%100000==0:
 						print(count)
+					'''
 
 	except:
 		print("Failed to run miranda on reprocess list")
@@ -303,7 +307,6 @@ def snpSeq(snpName):
 	nameSplit = snpName.split("|")
 	rsText = nameSplit[2]
 	rsNum = int(rsText[2:])
-	#print(rsNum)
 
 	for line in snpInfo:
 		rsStart = line[0][0]
@@ -315,7 +318,6 @@ def snpSeq(snpName):
 
 				cmpRsNum = entry[1]
 				if cmpRsNum == rsNum:
-					#print("found entry")
 					'''
 					seqArray = [[label1, seq1]
 								[label2, seq2]
@@ -353,7 +355,6 @@ def runMiranda(reprocessLine):
 	# Open output text file, store line, delete output text file
 	
 	toReturn = None
-	sig = str(randint(1,999999999999))
 		
 	tempmirna = "temp_mirna_" + sig + "_input.fasta"
 	with open(tempmirna, "a") as text_file:
