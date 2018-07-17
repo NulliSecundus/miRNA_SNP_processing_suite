@@ -35,35 +35,35 @@ def processInput(chromReport, snpFasta, outputFile, v):
 	try:
 		count = 0
 		with open(snpFasta) as f:
-			for line in f:
-				if line[0]==">":
-					sequence = ""
-					header = line
-					header = header.replace('\n', '')
-					headerSplt = header.split("|")
-					rsNum = headerSplt[2].split(" ")
-					rsNum = rsNum[0][2:]
+			with open(outputFile, "a") as text_file:
+				for line in f:
+					if line[0]==">":
+						sequence = ""
+						header = line
+						header = header.replace('\n', '')
+						headerSplt = header.split("|")
+						rsNum = headerSplt[2].split(" ")
+						rsNum = rsNum[0][2:]
 
-					unique = (int(refInfo[index][1])==2)
-					gene = (len(refInfo[index][12])>1)
+						unique = (int(refInfo[index][1])==2)
+						gene = (len(refInfo[index][12])>1)
 
-					pos = headerSplt[3]
-					pos = int(pos[4:])
+						pos = headerSplt[3]
+						pos = int(pos[4:])
 
-					snpClass = headerSplt[7]
-					snpClass = snpClass[6:]
-					stdSNP = (snpClass == '1')
-                        
-					alleles = headerSplt[8]
-					alleles = alleles[8:]
-					alleles = alleles.replace('\"','')
-					alleles = alleles.split('/')
-					alleleNum = len(alleles)
+						snpClass = headerSplt[7]
+						snpClass = snpClass[6:]
+						stdSNP = (snpClass == '1')
+							
+						alleles = headerSplt[8]
+						alleles = alleles[8:]
+						alleles = alleles.replace('\"','')
+						alleles = alleles.split('/')
+						alleleNum = len(alleles)
 
-					index += 1
-				elif line[0]=="\n":
-					if unique and gene and stdSNP and (pos>25):
-						with open(outputFile, "a") as text_file:
+						index += 1
+					elif line[0]=="\n":
+						if unique and gene and stdSNP and (pos>25):
 							sequence = sequence.replace('\n', '')
 							sequence = sequence.replace(' ', '')
 							sequence += '\n'
@@ -92,10 +92,10 @@ def processInput(chromReport, snpFasta, outputFile, v):
 								if v:
 									if count%10000==0:
 										print(count)
-				elif line[0]=="#":
-					#Do nothing, it's a comment line
-					pass
-				else:
-					sequence += line
+					elif line[0]=="#":
+						#Do nothing, it's a comment line
+						pass
+					else:
+						sequence += line
 	except:
 		print('Could not read snp fasta file')
