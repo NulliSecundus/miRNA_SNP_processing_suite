@@ -19,10 +19,15 @@ def processInput(chromReport, snpFasta, outputFile, v):
 	try:
 		refInfo = []
 		with open(chromReport) as f:
-			for line in f:
+			for line in f[7:]:
 				lineSplit = line.split("\t")
-				refInfo.append(lineSplit[:13])
-		refInfo = refInfo[7:]
+				lineSplit = lineSplit[:13]
+				tempLine = [
+					int(lineSplit[0]),
+					int(lineSplit[1]),
+					lineSplit[12]
+				]
+				refInfo.append(tempLine)
 		sequence = ""
 		header = ""
 		index = 0
@@ -42,11 +47,16 @@ def processInput(chromReport, snpFasta, outputFile, v):
 						header = line
 						header = header.replace('\n', '')
 						headerSplt = header.split("|")
-						rsNum = headerSplt[2].split(" ")
-						rsNum = rsNum[0][2:]
+						rs = headerSplt[2].split(" ")
+						rsNum = int(rs[0][2:])
 
-						unique = (int(refInfo[index][1])==2)
-						gene = (len(refInfo[index][12])>1)
+						tempLine = rsSearch(rsNum)
+						if tempLine == None :
+							unique = False
+							gene = False
+						else:
+							unique = (tempLine[1]==2)
+							gene = (len(tempLine[2])>1)
 
 						pos = headerSplt[3]
 						pos = int(pos[4:])
@@ -73,8 +83,8 @@ def processInput(chromReport, snpFasta, outputFile, v):
 						
 						index += 1
 					elif line[0]=="\n":
-						#if unique and gene and stdSNP and (pos>25):
-						if stdSNP and (pos>25):
+						if unique and gene and stdSNP and (pos>25):
+						#if stdSNP and (pos>25):
 							sequence = sequence.replace('\n', '')
 							sequence = sequence.replace(' ', '')
 							sequence += '\n'
@@ -113,3 +123,9 @@ def processInput(chromReport, snpFasta, outputFile, v):
 						sequence += line
 	except:
 		print('Could not read snp fasta file')
+		
+def rsSearch(rsNumber):
+	for line in refInfo:
+		if line[0]==rsNumber:
+			return line
+	return None
