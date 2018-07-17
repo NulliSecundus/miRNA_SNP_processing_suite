@@ -19,7 +19,9 @@ def processInput(chromReport, snpFasta, outputFile, v):
 	try:
 		refInfo = []
 		with open(chromReport) as f:
-			for line in f[7:]:
+			for x in range(7):
+				next(f)
+			for line in f:
 				lineSplit = line.split("\t")
 				lineSplit = lineSplit[:13]
 				tempLine = [
