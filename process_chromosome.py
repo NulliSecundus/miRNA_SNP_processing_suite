@@ -75,7 +75,7 @@ def processInput(chromReport, snpFasta, outputFile, v):
 								else:
 									seqChop += allele
 								seqChop += sequence[pos:pos+25]
-								seqChop += "\n"
+								seqChop += "\n" 
 								
 								# Modify header with allele info
 								label = header.split(" ")
