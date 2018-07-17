@@ -67,6 +67,7 @@ def processInput(chromReport, snpFasta, outputFile, v):
 							print(gene)
 							print(stdSNP)
 							print(pos>25)
+							print(refInfo[index])
 							return
 
 						index += 1
