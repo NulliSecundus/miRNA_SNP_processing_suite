@@ -51,6 +51,8 @@ def processInput(chromReport, snpFasta, outputFile, v):
 						headerSplt = header.split("|")
 						rs = headerSplt[2].split(" ")
 						rsNum = int(rs[0][2:])
+						print(rsNum)
+						print(refInfo[0])
 
 						tempLine = rsSearch(rsNum)
 						if tempLine == None :
@@ -127,6 +129,7 @@ def processInput(chromReport, snpFasta, outputFile, v):
 		print('Could not read snp fasta file')
 		
 def rsSearch(rsNumber):
+	print("rs search")
 	for line in refInfo:
 		if line[0]==rsNumber:
 			return line
