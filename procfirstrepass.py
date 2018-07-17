@@ -27,6 +27,7 @@ snpInfo = []
 mirnaInfo = []
 reprocessList = []
 	
+# Loads the SNP sequence file into memory 
 def loadsnp(procSnpFasta):
 	
 	try:
@@ -130,7 +131,8 @@ def loadsnp(procSnpFasta):
 			snpInfo.append(snpSubInfo)
 	except:
 		print('Could not parse processed snp fasta file')
-	
+
+# Loads the miRNA file into memory 		
 def loadrna(miRNA):
 	
 	try:
@@ -169,6 +171,7 @@ def loadrna(miRNA):
 	except:
 		print('Could not parse miRNA file')
 
+# Populates the reprocess list with labels for each pair 
 def buildReprocList(mirandaFile):
 	try: 
 		print('Building reprocess list from miranda file')
@@ -211,6 +214,7 @@ def buildReprocList(mirandaFile):
 	except:
 		print('Could not build reprocess list from miranda file')
 
+# Adds sequences to each identification label in the reprocess list 
 def addSequences():
 	print('Loading sequences into reprocess list (may take a few minutes)')
 	mirnaName = ""
@@ -228,7 +232,8 @@ def addSequences():
 		if count%100000==0:
 			print(count)
 		'''
-		
+
+# Iteratively runs miranda on the list of SNP-miRNA pairs to be processed
 def iterateMiranda(outputFile):
 	try: 
 		# Clear memory of unused variables
@@ -346,7 +351,8 @@ def mirnaSeq(mirnaName):
 		mirnaCmp = mirnaCmp[0]
 		if mirnaCmp == mirnaName:
 			return str(line[1])
-			
+	
+# Runs miranda on the given SNP-miRNA pair from the reprocess entry 	
 def runMiranda(reprocessLine, sig):
 	# Create temp input text files for miRNA and SNP fasta seqs
 	# Run miranda on each pair using temp input files

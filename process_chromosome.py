@@ -62,21 +62,18 @@ def processInput(chromReport, snpFasta, outputFile, v):
 
 					index += 1
 				elif line[0]=="\n":
-					if unique and gene and stdSNP:
+					if unique and gene and stdSNP and (pos>25):
 						with open(outputFile, "a") as text_file:
 							sequence = sequence.replace('\n', '')
 							sequence = sequence.replace(' ', '')
 							sequence += '\n'
-                            
+								
 							for allele in alleles:
-								if pos>=26:
-									seqChop = sequence[pos-26:pos-1]
-								#seqChop += " "
+								seqChop = sequence[pos-26:pos-1]
 								if allele=='-':
 									seqChop += ''
 								else:
 									seqChop += allele
-									#seqChop += " "
 								seqChop += sequence[pos:pos+25]
 								seqChop += "\n"
 								
