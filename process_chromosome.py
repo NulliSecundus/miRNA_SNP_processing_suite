@@ -128,11 +128,8 @@ def processInput(chromReport, snpFasta, outputFile, v):
 		print('Could not read snp fasta file')
 		
 def rsSearch(rsNumber):
-	print(index)
-	print(len(refInfo))
 	for n in range(index, len(refInfo)):
-		print(refInfo[n])
 		if refInfo[n][0]==rsNumber:
 			index = n 
-			return item
+			return refInfo[n]
 	return None
