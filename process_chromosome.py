@@ -60,6 +60,14 @@ def processInput(chromReport, snpFasta, outputFile, v):
 						alleles = alleles.replace('\"','')
 						alleles = alleles.split('/')
 						alleleNum = len(alleles)
+						
+						if int(rsNum) == 62247966:
+							print(found)
+							print(unique)
+							print(gene)
+							print(stdSNP)
+							print(pos>25)
+							break
 
 						index += 1
 					elif line[0]=="\n":

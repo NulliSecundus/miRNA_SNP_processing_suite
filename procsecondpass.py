@@ -30,7 +30,6 @@ reprocessList = []
 	
 # Loads the SNP sequence file into memory 
 def loadsnp(procSnpFasta):
-	
 	try:
 		print("Loading SNP fasta file (may take a few minutes)")
 		
