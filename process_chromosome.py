@@ -62,12 +62,12 @@ def processInput(chromReport, snpFasta, outputFile, v):
 						alleleNum = len(alleles)
 						
 						if int(rsNum) == 62247966:
-							print(found)
+							print("found")
 							print(unique)
 							print(gene)
 							print(stdSNP)
 							print(pos>25)
-							break
+							return
 
 						index += 1
 					elif line[0]=="\n":
