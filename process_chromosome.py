@@ -1,5 +1,6 @@
 import click
 refInfo = []
+index = 0
 
 @click.command()
 @click.argument('reportfile')
@@ -32,7 +33,6 @@ def processInput(chromReport, snpFasta, outputFile, v):
 				refInfo.append(tempLine)
 		sequence = ""
 		header = ""
-		index = 0
 		unique = False
 		gene = False
 		stdSNP = False
@@ -51,19 +51,17 @@ def processInput(chromReport, snpFasta, outputFile, v):
 						headerSplt = header.split("|")
 						rs = headerSplt[2].split(" ")
 						rsNum = int(rs[0][2:])
-						print(rsNum)
-						print(refInfo[0])
 
 						tempLine = rsSearch(rsNum)
-						print("found rs")
 						if tempLine == None :
 							unique = False
 							gene = False
+							print("Error")
+							return
 						else:
 							unique = (tempLine[1]==2)
 							gene = (len(tempLine[2])>1)
 
-						print("assigned truth values")
 						pos = headerSplt[3]
 						pos = int(pos[4:])
 
@@ -87,7 +85,6 @@ def processInput(chromReport, snpFasta, outputFile, v):
 							return
 						'''
 						
-						index += 1
 					elif line[0]=="\n":
 						if unique and gene and stdSNP and (pos>25):
 						#if stdSNP and (pos>25):
@@ -131,13 +128,8 @@ def processInput(chromReport, snpFasta, outputFile, v):
 		print('Could not read snp fasta file')
 		
 def rsSearch(rsNumber):
-	print("rs search")
-	
-	for item in refInfo:
-		print("comparing: ")
-		print(item[0])
-		print(rsNumber)
-		if item[0]==rsNumber:
+	for n in range(index, len(refInfo)):
+		if refInfo[n]==rsNumber:
+			index = n 
 			return item
-			
 	return None
