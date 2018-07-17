@@ -133,6 +133,9 @@ def processInput(chromReport, snpFasta, outputFile, v):
 def rsSearch(rsNumber):
 	print("rs search")
 	for item in refInfo:
+		print("comparing: ")
+		print(item[0])
+		print(rsNumber)
 		if item[0]==rsNumber:
 			return item
 	return None
