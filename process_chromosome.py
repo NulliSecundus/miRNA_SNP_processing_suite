@@ -133,8 +133,6 @@ def rsSearch(rsNumber):
 	global index
 	global refInfo
 	
-	print(index)
-	print(len(refInfo))
 	for n in range(index, len(refInfo)):
 		if refInfo[n][0]==rsNumber:
 			index = n 
