@@ -55,6 +55,7 @@ def processInput(chromReport, snpFasta, outputFile, v):
 						print(refInfo[0])
 
 						tempLine = rsSearch(rsNum)
+						print("found rs")
 						if tempLine == None :
 							unique = False
 							gene = False
@@ -62,6 +63,7 @@ def processInput(chromReport, snpFasta, outputFile, v):
 							unique = (tempLine[1]==2)
 							gene = (len(tempLine[2])>1)
 
+						print("assigned truth values")
 						pos = headerSplt[3]
 						pos = int(pos[4:])
 
@@ -130,7 +132,7 @@ def processInput(chromReport, snpFasta, outputFile, v):
 		
 def rsSearch(rsNumber):
 	print("rs search")
-	for line in refInfo:
-		if line[0]==rsNumber:
-			return line
+	for item in refInfo:
+		if item[0]==rsNumber:
+			return item
 	return None
