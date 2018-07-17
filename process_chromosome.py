@@ -1,4 +1,5 @@
 import click
+
 refInfo = []
 index = 0
 
@@ -18,6 +19,7 @@ if __name__ == '__main__':
 	pass
 
 def processInput(chromReport, snpFasta, outputFile, v):
+	global refInfo
 	try:
 		with open(chromReport) as f:
 			for x in range(7):
@@ -128,6 +130,9 @@ def processInput(chromReport, snpFasta, outputFile, v):
 		print('Could not read snp fasta file')
 		
 def rsSearch(rsNumber):
+	global index
+	global refInfo
+	
 	print(index)
 	print(len(refInfo))
 	for n in range(index, len(refInfo)):
