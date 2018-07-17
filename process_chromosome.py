@@ -67,6 +67,9 @@ def processInput(chromReport, snpFasta, outputFile, v):
 							sequence = sequence.replace('\n', '')
 							sequence = sequence.replace(' ', '')
 							sequence += '\n'
+							
+							if len(sequence) < 50:
+								continue
 								
 							for allele in alleles:
 								seqChop = sequence[pos-26:pos-1]
