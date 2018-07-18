@@ -19,9 +19,9 @@ def parseScore(mirandaOut, outputFile, v, ut, lt):
 		print('processing miranda output file')
 		count = 0
 		for line in f:
-			if line[0]=='>':
+			if line[0:2]=='>>':
 				lineSplit = line.split('\t')
-				scorelist.append(float(lineSplit[2]))
+				scorelist.append(float(lineSplit[4]))
 				if v:
 					count += 1
 					if count%10000==0:
@@ -38,4 +38,5 @@ def parseScore(mirandaOut, outputFile, v, ut, lt):
 	print('Top ', ut, ' percentile is: ', up)
 	lp = np.percentile(scorelist, lt)  
 	print('Bottom ', lt, ' percentile is: ', lp)
+	np.histogram(scorelist)
 	print('Score Parse Complete')
