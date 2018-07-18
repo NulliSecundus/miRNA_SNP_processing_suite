@@ -1,5 +1,6 @@
 import click
 import numpy as np
+import matplotlib.pyplot as plt
 
 @click.command()
 @click.argument('mirandafile')
@@ -38,5 +39,7 @@ def parseScore(mirandaOut, outputFile, v, ut, lt):
 	print('Top ', ut, ' percentile is: ', up)
 	lp = np.percentile(scorelist, lt)  
 	print('Bottom ', lt, ' percentile is: ', lp)
-	np.histogram(scorelist)
+	plt.hist(scorelist, bins='auto')
+	plt.title("Parsed Scores")
+	plt.show()
 	print('Score Parse Complete')
