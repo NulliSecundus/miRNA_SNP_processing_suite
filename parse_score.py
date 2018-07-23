@@ -11,7 +11,7 @@ import numpy as np
 def cli(mirandafile, so, verbose, ut, lt, scorefile):
 	try:
 		if scorefile:
-			readScore()
+			readScore(mirandafile, verbose, ut, lt)
 		else:
 			parseScore(mirandafile, so, verbose, ut, lt)
 	except:
@@ -20,7 +20,7 @@ def cli(mirandafile, so, verbose, ut, lt, scorefile):
 def parseScore(mirandaOut, outputFile, v, ut, lt):
 	scorelist = []
 	with open(mirandaOut) as f:
-		print('processing miranda output file')
+		print('Processing miranda output file')
 		count = 0
 		for line in f:
 			if line[0:2]=='>>':
@@ -44,5 +44,19 @@ def parseScore(mirandaOut, outputFile, v, ut, lt):
 	print('Bottom ', lt, ' percentile is: ', lp)
 	print('Score Parse Complete')
 
-def readScore():
-	print("Parsing score file")
+def readScore(scoreFile, v, ut, lt):
+	scorelist = []
+	with open(scoreFile) as f:
+		print('Reading score file')
+		count = 0
+		for line in f:
+			scorelist.append(float(line))
+			if v:
+				count += 1
+				if count%10000==0:
+					print(count)
+	up = np.percentile(scorelist, ut)  
+	print('Top ', ut, ' percentile is: ', up)
+	lp = np.percentile(scorelist, lt)  
+	print('Bottom ', lt, ' percentile is: ', lp)
+	print('Score Parse Complete')
