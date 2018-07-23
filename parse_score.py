@@ -5,8 +5,8 @@ import numpy as np
 @click.argument('mirandafile')
 @click.option('-so', default='off', help='Print the parsed scores to the specified output file')
 @click.option('--verbose', is_flag=True, help='Keep a count of the number of scores processed and print to console')
-@click.option('-ut', default=90.0, help='The upper threshold in which the top percentile is calculated\tDefault 90.0')
-@click.option('-lt', default=10.0, help='The lower threshold in which the bottom percentile is calculated\tDefault 10.0')
+@click.option('-ut', default=90.0, help='The upper threshold in which the top percentile is calculated\nDefault 90.0')
+@click.option('-lt', default=10.0, help='The lower threshold in which the bottom percentile is calculated\nDefault 10.0')
 @click.option('--scorefile', is_flag=True, help='Flag if a pre-processed score file is provided instead of miranda output')
 def cli(mirandafile, so, verbose, ut, lt, scorefile):
 	try:
