@@ -35,10 +35,13 @@ def loadrna(mirnaFile):
 	
 def iterateMiranda(out, sc):
 	print("Running miranda on SNP part 1")
-	iterate = [1, 2, 3, 4, 5, 6]
+	iterate = []
+	for i in range(5):
+		temp = [str(i), " test", " result"]
+		iterate.append(temp)
 	with Pool() as p:
 		p.map(test, iterate)
 		
 def test(x):
-	result = "Result: " + str(x)
+	result = x[0] + x[1] + x[2]
 	print(result)
