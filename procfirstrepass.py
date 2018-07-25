@@ -19,9 +19,6 @@ def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 	except:
 		print("Error")
 		return
-
-if __name__ == '__main__':
-	pass
 	
 snpInfo = []
 mirnaInfo = []
