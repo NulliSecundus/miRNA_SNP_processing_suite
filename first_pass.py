@@ -1,6 +1,7 @@
 import click
 import subprocess
 import secrets
+from multiprocessing import Pool
 
 snpList = []
 rnaList = []
@@ -34,3 +35,10 @@ def loadrna(mirnaFile):
 	
 def iterateMiranda(out, sc):
 	print("Running miranda on SNP part 1")
+	
+	with Pool(5) as p:
+		p.map(test, [1, 2, 3])
+		
+def test(x):
+	result = "Result: " + str(x)
+	print(result)
