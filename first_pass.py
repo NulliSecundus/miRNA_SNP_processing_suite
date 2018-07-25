@@ -45,5 +45,3 @@ def iterateMiranda(out, sc):
 def test(x):
 	result = x[0] + x[1] + x[2]
 	print(result)
-	for n in range(999999999):
-		s = str(n)
