@@ -57,6 +57,8 @@ def loadsnp(snpFile):
 				pass
 			else:
 				snpBlock[1] = line.replace('\n', '')
+				
+	outputSnp(fileNum)
 	
 # Loads the miRNA file into memory and splits it every 200 entries 
 # Outputs each split section as a temp file for miranda 
