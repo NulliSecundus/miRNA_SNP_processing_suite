@@ -55,15 +55,14 @@ def loadsnp(snpFile):
 	with open(snpFile) as f:
 		for line in f:
 			if line[0]==">":
+				snpBlock = [line.replace('\n', ''), "seq"]
+			elif line[0]=="\n": 	
 				if snpBlock != None:
 					snpList.append(snpBlock)
 					count += 1
 					if count%3000000==0:
 						outputSnp(fileNum)
 						fileNum += 1
-				snpBlock = [line.replace('\n', ''), "seq"]
-			elif line[0]=="\n": 	
-				pass
 			else:
 				snpBlock[1] = line.replace('\n', '')
 				
