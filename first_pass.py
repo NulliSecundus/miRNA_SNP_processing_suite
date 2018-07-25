@@ -90,6 +90,15 @@ def test(x):
 # Utility function for printing current snpList to file
 def outputSnp(n):
 	global snpList
-	tempSnpFileName = sigID + "_snp_" + str(n) + ".fasta"
-	print(tempSnpFileName)
+	
+	tempSnpFileName = dir + sigID + "_snp_" + str(n) + ".fasta"
+	with open(tempSnpFileName, "w") as text_file:
+		for entry in snpList:
+			header = entry[0]
+			sequence = entry[1] + "\n"
+			
+			# Print to file 
+			print("{}".format(header), file=text_file)
+			print("{}".format(sequence), file=text_file)
+	
 	snpList = []
