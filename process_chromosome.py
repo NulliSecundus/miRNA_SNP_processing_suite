@@ -79,7 +79,6 @@ def processInput(chromReport, snpFasta, outputFile, v):
 						
 					elif line[0]=="\n":
 						if unique and gene and stdSNP and (pos>25):
-						#if stdSNP and (pos>25):
 							sequence = sequence.replace('\n', '')
 							sequence = sequence.replace(' ', '')
 							sequence += '\n'
