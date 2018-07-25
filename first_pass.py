@@ -7,6 +7,7 @@ snpList = []
 rnaList = []
 mirandaList = []
 sigID = None
+dir = None
 sc = None 
 
 @click.command()
@@ -30,7 +31,15 @@ def cli(snpfile, mirnafile, output, score):
 # Generates a unique signature ID to be used in file naming
 def genSig():
 	global sigID
+	global dir 
+	
 	sigID = str(secrets.randbelow(999999999999))
+	dir = "temp_" + sigID
+	
+	toRun = ["mkdir", dir]
+	subprocess.run(toRun, check=True)
+	
+	dir += "/"
 
 # Loads the SNP file into memory and splits it every 3 million entries
 # Outputs each split section as a temp file for miranda 	
@@ -81,6 +90,6 @@ def test(x):
 # Utility function for printing current snpList to file
 def outputSnp(n):
 	global snpList
-	tempSnpFileName = sigID + "-snp-" + str(n)
+	tempSnpFileName = sigID + "_snp_" + str(n) + ".fasta"
 	print(tempSnpFileName)
 	snpList = []
