@@ -106,12 +106,12 @@ def loadrna(mirnaFile):
 				rnaBlock[1] = line.replace('\n', '')
 				rnaList.append(rnaBlock)
 				count += 1
-				if count%90==0:
+				if count%80==0:
 					outputRna(fileNum)
 					fileNum += 1
 				
 	# Output any remaining miRNA entries
-	if count%90!=0:
+	if count%80!=0:
 		outputRna(fileNum)
 		
 	# Populate list of output files based on miRNA input files
