@@ -43,7 +43,7 @@ def genSig(snpFile, mirnaFile, out):
 	
 	dir += "/"
 	
-	infoFile = dir + sigID + "_README" + ".txt"
+	infoFile = dir + "README" + ".txt"
 	with open(infoFile, "w") as text_file:
 		header = "Input Parameters: "
 		
@@ -181,7 +181,7 @@ def runMiranda(x):
 	tempRnaFile = x[1]
 	
 	# Get the file number for output naming
-	textArray = tempSnpFile.replace('.fasta', '').split("_")
+	textArray = tempRnaFile.replace('.fasta', '').split("_")
 	fileNum = textArray[3]
 	
 	# Assign name of temp output file 
