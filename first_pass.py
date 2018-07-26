@@ -106,19 +106,18 @@ def loadrna(mirnaFile):
 				rnaBlock[1] = line.replace('\n', '')
 				rnaList.append(rnaBlock)
 				count += 1
-				if count%80==0:
+				if count%90==0:
 					outputRna(fileNum)
 					fileNum += 1
 				
 	# Output any remaining miRNA entries
-	if count%80!=0:
+	if count%90!=0:
 		outputRna(fileNum)
 		
 	# Populate list of output files based on miRNA input files
 	for n in range(fileNum):
 		outName = dir + sigID + "_out_" + str(n+1) + ".txt"
 		outputFileList.append(outName)
-		print(outName)
 	
 def iterateMiranda(out):
 	# Setup lists of files to iterate miranda over 
@@ -265,3 +264,7 @@ def parseMiranda(n):
 			for line in output_container:
 				# write each topLine to the output file 
 				print('{}'.format(line), file=o)
+
+		# Delete temp input files
+		toRun = ["rm", entry]
+		subprocess.run(toRun, check=True)
