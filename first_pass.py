@@ -2,6 +2,7 @@ import click
 import subprocess
 import secrets
 from multiprocessing import Pool
+import time;
 
 snpList = []
 snpFileList = []
@@ -44,8 +45,12 @@ def genSig(snpFile, mirnaFile, out):
 	
 	dir += "/"
 	
-	# TODO: add timestamp
+	# Create output file and add timestamp
+	with open(out, 'w') as o:
+		localtime = "# Start: " + time.asctime(time.localtime(time.time()))
+		print("{}".format(localtime), file=o)
 	
+	# Create README info file 
 	infoFile = dir + "README" + ".txt"
 	with open(infoFile, "w") as text_file:
 		header = "Input Parameters: "
@@ -137,6 +142,11 @@ def iterateMiranda(out):
 		parseMiranda(num)
 		appendOutput(out)
 		num += 1
+		
+	# Add ending timestamp to output file 
+	with open(out, 'a') as o:
+		localtime = "# End: " + time.asctime(time.localtime(time.time()))
+		print("{}".format(localtime), file=o)
 	
 # Utility function for printing current snpList to file
 def outputSnp(n):
