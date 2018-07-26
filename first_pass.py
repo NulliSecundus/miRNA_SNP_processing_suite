@@ -135,7 +135,7 @@ def iterateMiranda(out):
 		with Pool() as p:
 			p.map(runMiranda, entry)
 		parseMiranda(num)
-		appendOutput()
+		appendOutput(out)
 		num += 1
 	
 # Utility function for printing current snpList to file
@@ -267,5 +267,19 @@ def parseMiranda(n):
 		subprocess.run(toRun, check=True)
 		
 # Utility function for appending each compressed temp output to final
-def appendOutput():
-	pass
+def appendOutput(out):
+	for entry in outputFileList:
+		cmpOut = entry.replace('.txt', '_cmp.txt')
+		with open(cmpOut) as f:
+			with open(out, 'a') as o:
+				for line in f:
+					print('{}'.format(line), file=o)
+		
+		# Delete temp input files
+		toRun = ["rm", cmpOut]
+		subprocess.run(toRun, check=True)
+		
+	# Delete all temp files and folder
+	toRun = ["rm", "-rf", dir.replace('/', '')]
+	subprocess.run(toRun, check=True)
+		
