@@ -273,7 +273,7 @@ def appendOutput(out):
 		with open(cmpOut) as f:
 			with open(out, 'a') as o:
 				for line in f:
-					print('{}'.format(line), file=o)
+					print('{}'.format(line.replace('\n', '')), file=o)
 		
 		# Delete temp input files
 		toRun = ["rm", cmpOut]
