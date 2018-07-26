@@ -65,13 +65,37 @@ def loadsnp(snpFile):
 						fileNum += 1
 			else:
 				snpBlock[1] = line.replace('\n', '')
-				
-	outputSnp(fileNum)
+	
+	# Output any remaining SNP entries
+	if count%3000000!=0:
+		outputSnp(fileNum)
 	
 # Loads the miRNA file into memory and splits it every 200 entries 
 # Outputs each split section as a temp file for miranda 
 def loadrna(mirnaFile):
+	global rnaList
+	
 	print("Loading miRNA fasta file")
+	
+	rnaBlock = None
+	fileNum = 1
+	count = 0
+	
+	with open(mirnaFile) as f:
+		for line in f:
+			if line[0]==">":
+				rnaBlock = [line.replace('\n', ''), "seq"]
+			else:
+				rnaBlock[1] = line.replace('\n', '')
+				rnaList.append(rnaBlock)
+				count += 1
+				if count%200==0:
+					outputRna(fileNum)
+					fileNum += 1
+				
+	# Output any remaining miRNA entries
+	if count%200!=0:
+		outputRna(fileNum)
 	
 def iterateMiranda(out):
 	print("Running miranda on SNP part 1")
@@ -101,3 +125,19 @@ def outputSnp(n):
 			print("{}".format(sequence), file=text_file)
 	
 	snpList = []
+	
+# Utility function for printing current rnaList to file
+def outputRna(n):
+	global rnaList
+	
+	tempRnaFileName = dir + sigID + "_mirna_" + str(n) + ".fasta"
+	with open(tempRnaFileName, "w") as text_file:
+		for entry in rnaList:
+			header = entry[0]
+			sequence = entry[1] + "\n"
+			
+			# Print to file 
+			print("{}".format(header), file=text_file)
+			print("{}".format(sequence), file=text_file)
+	
+	rnaList = []
