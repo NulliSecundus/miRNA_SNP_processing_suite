@@ -182,7 +182,7 @@ def runMiranda(x):
 	
 	# Get the file number for output naming
 	textArray = tempSnpFile.replace('.fasta', '').split("_")
-	fileNum = textArray[2]
+	fileNum = textArray[3]
 	
 	# Assign name of temp output file 
 	tempOut = dir + sigID + "_out_" + fileNum + ".txt"
