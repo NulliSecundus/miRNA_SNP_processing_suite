@@ -4,8 +4,10 @@ import secrets
 from multiprocessing import Pool
 
 snpList = []
+snpFileList = []
 rnaList = []
-mirandaList = []
+rnaFileList = []
+mirandaList = [] # Ordered parameters to iterate miranda
 sigID = None
 dir = None
 sc = None 
@@ -17,10 +19,10 @@ sc = None
 @click.argument('score')
 def cli(snpfile, mirnafile, output, score):
 	global sc 
-	sc = score
+	sc = float(score)
 	
 	try:
-		genSig()
+		genSig(snpfile, mirnafile, output)
 		loadsnp(snpfile)
 		loadrna(mirnafile)
 		iterateMiranda(output)
@@ -29,7 +31,7 @@ def cli(snpfile, mirnafile, output, score):
 		return
 	
 # Generates a unique signature ID to be used in file naming
-def genSig():
+def genSig(snpFile, mirnaFile, out):
 	global sigID
 	global dir 
 	
@@ -40,6 +42,17 @@ def genSig():
 	subprocess.run(toRun, check=True)
 	
 	dir += "/"
+	
+	infoFile = dir + sigID + "_README" + ".txt"
+	with open(infoFile, "w") as text_file:
+		header = "Input Parameters: "
+		
+		# Print to file 
+		print("{}".format(header), file=text_file)
+		print("{}".format(snpFile), file=text_file)
+		print("{}".format(mirnaFile), file=text_file)
+		print("{}".format(out), file=text_file)
+		print("{}".format(sc), file=text_file)
 
 # Loads the SNP file into memory and splits it every 3 million entries
 # Outputs each split section as a temp file for miranda 	
@@ -98,6 +111,23 @@ def loadrna(mirnaFile):
 		outputRna(fileNum)
 	
 def iterateMiranda(out):
+	# Setup lists of files to iterate miranda over 
+	for entry in snpFileList:
+		tempMiranda = []
+		for line in rnaFileList:
+			tempMiranda.append([entry, line])
+		mirandaList.append(tempMiranda)
+	
+	num = 1
+	# Iteratively run miranda
+	for entry in mirandaList:
+		toPrint = "Running miranda on SNP part " + str(num)
+		print(toPrint)
+		with Pool() as p:
+			p.map(runMiranda, entry)
+		num += 1
+	
+	'''
 	print("Running miranda on SNP part 1")
 	iterate = []
 	for i in range(15):
@@ -105,6 +135,7 @@ def iterateMiranda(out):
 		iterate.append(temp)
 	with Pool() as p:
 		p.map(test, iterate)
+	'''
 		
 def test(x):
 	result = x[0] + x[1] + x[2]
@@ -124,6 +155,7 @@ def outputSnp(n):
 			print("{}".format(header), file=text_file)
 			print("{}".format(sequence), file=text_file)
 	
+	snpFileList.append(tempSnpFileName)
 	snpList = []
 	
 # Utility function for printing current rnaList to file
@@ -140,4 +172,33 @@ def outputRna(n):
 			print("{}".format(header), file=text_file)
 			print("{}".format(sequence), file=text_file)
 	
+	rnaFileList.append(tempRnaFileName)
 	rnaList = []
+	
+# Utility function for handling each iteration of miranda 
+def runMiranda(x):
+	tempSnpFile = x[0]
+	tempRnaFile = x[1]
+	
+	# Get the file number for output naming
+	textArray = tempSnpFile.replace('.fasta', '').split("_")
+	fileNum = textArray[2]
+	
+	# Assign name of temp output file 
+	tempOut = dir + sigID + "_out_" + fileNum + ".txt"
+	
+	# Run miranda
+	toRun = [
+		"miranda", 
+		tempRnaFile, 
+		tempSnpFile, 
+		"-sc",
+		str(sc),
+		"-noenergy",
+		"-quiet",
+		"-keyval",
+		"-out",
+		tempOut
+	]
+	subprocess.run(toRun, check=True)
+	
