@@ -19,15 +19,22 @@ Primary Commands:
 		the 5' or 3' UTR or CDS of any gene. Trims rs_chrN.fas entries to 25 bp
 		each side of SNP and creates separate FASTA entries for each allele.
 
-    compressmir [OPTIONS] MIRANDAFILE OUTPUT
-		Compresses a miranda output file by only retaining the top scoring hit 
-		from each miRNA-SNP pair and outputting to a text file. 
+    firstpass [OPTIONS] SNPFILE MIRNAFILE OUTPUT SCORE
+		Wrapper interface for running a miranda first pass. For the given 
+		snpFile, mirnaFile, and score threshold, iteratively runs miranda in 
+		parallel on small subsections of the input files and combines the 
+		outputs to a final processed output file. 
 		
-	procfirstpass
-		Process the (parsed) first pass miranda output
+	procfirstpass [OPTIONS] MIRANDAFILE
+		Parses a miranda output file for a given chromosome and only retains 
+		entries that have at least one, but not all, SNP alleles for a given 
+		SNP ID in the upper 80th percentile. 
 
-    secondpass
-		Process the second pass miranda output
+    secondpass [OPTIONS] 
+		Wrapper interface for running a miranda first pass.
+		
+	procsecondpass [OPTIONS]
+		Parses the miranda output for the second pass. 
 
 Utility Commands: 
 
@@ -46,18 +53,27 @@ Utility Commands:
 
 Files:
 
-	compressmir.py - python source file for compressmir command
-	
-	parse_mir.py - [DEPRECIATED] python source file for parsemir command
+	first_pass.py - python source file for firstpass command
 	
 	parse_score.py - python source file for parsescore command
 	
+	proc_first_pass.py - python source file for procfirstpass command
+	
+	proc_first_repass.py - python source file for procfirstrepass command
+	
+	proc_mirout.py - python source file for procmirout command
+	
+	proc_second_pass.py - python source file for procsecondpass command
+	
 	process_chromosome.py - python source file for procchrom command
 	
-	procmirout.py - python source file for procmirout command
-	
-	procsecondpass.py - python source file for secondpass command
+	second_pass.py - python source file for secondpass command
 	
 	setup.py - setuptools python source file
+	___________________________________________________________________________
+	
+	parse_mir.py - [DEPRECIATED] python source file for parsemir command
+	
+	compress_mir.py - [DEPRECIATED] python source file for compressmir command
 	
 	
