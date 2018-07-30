@@ -1,0 +1,24 @@
+miRNA SNP Processing Suite Installation
+=======================================
+
+REQUIREMENTS: Python 3 or later, Click (python package), numpy (python package)
+
+Clone the github repository to the desired local directory. 
+Navigate ('cd') to the top level of the local repository and run the following 
+
+	$ . venv/bin/activate
+	$ pip install --editable .
+	
+The following commands will now be available
+
+	$ procchrom
+	
+	$ firstpass
+	
+	$ procfirstpass
+	
+	$ secondpass
+	
+	$ procsecondpass
+	
+	$ parsescore

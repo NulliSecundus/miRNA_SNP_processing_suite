@@ -61,8 +61,6 @@ Files:
 	
 	proc_first_repass.py - python source file for procfirstrepass command
 	
-	proc_mirout.py - python source file for procmirout command
-	
 	proc_second_pass.py - python source file for procsecondpass command
 	
 	process_chromosome.py - python source file for procchrom command
