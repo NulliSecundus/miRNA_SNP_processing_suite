@@ -6,10 +6,12 @@ setup(
 	py_modules=[
 		'process_chromosome', 
 		'parse_score', 
-		'parse_mir', 
-		'compressmir', 
-		'procfirstrepass', 
-		'first_pass'
+		'compress_mir', 
+		'proc_first_repass', 
+		'first_pass', 
+		'proc_first_pass',
+		'second_pass',
+		'proc_second_pass'
 	],
 	install_requires=[
 		'Click',
@@ -19,9 +21,11 @@ setup(
 		[console_scripts]
 		procchrom=process_chromosome:cli
 		parsescore=parse_score:cli
-		parsemir=parse_mir:cli
-		compressmir=compressmir:cli
-		procfirstrepass=procfirstrepass:cli
+		compressmir=compress_mir:cli
+		procfirstrepass=proc_first_repass:cli
 		firstpass=first_pass:cli
+		procfirstpass=proc_first_pass:cli
+		secondpass=second_pass:cli
+		procsecondpass=proc_second_pass:cli
 	''',
 )

@@ -4,15 +4,17 @@ import secrets
 from multiprocessing import Pool
 import time;
 
-snpList = []
-snpFileList = []
-rnaList = []
-rnaFileList = []
+snpList = [] # List to hold SNP entries
+snpFileList = [] # List to hold names of SNP temp files 
+rnaList = [] # List to hold miRNA entries
+rnaFileList = [] # List to hold names of miRNA temp files 
 mirandaList = [] # Ordered parameters to iterate miranda
-outputFileList = []
-sigID = None
-dir = None
-sc = None 
+outputFileList = [] # List to hold names of temp miranda output files
+sigID = None # Unique signature ID for naming temp files and folder 
+dir = None # Directory for temp file storage 
+sc = None # Input score threshold (float) 
+snpSplit = 2000000 # Number of SNP entries per subsection
+rnaSplit = 80 # Number of miRNA entries per subsection
 
 @click.command()
 @click.argument('snpfile')
@@ -28,6 +30,7 @@ def cli(snpfile, mirnafile, output, score):
 		loadsnp(snpfile)
 		loadrna(mirnafile)
 		iterateMiranda(output)
+		print("Success")
 	except:
 		print("Error")
 		return
@@ -81,14 +84,14 @@ def loadsnp(snpFile):
 				if snpBlock != None:
 					snpList.append(snpBlock)
 					count += 1
-					if count%2000000==0:
+					if count%snpSplit==0:
 						outputSnp(fileNum)
 						fileNum += 1
 			else:
 				snpBlock[1] = line.replace('\n', '')
 	
 	# Output any remaining SNP entries
-	if count%2000000!=0:
+	if count%snpSplit!=0:
 		outputSnp(fileNum)
 	
 # Loads the miRNA file into memory and splits it every 200 entries 
@@ -111,12 +114,12 @@ def loadrna(mirnaFile):
 				rnaBlock[1] = line.replace('\n', '')
 				rnaList.append(rnaBlock)
 				count += 1
-				if count%80==0:
+				if count%rnaSplit==0:
 					outputRna(fileNum)
 					fileNum += 1
 				
 	# Output any remaining miRNA entries
-	if count%80!=0:
+	if count%rnaSplit!=0:
 		outputRna(fileNum)
 		
 	# Populate list of output files based on miRNA input files
@@ -143,6 +146,12 @@ def iterateMiranda(out):
 		appendOutput(out)
 		num += 1
 		
+	# Delete all temp files and folder
+	toPrint = "Clearing temporary files and folder"
+	print(toPrint)
+	toRun = ["rm", "-rf", dir.replace('/', '')]
+	subprocess.run(toRun, check=True)
+	
 	# Add ending timestamp to output file 
 	with open(out, 'a') as o:
 		localtime = "# End: " + time.asctime(time.localtime(time.time()))
@@ -272,7 +281,7 @@ def parseMiranda(n):
 				# write each topLine to the output file 
 				print('{}'.format(line), file=o)
 
-		# Delete temp input files
+		# Delete temp miranda output file
 		toRun = ["rm", entry]
 		subprocess.run(toRun, check=True)
 		
@@ -285,11 +294,6 @@ def appendOutput(out):
 				for line in f:
 					print('{}'.format(line.replace('\n', '')), file=o)
 		
-		# Delete temp input files
+		# Delete compressed temp output files
 		toRun = ["rm", cmpOut]
 		subprocess.run(toRun, check=True)
-		
-	# Delete all temp files and folder
-	toRun = ["rm", "-rf", dir.replace('/', '')]
-	subprocess.run(toRun, check=True)
-		
