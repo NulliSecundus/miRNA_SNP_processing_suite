@@ -1,10 +1,18 @@
 from setuptools import setup
 
-
 setup(
-	name='miRanda_input_processing',
+	name='miRNA_SNP_processing_suite',
 	version='1.0',
-	py_modules=['process_chromosome', 'parse_score', 'parse_mir', 'compressmir'],
+	py_modules=[
+		'process_chromosome', 
+		'parse_score', 
+		'compress_mir', 
+		'proc_first_repass', 
+		'first_pass', 
+		'proc_first_pass',
+		'second_pass',
+		'proc_second_pass'
+	],
 	install_requires=[
 		'Click',
 		'numpy'
@@ -13,7 +21,11 @@ setup(
 		[console_scripts]
 		procchrom=process_chromosome:cli
 		parsescore=parse_score:cli
-		parsemir=parse_mir:cli
-		compressmir=compressmir:cli
+		compressmir=compress_mir:cli
+		procfirstrepass=proc_first_repass:cli
+		firstpass=first_pass:cli
+		procfirstpass=proc_first_pass:cli
+		secondpass=second_pass:cli
+		procsecondpass=proc_second_pass:cli
 	''',
 )
