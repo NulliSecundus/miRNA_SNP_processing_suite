@@ -8,10 +8,13 @@ import numpy as np
 @click.option('-ut', default=90.0, help='The upper threshold in which the top percentile is calculated\nDefault 90.0')
 @click.option('-lt', default=10.0, help='The lower threshold in which the bottom percentile is calculated\nDefault 10.0')
 @click.option('--scorefile', is_flag=True, help='Flag if a pre-processed score file is provided instead of miranda output')
-def cli(mirandafile, so, verbose, ut, lt, scorefile):
+@click.option('--parsefile', is_flag=True, help='Flag if a parsed miranda output file is provided as input')
+def cli(mirandafile, so, verbose, ut, lt, scorefile, parsefile):
 	try:
 		if scorefile:
 			readScore(mirandafile, verbose, ut, lt)
+		elif parsefile:
+			parseScoreNew(mirandafile, so, verbose, ut, lt)
 		else:
 			parseScore(mirandafile, so, verbose, ut, lt)
 	except:
@@ -55,6 +58,33 @@ def readScore(scoreFile, v, ut, lt):
 				count += 1
 				if count%10000==0:
 					print(count)
+	up = np.percentile(scorelist, ut)  
+	print('Top ', ut, ' percentile is: ', up)
+	lp = np.percentile(scorelist, lt)  
+	print('Bottom ', lt, ' percentile is: ', lp)
+	print('Score Parse Complete')
+	
+def parseScoreNew(mirandaOut, outputFile, v, ut, lt):
+	scorelist = []
+	with open(mirandaOut) as f:
+		print('Processing miranda output file')
+		count = 0
+		for line in f:
+			if line[0]=='>':
+				lineSplit = line.split('\t')
+				scorelist.append(float(lineSplit[2]))
+				if v:
+					count += 1
+					if count%10000==0:
+						print(count)
+	if outputFile!="off":
+		try:
+			with open(outputFile, "a") as text_file:
+				print('Writing scores to output file')
+				for score in scorelist:
+					print('{}'.format(score), file=text_file)
+		except:
+			print('Could not print to output file')
 	up = np.percentile(scorelist, ut)  
 	print('Top ', ut, ' percentile is: ', up)
 	lp = np.percentile(scorelist, lt)  
