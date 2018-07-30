@@ -14,6 +14,7 @@ def parsemir(mirandaOut, outputFile):
 	print("Processing first pass miranda output file")
 	
 	snp = None # SNP container 
+	snpInfo = None # SNP ref info
 	snpID = "default" # SNP ID
 	
 	with open(mirandaOut) as f, open(outputFile, "a") as o:
@@ -28,7 +29,6 @@ def parsemir(mirandaOut, outputFile):
 						# Count number of SNP alleles in output 
 						# Compare to total number of SNP alleles 
 						snpNum = len(snp)
-						
 						snpTot = int(snpInfo[3])
 						
 						if snpNum < snpTot:
@@ -43,5 +43,15 @@ def parsemir(mirandaOut, outputFile):
 				else: 
 					snp.append(line.replace("\n", ""))
 			elif line[0]=="#":
+				if line[0:5]=="# End":
+					# Compare SNP alleles for the last SNP container 
+					snpNum = len(snp)
+					snpTot = int(snpInfo[3])
+					
+					if snpNum < snpTot:
+						# Print to file 
+						for entry in snp:
+							print("{}".format(entry), file=o)
+							
 				# Comment line, append to output file
 				print("{}".format(line.replace("\n", "")), file=o)
