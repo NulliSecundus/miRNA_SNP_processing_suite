@@ -21,9 +21,16 @@ rnaSplit = 80 # Number of miRNA entries per subsection
 @click.argument('mirnafile')
 @click.argument('output')
 @click.argument('score')
-def cli(snpfile, mirnafile, output, score):
+@click.option('-snp', default=2000000, help='Number of SNP entries per subsection\nDefault 2000000')
+@click.option('-rna', default=80, help='Number of miRNA entries per subsection\nDefault 80')
+def cli(snpfile, mirnafile, output, score, snp, rna):
 	global sc 
+	global snpSplit
+	global rnaSplit
+	
 	sc = float(score)
+	snpSplit = snp 
+	rnaSplit = rna 
 	
 	try:
 		genSig(snpfile, mirnafile, output)
