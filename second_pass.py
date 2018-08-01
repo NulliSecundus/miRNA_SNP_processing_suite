@@ -247,7 +247,7 @@ def buildSubBottomList(n):
 		
 		snpLine = snpSearch(rsNum)
 		
-		if snpLine = None:
+		if snpLine == None:
 			pass
 		
 		#print(snpLine)
