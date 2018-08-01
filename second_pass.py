@@ -205,6 +205,7 @@ def buildBottomList():
 	global bottomListParams
 	
 	print(len(topList))
+	print(len(topList[0]))
 	print("Building list of entries to process (may take a few minutes)")
 	
 	# For each SNP-miRNA entry in the top list
@@ -213,7 +214,7 @@ def buildBottomList():
 	
 	# Setup 30 entries in bottomList
 	for x in range(30):
-		bottomList.append(x)
+		bottomList.append([x])
 		
 	print(bottomList)
 	
