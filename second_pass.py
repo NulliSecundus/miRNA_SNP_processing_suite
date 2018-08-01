@@ -266,6 +266,8 @@ def buildSubBottomList(n):
 				sublist.append([mirna, mirnaSeq(mirna), snpAlleleName, checkAllele[1]])
 		count += 1
 	
+	toPrint = "Finished buildSubBottomList " + str(n)
+	print(toPrint)
 	bottomList[n] = sublist
 
 # Adds sequences to each identification label in the bottom list 
