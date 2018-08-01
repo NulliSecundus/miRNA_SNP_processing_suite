@@ -297,9 +297,10 @@ def snpSeq(snpName):
 # Searches the procSnpArray and returns the line for the given rsNum
 def snpSearch(rs):
 	for subsection in procSnpArray:
-		print(subsection[0])
-		if rs < subsection[0]:
+		print(subsection[0][0])
+		if rs < subsection[0][0]:
 			for line in subsection:
+				#print(line[0])
 				if rs == line[0]:
 					return line
 	print("Error: could not find SNP")
