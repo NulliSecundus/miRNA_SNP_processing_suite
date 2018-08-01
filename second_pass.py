@@ -223,7 +223,7 @@ def buildBottomList():
 	
 	print("Finished")
 	print(len(bottomList))
-	print(len(bottomList[0]))
+	print(bottomList[0])
 	
 def buildSubBottomList(n):
 	global bottomList
