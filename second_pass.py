@@ -17,19 +17,15 @@ bottomList = []
 def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 	try:
 		loadsnp(procsnpfile)
-		print(procSnpArray[0][0])
-		print(procSnpArray[0][1])
-		print(procSnpArray[0][2])
-		print(procSnpArray[1][0])
-		print(procSnpArray[2][0])
-		print(len(procSnpArray))
-		return
-		
 		loadrna(mirnafile)
 		loadTopList(mirandafile)
+		print(topList[0])
+		return
+		
 		buildBottomList()
 		addSequences()
 		iterateMiranda(output)
+		print("Success")
 	except:
 		print("Error")
 		return
@@ -120,7 +116,6 @@ def loadsnp(procSnpFasta):
 		headerLine = [rsNum]
 		snpSubArray.insert(0, headerLine)
 		procSnpArray.append(snpSubArray)
-		print(count)
 	
 # Loads the miRNA file into memory 
 def loadrna(miRNA):
@@ -160,42 +155,27 @@ def loadrna(miRNA):
 
 # Populates the list of top hit pairs
 def loadTopList(mirandaFile):
-	print('Building list of top hits from miranda file')
+	global topList
 	
-	# For each line in cleaned miranda output
-	# Populate temp container with same-name entries
-	# When new name appears, count num in temp container
-	# Search procSnpArray for the entry, compare to temp container num
-	# If (available - output) > 0, then add SNP-miRNA pair to reprocess list
+	print('Loading list of top hits from miranda file')
 	
-	count = 0
-	current = ""
-	alleleCount = 1
+	# For each line in processed miranda output
+	# Populate the top list with the miRNA and SNP rsNum pair 
 	
 	with open(mirandaFile) as f:
 		for line in f:
 			if line[0]==">":
-				lineEdit = line.split("\t")
+				lineSplit = line.split("\t")
+				
 				mirnaName = lineEdit[0]
+				
 				refName = lineEdit[1]
+				refSplit = refName.split("|")
+				rsNum = int(refSplit[2].replace("rs", ""))
 				
-				if refName != current:
-					if (current != "") and (alleleCount==1):
-						#checkAlleleCount(current, alleleCount, mirnaName)
-						temp = [mirnaName, current]
-						reprocessList.append(temp)
-					alleleCount = 1
-					current = refName
-				else:
-					alleleCount += 1
+				allele = refSplit[4]
 				
-				count = count+1
-			else:
-				pass
-			'''	
-			if count%1000000 == 0:
-				print(count)
-			'''
+				topList.append([mirnaName, rsNum, allele])
 
 # Populates the list of pairs to process 
 def buildBottomList():
