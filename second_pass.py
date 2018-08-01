@@ -180,8 +180,8 @@ def buildBottomList():
 	global topList
 	global bottomList
 	
-	print("Building list of entries to process")
 	print(len(topList))
+	print("Building list of entries to process")
 	
 	# For each SNP-miRNA entry in the top list
 	# Search the processed SNP list for alternative SNP alleles ID
@@ -193,12 +193,11 @@ def buildBottomList():
 		allele = line[2]
 		
 		snpLine = snpSearch(rsNum)
-		print(snpLine)
-		return
+		#print(snpLine)
 		snpName = snpLine[1]
 		alleleNum = snpLine[2]
 		for x in range(alleleNum):
-			checkAllele = snpLine[2+x]
+			checkAllele = snpLine[3+x]
 			if checkAllele[0] != allele:
 				snpAlleleName = snpName + checkAllele[0]
 				bottomList.append([mirna, mirnaSeq(mirna), snpAlleleName, checkAllele[1]])
