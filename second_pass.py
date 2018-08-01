@@ -3,6 +3,7 @@ import subprocess
 import secrets
 import time
 import math
+from multiprocessing import Pool
 
 procSnpArray = []
 procRnaArray = []
@@ -214,7 +215,7 @@ def buildBottomList():
 	
 	# Setup 30 entries in bottomList
 	for x in range(30):
-		bottomList.append([x])
+		bottomList.append(x)
 		
 	print(bottomList)
 	
