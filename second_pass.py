@@ -231,7 +231,8 @@ def buildSubBottomList(n):
 	count = 0
 	sublist = []
 	
-	print("buildSubBottomList")
+	toPrint = "buildSubBottomList" + str(n)
+	print(toPrint)
 	
 	for line in bottomList[n]:
 		'''
@@ -248,6 +249,9 @@ def buildSubBottomList(n):
 		#print(snpLine)
 		snpName = snpLine[1]
 		alleleNum = snpLine[2]
+		
+		print("here")
+		
 		for x in range(alleleNum):
 			checkAllele = snpLine[3+x]
 			if checkAllele[0] != allele:
