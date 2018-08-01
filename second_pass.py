@@ -222,6 +222,7 @@ def buildBottomList():
 	with Pool() as p:
 		p.map(buildSubBottomList, bottomList)
 	
+	print("Finished")
 	print(bottomList[0][0])
 	return
 	
