@@ -170,13 +170,12 @@ def loadTopList(mirandaFile):
 	textArray = stdOutText.split(" ")
 	numLines = int(textArray[0])
 	topSplit = int( math.ceil(float(numLines) / 30.0 ) )
-	print(topSplit)
-	return
 	
 	# For each line in processed miranda output
-	# Populate the top list with the miRNA and SNP rsNum pair 
+	# Populate the top list with the miRNA and SNP rsNum pair
 	
 	subTopList = []
+	count = 0
 	
 	with open(mirandaFile) as f:
 		for line in f:
@@ -193,6 +192,11 @@ def loadTopList(mirandaFile):
 				
 				temp = [mirnaName, rsNum, allele]
 				subTopList.append(temp)
+				count += 1
+				
+				if count%topSplit==0:
+					topList.append(subTopList)
+					subTopList = []
 
 # Populates the list of pairs to process with miranda
 def buildBottomList():
