@@ -169,7 +169,7 @@ def loadTopList(mirandaFile):
 	stdOutText = completedProcess.stdout
 	textArray = stdOutText.split(" ")
 	numLines = int(textArray[0])
-	topSplit = int( math.ceil(float(numLines) / 30.0 ) )
+	topSplit = int( math.floor(float(numLines) / 30.0 ) )
 	
 	# For each line in processed miranda output
 	# Populate the top list with the miRNA and SNP rsNum pair
