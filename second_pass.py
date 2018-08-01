@@ -214,6 +214,8 @@ def buildBottomList():
 	# Setup 30 entries in bottomList
 	for x in range(30):
 		bottomList.append(x)
+		
+	print(bottomList)
 	
 	with Pool() as p:
 		p.map(buildSubBottomList, bottomList)
@@ -226,6 +228,8 @@ def buildSubBottomList(n):
 	
 	count = 0
 	sublist = []
+	
+	print("buildSubBottomList")
 	
 	for line in bottomList[n]:
 		'''
