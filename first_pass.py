@@ -2,7 +2,7 @@ import click
 import subprocess
 import secrets
 from multiprocessing import Pool
-import time;
+import time
 
 snpList = [] # List to hold SNP entries
 snpFileList = [] # List to hold names of SNP temp files 

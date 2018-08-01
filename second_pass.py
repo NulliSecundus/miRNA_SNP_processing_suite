@@ -1,6 +1,7 @@
 import click
 import subprocess
 import secrets
+import time
 
 procSnpArray = []
 procRnaArray = []
@@ -191,7 +192,8 @@ def buildBottomList():
 	
 	for line in topList:
 		if count%100000==0:
-			print(count)
+			localtime = str(count) + " at " + time.asctime(time.localtime(time.time()))
+			print(localtime)
 		
 		mirna = line[0]
 		rsNum = int(line[1])
