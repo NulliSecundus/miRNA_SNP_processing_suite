@@ -78,7 +78,7 @@ def loadsnp(procSnpFasta):
 							snpSubArray = []
 					
 					# Create new SNP line entry
-					snpLine = [rsNum, snpName]
+					snpLine = [rsNum, snpName, alleleNum]
 					snpAllele = [allele, "seq"]
 					rsSet = rsNum
 					count += 1
@@ -175,7 +175,7 @@ def loadTopList(mirandaFile):
 				temp = [mirnaName, rsNum, allele]
 				topList.append(temp)
 
-# Populates the list of pairs to process 
+# Populates the list of pairs to process with miranda
 def buildBottomList():
 	global topList
 	global bottomList
@@ -191,13 +191,17 @@ def buildBottomList():
 		rsNum = int(line[1])
 		allele = line[2]
 		
-		print(mirna)
-		print(rsNum)
-		print(allele)
-		
 		snpLine = snpSearch(rsNum)
-		print(snpLine)
-		return
+		snpName = snpLine[1]
+		alleleNum = snpLine[2]
+		for x in range(alleleNum):
+			checkAllele = snpLine[2+x]
+			if checkAllele[0] != allele:
+				snpAlleleName = snpName + checkAllele[0]
+				bottomList.append([mirna, mirnaSeq(mirna), snpAlleleName, checkAllele[1]])
+	
+	print(bottomList[0])
+	return
 
 # Adds sequences to each identification label in the bottom list 
 def addSequences():
@@ -297,7 +301,6 @@ def snpSeq(snpName):
 # Searches the procSnpArray and returns the line for the given rsNum
 def snpSearch(rs):
 	for subsection in procSnpArray:
-		print(subsection[0][0])
 		if rs < subsection[0][0]:
 			for line in subsection:
 				#print(line[0])
