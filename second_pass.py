@@ -165,6 +165,7 @@ def loadTopList(mirandaFile):
 	with open(mirandaFile) as f:
 		for line in f:
 			if line[0]==">":
+				print("here")
 				lineSplit = line.split("\t")
 				
 				mirnaName = lineEdit[0]
@@ -175,7 +176,8 @@ def loadTopList(mirandaFile):
 				
 				allele = refSplit[4]
 				
-				topList.append([mirnaName, rsNum, allele])
+				temp = [mirnaName, rsNum, allele]
+				topList.append(temp)
 
 # Populates the list of pairs to process 
 def buildBottomList():
