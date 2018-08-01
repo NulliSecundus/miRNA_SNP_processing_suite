@@ -2,6 +2,11 @@ import click
 import subprocess
 import secrets
 
+procSnpArray = []
+procRnaArray = []
+topList = []
+bottomList = []
+
 @click.command()
 @click.argument('mirandafile')
 @click.argument('procsnpfile')
@@ -12,215 +17,186 @@ import secrets
 def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 	try:
 		loadsnp(procsnpfile)
+		print(procSnpArray[0][0])
+		print(procSnpArray[0][1])
+		print(procSnpArray[1][0])
+		print(procSnpArray[2][0])
+		return
+		
 		loadrna(mirnafile)
-		buildTopList(mirandafile)
+		loadTopList(mirandafile)
 		buildBottomList()
 		addSequences()
 		iterateMiranda(output)
 	except:
 		print("Error")
 		return
-
-if __name__ == '__main__':
-	pass
-	
-snpInfo = []
-mirnaInfo = []
-reprocessList = []
 	
 # Loads the SNP sequence file into memory 
 def loadsnp(procSnpFasta):
-	try:
-		print("Loading SNP fasta file (may take a few minutes)")
-		
-		snpSubInfo = []
-		count = 0
-		header = ""
-		snpName = ""
-		allele = ""
-		alleleNum = 0
-		alleleIndex = 0
-		sequence = ""
-		rsStart = 0
-		rsEnd = 0
-		rsSet = 0
-		temp = []
-		
-		with open(procSnpFasta) as f:
-			for line in f:
-				if line[0]==">":
-					
-					if alleleIndex==alleleNum:
-						alleleIndex = 0
-					
-					header = line
-					header = header.replace('\n', '')
-					
-					snpName = header.split(" ")
-					snpName = snpName[0][1:]
-                    
-					headerSplt = header.split("|")
-					
-					rsNum = headerSplt[2].split(" ")
-					rsNum = rsNum[0][2:]
-					rsEnd = int(rsNum)
-					
-					alleles = headerSplt[8]
-					alleles = alleles[8:]
-					alleles = alleles.replace('\"','')
-					alleles = alleles.split('/')
-					alleleNum = len(alleles)
-					allele = alleles[alleleIndex]
-					
-					'''
-					snpName = snpName + "|" + str(alleleNum)
-					snpName = snpName + "|" + alleles[alleleIndex]
-					'''
-					
-					alleleIndex = alleleIndex + 1
-					
-				elif line[0]=="\n": 
-					# End of sequence
-					# populate each temp line with 
-					# [snpName, rsEnd, alleleNum, allele, sequence, allele, sequence, etc...]
-					
-					if rsSet == rsEnd:
-						temp.extend([allele, sequence])
-					else:
-						if count != 0:
-							snpSubInfo.append(temp)
-							'''
-							if rsSet==960618749: 
-								print(temp
-							'''
-						temp = [snpName, rsEnd, alleleNum, allele, sequence]
-						
-						count = count+1
-						if count%5000 == 0:
-							headerLine = [rsStart, rsSet]
-							snpSubInfo.insert(0, headerLine)
-							snpInfo.append(snpSubInfo)
-							
-							# Reset SNP sub-list and rsStart number
-							snpSubInfo = []
-							rsStart = rsSet
-						
-						rsSet = rsEnd
-					'''
-					if count%1000000 == 0:
-						print(count)
-						
-						for line in snpInfo:
-							print(line)
-						
-						return
-						'''
-						
-					
-				elif line[0]=="#":
-					#Do nothing, it's a comment line
-					pass
+	print("Loading SNP fasta file (may take a few minutes)")
+	
+	snpSubArray = []
+	snpLine = []
+	snpAllele = []
+	count = 0
+	header = ""
+	rsNum = 0
+	alleleNum = 0
+	allele = ""
+	sequence = ""
+	headerSplit = None
+	rsSet = -1
+	
+	with open(procSnpFasta) as f:
+		for line in f:
+			if line[0]==">":
+				
+				header = line
+				header = header.replace('\n', '')
+				headerSplit = header.split("|")
+				
+				rsNum = int(headerSplit[2].replace("rs", ""))
+				alleleNum = int(headerSplit[3])
+				allele = headerSplit[4]
+				
+				if rsSet == rsNum:
+					# Add to current entry 
+					snpAllele = [allele, "seq"]
 				else:
-					# Sequence line 
-					sequence = line
-					sequence = sequence.replace('\n', '')
+					if count != 0:
+						# Store current SNP line 
+						snpSubArray.append(snpLine)
+						
+						if count%5000 == 0:
+							headerLine = [rsNum]
+							snpSubArray.insert(0, headerLine)
+							procSnpArray.append(snpSubArray)
+							
+							# Reset SNP sub-list
+							snpSubArray = []
 					
-			snpSubInfo.append(temp)
-			headerLine = [rsStart, rsEnd]
-			snpSubInfo.insert(0, headerLine)
-			snpInfo.append(snpSubInfo)
-	except:
-		print('Could not parse processed snp fasta file')
+					# Create new SNP line entry
+					snpLine = [rsNum, alleleNum]
+					snpAllele = [allele, "seq"]
+					rsSet = rsNum
+					count += 1
+				
+			elif line[0]=="\n": 
+				# End of sequence
+				# populate each temp line with 
+				# [snpName, rsEnd, alleleNum, allele, sequence, allele, sequence, etc...]
+				
+				snpAllele[1] = sequence
+				snpLine.append(snpAllele)
+				
+				'''
+				if count%1000000 == 0:
+					print(count)
+					
+					for line in procSnpArray:
+						print(line)
+					
+					return
+					'''
+					
+			elif line[0]=="#":
+				#Do nothing, it's a comment line
+				pass
+			else:
+				# Sequence line 
+				sequence = line
+				sequence = sequence.replace('\n', '')
+				
+		snpSubArray.append(snpLine)
+		headerLine = [rsNum]
+		snpSubArray.insert(0, headerLine)
+		procSnpArray.append(snpSubArray)
 	
 # Loads the miRNA file into memory 
 def loadrna(miRNA):
+	print("Loading miRNA file")
 	
-	try:
-		print("Loading miRNA file")
-		
-		count = 0
-		header = ""
-		sequence = ""
-		
-		with open(miRNA) as f:
-			for line in f:
-				if line[0]==">":
-					header = line
-					header = header.replace('\n', '')
-					
-				else:
-					# Sequence line 
-					sequence = line
-					sequence = sequence.replace('\n', '')
-					
-					temp = [header, sequence]
-					mirnaInfo.append(temp)
-					
-					'''
-					if count%100000 == 0:
-						print(count)
-						
-						for line in mirnaInfo:
-							print(line)
-						
-						return
-					'''
-					
-					count = count+1
-
-	except:
-		print('Could not parse miRNA file')
-
-# Populates the list of top hit pairs
-def buildTopList(mirandaFile):
-	try: 
-		print('Building list of top hits from miranda file')
-		
-		# For each line in cleaned miranda output
-		# Populate temp container with same-name entries
-		# When new name appears, count num in temp container
-		# Search snpInfo for the entry, compare to temp container num
-		# If (available - output) > 0, then add SNP-miRNA pair to reprocess list
-		
-		count = 0
-		current = ""
-		alleleCount = 1
-		
-		with open(mirandaFile) as f:
-			for line in f:
-				if line[0]==">":
-					lineEdit = line.split("\t")
-					mirnaName = lineEdit[0]
-					refName = lineEdit[1]
-					
-					if refName != current:
-						if (current != "") and (alleleCount==1):
-							#checkAlleleCount(current, alleleCount, mirnaName)
-							temp = [mirnaName, current]
-							reprocessList.append(temp)
-						alleleCount = 1
-						current = refName
-					else:
-						alleleCount += 1
-					
-					count = count+1
-				else:
-					pass
-				'''	
-				if count%1000000 == 0:
+	count = 0
+	header = ""
+	sequence = ""
+	
+	with open(miRNA) as f:
+		for line in f:
+			if line[0]==">":
+				header = line
+				header = header.replace('\n', '')
+				
+			else:
+				# Sequence line 
+				sequence = line
+				sequence = sequence.replace('\n', '')
+				
+				temp = [header, sequence]
+				procRnaArray.append(temp)
+				
+				'''
+				if count%100000 == 0:
 					print(count)
+					
+					for line in procRnaArray:
+						print(line)
+					
+					return
 				'''
 				
-	except:
-		print('Could not build reprocess list from miranda file')
+				count = count+1
+
+# Populates the list of top hit pairs
+def loadTopList(mirandaFile):
+	print('Building list of top hits from miranda file')
+	
+	# For each line in cleaned miranda output
+	# Populate temp container with same-name entries
+	# When new name appears, count num in temp container
+	# Search procSnpArray for the entry, compare to temp container num
+	# If (available - output) > 0, then add SNP-miRNA pair to reprocess list
+	
+	count = 0
+	current = ""
+	alleleCount = 1
+	
+	with open(mirandaFile) as f:
+		for line in f:
+			if line[0]==">":
+				lineEdit = line.split("\t")
+				mirnaName = lineEdit[0]
+				refName = lineEdit[1]
+				
+				if refName != current:
+					if (current != "") and (alleleCount==1):
+						#checkAlleleCount(current, alleleCount, mirnaName)
+						temp = [mirnaName, current]
+						reprocessList.append(temp)
+					alleleCount = 1
+					current = refName
+				else:
+					alleleCount += 1
+				
+				count = count+1
+			else:
+				pass
+			'''	
+			if count%1000000 == 0:
+				print(count)
+			'''
 
 # Populates the list of pairs to process 
 def buildBottomList():
 	print("Building list of entries to process")
+	
+	# For each SNP-miRNA entry in the top list
+	# Search the processed SNP list for alternative SNP alleles ID
+	# Add the alternative alleles to the bottom list for processing
 
-# Adds sequences to each identification label in the reprocess list 
+# Adds sequences to each identification label in the bottom list 
 def addSequences():
-	print('Loading sequences into reprocess list (may take a few minutes)')
+	print('Loading sequences into bottom list (may take a few minutes)')
 	mirnaName = ""
 	snpName = ""
 	count = 0
@@ -241,8 +217,8 @@ def addSequences():
 def iterateMiranda(outputFile):
 	try: 
 		# Clear memory of unused variables
-		snpInfo = None
-		mirnaInfo = None
+		procSnpArray = None
+		procRnaArray = None
 		
 		sig = str(secrets.randbelow(999999999999))
 		count = 0
@@ -284,7 +260,7 @@ def snpSeq(snpName):
 	rsText = nameSplit[2]
 	rsNum = int(rsText[2:])
 
-	for line in snpInfo:
+	for line in procSnpArray:
 		rsStart = line[0][0]
 		rsEnd = line[0][1]
 
@@ -316,7 +292,7 @@ def snpSeq(snpName):
 	
 # Returns the sequence associated with the given miRNA name	
 def mirnaSeq(mirnaName):
-	for line in mirnaInfo:
+	for line in procRnaArray:
 		mirnaCmp = line[0]
 		mirnaCmp = mirnaCmp.split(" ")
 		mirnaCmp = mirnaCmp[0]
