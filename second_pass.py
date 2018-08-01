@@ -181,6 +181,7 @@ def buildBottomList():
 	global bottomList
 	
 	print("Building list of entries to process")
+	print(len(topList))
 	
 	# For each SNP-miRNA entry in the top list
 	# Search the processed SNP list for alternative SNP alleles ID
