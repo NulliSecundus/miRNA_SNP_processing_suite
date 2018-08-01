@@ -7,6 +7,7 @@ procSnpArray = []
 procRnaArray = []
 topList = []
 bottomList = []
+bottomListParams = []
 
 @click.command()
 @click.argument('mirandafile')
@@ -20,6 +21,7 @@ def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 		loadsnp(procsnpfile)
 		loadrna(mirnafile)
 		loadTopList(mirandafile)
+		return
 		buildBottomList()
 		addSequences()
 		iterateMiranda(output)
@@ -157,8 +159,23 @@ def loadTopList(mirandaFile):
 	
 	print('Loading list of top hits from miranda file')
 	
+	# Determine the number of lines in mirandaFile
+	toRun = [
+		"wc", 
+		"-l", 
+		mirandaFile, 
+	]
+	completedProcess = subprocess.run(toRun, stdout=subprocess.PIPE, encoding="utf-8")
+	stdOutText = completedProcess.stdout
+	textArray = stdOutText.split(" ")
+	numLines = int(textArray[0])
+	print(numLines)
+	return
+	
 	# For each line in processed miranda output
 	# Populate the top list with the miRNA and SNP rsNum pair 
+	
+	subTopList = []
 	
 	with open(mirandaFile) as f:
 		for line in f:
@@ -174,12 +191,13 @@ def loadTopList(mirandaFile):
 				allele = refSplit[4]
 				
 				temp = [mirnaName, rsNum, allele]
-				topList.append(temp)
+				subTopList.append(temp)
 
 # Populates the list of pairs to process with miranda
 def buildBottomList():
 	global topList
 	global bottomList
+	global bottomListParams
 	
 	print(len(topList))
 	print("Building list of entries to process (may take a few minutes)")
@@ -188,9 +206,23 @@ def buildBottomList():
 	# Search the processed SNP list for alternative SNP alleles ID
 	# Add the alternative alleles to the bottom list for processing
 	
-	count = 0
+	# Setup 30 entries in bottomList
+	for x in range(30):
+		bottomList.append(x)
 	
-	for line in topList:
+	with Pool() as p:
+		p.map(buildSubBottomList, bottomList)
+	
+	print(bottomList[0])
+	return
+	
+def buildSubBottomList(n):
+	global bottomList
+	
+	count = 0
+	sublist = []
+	
+	for line in bottomList[n]:
 		'''
 		if count%100000==0:
 			localtime = str(count) + " at " + time.asctime(time.localtime(time.time()))
@@ -209,11 +241,10 @@ def buildBottomList():
 			checkAllele = snpLine[3+x]
 			if checkAllele[0] != allele:
 				snpAlleleName = snpName + checkAllele[0]
-				bottomList.append([mirna, mirnaSeq(mirna), snpAlleleName, checkAllele[1]])
+				sublist.append([mirna, mirnaSeq(mirna), snpAlleleName, checkAllele[1]])
 		count += 1
 	
-	print(bottomList[0])
-	return
+	bottomList[n] = sublist
 
 # Adds sequences to each identification label in the bottom list 
 def addSequences():
