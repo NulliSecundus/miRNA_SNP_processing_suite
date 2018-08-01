@@ -136,9 +136,6 @@ def loadrna(mirnaFile):
 		outputFileList.append(outName)
 	
 def iterateMiranda(out, stop):
-	if stop != 0:
-		end = int(stop)
-
 	# Setup lists of files to iterate miranda over 
 	for entry in snpFileList:
 		tempMiranda = []
