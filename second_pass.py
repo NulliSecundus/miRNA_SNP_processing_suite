@@ -165,12 +165,11 @@ def loadTopList(mirandaFile):
 	with open(mirandaFile) as f:
 		for line in f:
 			if line[0]==">":
-				print("here")
 				lineSplit = line.split("\t")
 				
-				mirnaName = lineEdit[0]
+				mirnaName = lineSplit[0]
 				
-				refName = lineEdit[1]
+				refName = lineSplit[1]
 				refSplit = refName.split("|")
 				rsNum = int(refSplit[2].replace("rs", ""))
 				
