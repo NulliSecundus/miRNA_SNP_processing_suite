@@ -265,7 +265,7 @@ def buildSubBottomList(n):
 				sublist.append([mirna, mirnaSeq(mirna), snpAlleleName, checkAllele[1]])
 		count += 1
 	
-	toPrint = "Finished buildSubBottomList " + str(n)
+	toPrint = "Finished buildSubBottomList " + str(n) + ", sublist length " + str(len(sublist))
 	print(toPrint)
 	bottomList[n] = sublist
 
