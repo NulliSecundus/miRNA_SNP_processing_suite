@@ -2,6 +2,7 @@ import click
 import subprocess
 import secrets
 import time
+import math
 
 procSnpArray = []
 procRnaArray = []
@@ -21,7 +22,6 @@ def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 		loadsnp(procsnpfile)
 		loadrna(mirnafile)
 		loadTopList(mirandafile)
-		return
 		buildBottomList()
 		addSequences()
 		iterateMiranda(output)
@@ -169,7 +169,8 @@ def loadTopList(mirandaFile):
 	stdOutText = completedProcess.stdout
 	textArray = stdOutText.split(" ")
 	numLines = int(textArray[0])
-	print(numLines)
+	topSplit = int( float(numLines) / 30.0 )
+	print(topSplit)
 	return
 	
 	# For each line in processed miranda output
