@@ -231,10 +231,10 @@ def buildSubBottomList(n):
 	count = 0
 	sublist = []
 	
-	toPrint = "buildSubBottomList" + str(n)
+	toPrint = "buildSubBottomList " + str(n)
 	print(toPrint)
 	
-	for line in bottomList[n]:
+	for line in topList[n]:
 		'''
 		if count%100000==0:
 			localtime = str(count) + " at " + time.asctime(time.localtime(time.time()))
@@ -250,7 +250,7 @@ def buildSubBottomList(n):
 		snpName = snpLine[1]
 		alleleNum = snpLine[2]
 		
-		print("here")
+		#print("here")
 		
 		for x in range(alleleNum):
 			checkAllele = snpLine[3+x]
