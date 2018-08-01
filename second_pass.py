@@ -223,12 +223,15 @@ def buildBottomList():
 		print(list[0])
 		bottomList.append(list)
 	
+# Sub-function to handle parallel processing of each topList section
 def buildSubBottomList(n):
 	count = 0
 	sublist = []
 	
+	'''
 	toPrint = "buildSubBottomList " + str(n)
 	print(toPrint)
+	'''
 	
 	for line in topList[n]:
 		'''

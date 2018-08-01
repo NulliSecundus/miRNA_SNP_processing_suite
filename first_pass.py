@@ -23,7 +23,8 @@ rnaSplit = 80 # Number of miRNA entries per subsection
 @click.argument('score')
 @click.option('-snp', default=2000000, help='Number of SNP entries per subsection\nDefault 2000000')
 @click.option('-rna', default=80, help='Number of miRNA entries per subsection\nDefault 80')
-def cli(snpfile, mirnafile, output, score, snp, rna):
+@click.option('-stop', default=0, help='Limits run to the specified number of sections')
+def cli(snpfile, mirnafile, output, score, snp, rna, stop):
 	global sc 
 	global snpSplit
 	global rnaSplit
@@ -36,7 +37,7 @@ def cli(snpfile, mirnafile, output, score, snp, rna):
 		genSig(snpfile, mirnafile, output)
 		loadsnp(snpfile)
 		loadrna(mirnafile)
-		iterateMiranda(output)
+		iterateMiranda(output, stop)
 		print("Success")
 	except:
 		print("Error")
@@ -134,7 +135,10 @@ def loadrna(mirnaFile):
 		outName = dir + sigID + "_out_" + str(n+1) + ".txt"
 		outputFileList.append(outName)
 	
-def iterateMiranda(out):
+def iterateMiranda(out, stop):
+	if stop != 0:
+		end = int(stop)
+
 	# Setup lists of files to iterate miranda over 
 	for entry in snpFileList:
 		tempMiranda = []
@@ -151,6 +155,10 @@ def iterateMiranda(out):
 			p.map(runMiranda, entry)
 		parseMiranda(num)
 		appendOutput(out)
+		
+		if (stop!=0) and (num%stop==0):
+			break
+		
 		num += 1
 		
 	# Delete all temp files and folder
