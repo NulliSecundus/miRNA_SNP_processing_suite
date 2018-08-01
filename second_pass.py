@@ -192,6 +192,8 @@ def buildBottomList():
 		allele = line[2]
 		
 		snpLine = snpSearch(rsNum)
+		print(snpLine)
+		return
 		snpName = snpLine[1]
 		alleleNum = snpLine[2]
 		for x in range(alleleNum):
