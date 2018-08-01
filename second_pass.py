@@ -223,7 +223,6 @@ def buildBottomList():
 	
 	print("Finished")
 	print(len(bottomList))
-	print(bottomList[0])
 	for list in sublists:
 		print(len(list))
 	
