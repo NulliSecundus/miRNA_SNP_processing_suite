@@ -187,7 +187,12 @@ def buildBottomList():
 	# Search the processed SNP list for alternative SNP alleles ID
 	# Add the alternative alleles to the bottom list for processing
 	
+	count = 0
+	
 	for line in topList:
+		if count%100==0:
+			print(count)
+		
 		mirna = line[0]
 		rsNum = int(line[1])
 		allele = line[2]
@@ -201,6 +206,7 @@ def buildBottomList():
 			if checkAllele[0] != allele:
 				snpAlleleName = snpName + checkAllele[0]
 				bottomList.append([mirna, mirnaSeq(mirna), snpAlleleName, checkAllele[1]])
+		count += 1
 	
 	print(bottomList[0])
 	return
