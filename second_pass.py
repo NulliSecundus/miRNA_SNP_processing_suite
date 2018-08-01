@@ -191,6 +191,10 @@ def buildBottomList():
 		rsNum = line[1]
 		allele = line[2]
 		
+		print(mirna)
+		print(rsNum)
+		print(allele)
+		
 		snpLine = snpSearch(rsNum)
 		print(snpLine)
 		return
