@@ -19,9 +19,6 @@ def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 		loadsnp(procsnpfile)
 		loadrna(mirnafile)
 		loadTopList(mirandafile)
-		print(topList[0])
-		return
-		
 		buildBottomList()
 		addSequences()
 		iterateMiranda(output)
