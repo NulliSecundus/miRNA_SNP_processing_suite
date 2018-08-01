@@ -222,7 +222,7 @@ def buildBottomList():
 	with Pool() as p:
 		p.map(buildSubBottomList, bottomList)
 	
-	print(bottomList[0])
+	print(bottomList[0][0])
 	return
 	
 def buildSubBottomList(n):
@@ -246,6 +246,10 @@ def buildSubBottomList(n):
 		allele = line[2]
 		
 		snpLine = snpSearch(rsNum)
+		
+		if snpLine = None:
+			pass
+		
 		#print(snpLine)
 		snpName = snpLine[1]
 		alleleNum = snpLine[2]
@@ -364,7 +368,9 @@ def snpSearch(rs):
 				#print(line[0])
 				if rs == line[0]:
 					return line
-	print("Error: could not find SNP")
+	toPrint = "Error: could not find SNP" + str(rs)
+	print(toPrint)
+	return None
 	
 # Returns the sequence associated with the given miRNA name	
 def mirnaSeq(mirnaName):
