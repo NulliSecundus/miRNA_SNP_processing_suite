@@ -22,6 +22,7 @@ def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 		print(procSnpArray[0][2])
 		print(procSnpArray[1][0])
 		print(procSnpArray[2][0])
+		print(len(procSnpArray))
 		return
 		
 		loadrna(mirnafile)
