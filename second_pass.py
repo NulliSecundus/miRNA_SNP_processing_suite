@@ -39,13 +39,14 @@ def loadsnp(procSnpFasta):
 	snpSubArray = []
 	snpLine = []
 	snpAllele = []
+	headerSplit = None
 	count = 0
-	header = ""
 	rsNum = 0
 	alleleNum = 0
+	header = ""
+	snpName = ""
 	allele = ""
 	sequence = ""
-	headerSplit = None
 	rsSet = -1
 	
 	with open(procSnpFasta) as f:
@@ -55,6 +56,9 @@ def loadsnp(procSnpFasta):
 				header = line
 				header = header.replace('\n', '')
 				headerSplit = header.split("|")
+				
+				snpName = headerSplit[0] + "|" + headerSplit[1] + "|" 
+				snpName += headerSplit[2] + "|" + headerSplit[3] + "|"
 				
 				rsNum = int(headerSplit[2].replace("rs", ""))
 				alleleNum = int(headerSplit[3])
@@ -77,7 +81,7 @@ def loadsnp(procSnpFasta):
 							snpSubArray = []
 					
 					# Create new SNP line entry
-					snpLine = [rsNum, alleleNum]
+					snpLine = [rsNum, snpName]
 					snpAllele = [allele, "seq"]
 					rsSet = rsNum
 					count += 1
