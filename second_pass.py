@@ -180,11 +180,23 @@ def loadTopList(mirandaFile):
 
 # Populates the list of pairs to process 
 def buildBottomList():
+	global topList
+	global bottomList
+	
 	print("Building list of entries to process")
 	
 	# For each SNP-miRNA entry in the top list
 	# Search the processed SNP list for alternative SNP alleles ID
 	# Add the alternative alleles to the bottom list for processing
+	
+	for line in topList:
+		mirna = line[0]
+		rsNum = line[1]
+		allele = line[2]
+		
+		snpLine = snpSearch(rsNum)
+		print(snpLine)
+		return
 
 # Adds sequences to each identification label in the bottom list 
 def addSequences():
@@ -207,44 +219,43 @@ def addSequences():
 
 # Iteratively runs miranda on the list of SNP-miRNA pairs to be processed 
 def iterateMiranda(outputFile):
-	try: 
-		# Clear memory of unused variables
-		procSnpArray = None
-		procRnaArray = None
-		
-		sig = str(secrets.randbelow(999999999999))
-		count = 0
-		
-		'''
-		print(len(reprocessList))
-		'''
-		
-		print("Success: reprocess list complete, running miranda")
-		
-		# Iterate through list of SNP-miRNA pairs that need to be reprocessed 
-		# Add score line to condensed final output file
-		
-		#outputFile = "repass1_sc206_chr1.txt"
-		errorFile = outputFile.strip(".txt") + "_error_log.txt"
-		with open(outputFile, "a") as final_output:
-			with open(errorFile, "a") as error_log:
-				for line in reprocessList:
-					scoreLine = runMiranda(line, sig)
-					
-					# Print to file 
-					if scoreLine != None:
-						print("{}".format(scoreLine), file=final_output)
-					else:
-						print("{}".format(line), file=error_log)
-					
-					count += 1
-					'''
-					if count%100000==0:
-						print(count)
-					'''
-
-	except:
-		print("Failed to run miranda on reprocess list")
+	global procSnpArray
+	global procRnaArray
+	
+	# Clear memory of unused variables
+	procSnpArray = None
+	procRnaArray = None
+	
+	sig = str(secrets.randbelow(999999999999))
+	count = 0
+	
+	'''
+	print(len(reprocessList))
+	'''
+	
+	print("Success: reprocess list complete, running miranda")
+	
+	# Iterate through list of SNP-miRNA pairs that need to be reprocessed 
+	# Add score line to condensed final output file
+	
+	#outputFile = "repass1_sc206_chr1.txt"
+	errorFile = outputFile.strip(".txt") + "_error_log.txt"
+	with open(outputFile, "a") as final_output:
+		with open(errorFile, "a") as error_log:
+			for line in reprocessList:
+				scoreLine = runMiranda(line, sig)
+				
+				# Print to file 
+				if scoreLine != None:
+					print("{}".format(scoreLine), file=final_output)
+				else:
+					print("{}".format(line), file=error_log)
+				
+				count += 1
+				'''
+				if count%100000==0:
+					print(count)
+				'''
 
 # Returns the sequence associated with the given SNP name
 def snpSeq(snpName):
@@ -281,6 +292,15 @@ def snpSeq(snpName):
 					
 	print("Failed to locate SNP Sequence")
 	print(snpName)
+	
+# Searches the procSnpArray and returns the line for the given rsNum
+def snpSearch(rs):
+	for subsection in procSnpArray:
+		if rs < subsection[0]:
+			for line in subsection:
+				if rs == line[0]:
+					return line
+	print("Error: could not find SNP")
 	
 # Returns the sequence associated with the given miRNA name	
 def mirnaSeq(mirnaName):
