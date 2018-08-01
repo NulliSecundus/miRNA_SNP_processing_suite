@@ -9,7 +9,6 @@ procSnpArray = []
 procRnaArray = []
 topList = []
 bottomList = []
-bottomListParams = []
 
 @click.command()
 @click.argument('mirandafile')
@@ -215,20 +214,16 @@ def buildBottomList():
 	# Setup 30 entries in bottomList
 	for x in range(30):
 		bottomList.append(x)
-		
-	print(bottomList)
 	
 	with Pool() as p:
 		sublists = p.map(buildSubBottomList, bottomList)
 	
-	print("Finished")
-	print(len(bottomList))
+	bottomList = []
 	for list in sublists:
-		print(len(list))
+		print(list[0])
+		bottomList.append(list)
 	
 def buildSubBottomList(n):
-	global bottomList
-	
 	count = 0
 	sublist = []
 	
@@ -253,11 +248,8 @@ def buildSubBottomList(n):
 			print(toPrint)
 			pass
 		
-		#print(snpLine)
 		snpName = snpLine[1]
 		alleleNum = snpLine[2]
-		
-		#print("here")
 		
 		for x in range(alleleNum):
 			checkAllele = snpLine[3+x]
@@ -268,7 +260,6 @@ def buildSubBottomList(n):
 	
 	toPrint = "Finished buildSubBottomList " + str(n) + ", sublist length " + str(len(sublist))
 	print(toPrint)
-	#bottomList[n] = sublist
 	return sublist
 
 # Adds sequences to each identification label in the bottom list 
