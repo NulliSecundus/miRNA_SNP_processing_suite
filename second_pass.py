@@ -169,7 +169,7 @@ def loadTopList(mirandaFile):
 	stdOutText = completedProcess.stdout
 	textArray = stdOutText.split(" ")
 	numLines = int(textArray[0])
-	topSplit = int( float(numLines) / 30.0 )
+	topSplit = int( math.ceil(float(numLines) / 30.0 ) )
 	print(topSplit)
 	return
 	
