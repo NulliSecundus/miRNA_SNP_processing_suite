@@ -190,7 +190,7 @@ def buildBottomList():
 	count = 0
 	
 	for line in topList:
-		if count%100==0:
+		if count%500000==0:
 			print(count)
 		
 		mirna = line[0]
