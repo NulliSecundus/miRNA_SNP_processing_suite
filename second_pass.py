@@ -114,7 +114,7 @@ def loadsnp(procSnpFasta):
 				sequence = sequence.replace('\n', '')
 				
 		snpSubArray.append(snpLine)
-		headerLine = [rsNum]
+		headerLine = [rsNum+1]
 		snpSubArray.insert(0, headerLine)
 		procSnpArray.append(snpSubArray)
 	
@@ -248,6 +248,8 @@ def buildSubBottomList(n):
 		snpLine = snpSearch(rsNum)
 		
 		if snpLine == None:
+			toPrint = "Error in buildSubBottomList " + str(n)
+			print(toPrint)
 			pass
 		
 		#print(snpLine)
@@ -368,7 +370,7 @@ def snpSearch(rs):
 				#print(line[0])
 				if rs == line[0]:
 					return line
-	toPrint = "Error: could not find SNP" + str(rs)
+	toPrint = "Error: could not find SNP " + str(rs)
 	print(toPrint)
 	return None
 	
