@@ -219,11 +219,13 @@ def buildBottomList():
 	print(bottomList)
 	
 	with Pool() as p:
-		p.map(buildSubBottomList, bottomList)
+		sublists = p.map(buildSubBottomList, bottomList)
 	
 	print("Finished")
 	print(len(bottomList))
 	print(bottomList[0])
+	for list in sublists:
+		print(len(list))
 	
 def buildSubBottomList(n):
 	global bottomList
@@ -267,7 +269,8 @@ def buildSubBottomList(n):
 	
 	toPrint = "Finished buildSubBottomList " + str(n) + ", sublist length " + str(len(sublist))
 	print(toPrint)
-	bottomList[n] = sublist
+	#bottomList[n] = sublist
+	return sublist
 
 # Adds sequences to each identification label in the bottom list 
 def addSequences():
