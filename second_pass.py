@@ -36,6 +36,8 @@ def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 	
 # Loads the SNP sequence file into memory 
 def loadsnp(procSnpFasta):
+	global procSnpArray
+	
 	print("Loading SNP fasta file (may take a few minutes)")
 	
 	snpSubArray = []
@@ -118,9 +120,12 @@ def loadsnp(procSnpFasta):
 		headerLine = [rsNum]
 		snpSubArray.insert(0, headerLine)
 		procSnpArray.append(snpSubArray)
+		print(count)
 	
 # Loads the miRNA file into memory 
 def loadrna(miRNA):
+	global procRnaArray
+	
 	print("Loading miRNA file")
 	
 	count = 0
