@@ -203,7 +203,6 @@ def loadTopList(mirandaFile):
 def buildBottomList():
 	global topList
 	global bottomList
-	global bottomListParams
 	
 	print(len(topList))
 	print(len(topList[0]))
@@ -223,8 +222,8 @@ def buildBottomList():
 		p.map(buildSubBottomList, bottomList)
 	
 	print("Finished")
-	print(bottomList[0][0])
-	return
+	print(len(bottomList))
+	print(len(bottomList[0]))
 	
 def buildSubBottomList(n):
 	global bottomList
