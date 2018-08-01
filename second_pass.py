@@ -188,7 +188,7 @@ def buildBottomList():
 	
 	for line in topList:
 		mirna = line[0]
-		rsNum = line[1]
+		rsNum = int(line[1])
 		allele = line[2]
 		
 		print(mirna)
@@ -297,6 +297,7 @@ def snpSeq(snpName):
 # Searches the procSnpArray and returns the line for the given rsNum
 def snpSearch(rs):
 	for subsection in procSnpArray:
+		print(subsection[0])
 		if rs < subsection[0]:
 			for line in subsection:
 				if rs == line[0]:
