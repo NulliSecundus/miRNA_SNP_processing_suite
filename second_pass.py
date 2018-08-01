@@ -70,7 +70,7 @@ def loadsnp(procSnpFasta):
 						# Store current SNP line 
 						snpSubArray.append(snpLine)
 						
-						if count%5000 == 0:
+						if count%3850 == 0:
 							headerLine = [rsNum]
 							snpSubArray.insert(0, headerLine)
 							procSnpArray.append(snpSubArray)
@@ -191,9 +191,11 @@ def buildBottomList():
 	count = 0
 	
 	for line in topList:
+		'''
 		if count%100000==0:
 			localtime = str(count) + " at " + time.asctime(time.localtime(time.time()))
 			print(localtime)
+			'''
 		
 		mirna = line[0]
 		rsNum = int(line[1])
