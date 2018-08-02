@@ -9,6 +9,10 @@ procSnpArray = []
 procRnaArray = []
 topList = []
 bottomList = []
+tempFileList = []
+v = False
+sigID = None
+dir = None 
 
 @click.command()
 @click.argument('mirandafile')
@@ -18,17 +22,50 @@ bottomList = []
 @click.option('--verbose', is_flag=True, help='''Output additional information to
 	the console''')
 def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
+	global v
+	v = verbose
+	
 	try:
+		genSig(procsnpfile, mirnafile, output)
 		loadsnp(procsnpfile)
 		loadrna(mirnafile)
 		loadTopList(mirandafile)
 		buildBottomList()
-		addSequences()
 		iterateMiranda(output)
 		print("Success")
 	except:
 		print("Error")
 		return
+	
+# Generates a unique signature ID to be used in file naming
+def genSig(snpFile, mirnaFile, out):
+	global sigID
+	global dir 
+	
+	sigID = str(secrets.randbelow(999999999999))
+	dir = "temp_" + sigID
+	
+	toRun = ["mkdir", dir]
+	subprocess.run(toRun, check=True)
+	
+	dir += "/"
+	
+	# Create output file and add timestamp
+	with open(out, 'w') as o:
+		localtime = "# Start: " + time.asctime(time.localtime(time.time()))
+		print("{}".format(localtime), file=o)
+	
+	# Create README info file in the temp folder
+	infoFile = dir + "README" + ".txt"
+	with open(infoFile, "w") as text_file:
+		header = "Input Parameters: "
+		
+		# Print to file 
+		print("{}".format(header), file=text_file)
+		print("{}".format(snpFile), file=text_file)
+		print("{}".format(mirnaFile), file=text_file)
+		print("{}".format(out), file=text_file)
+		print("{}".format(sc), file=text_file)
 	
 # Loads the SNP sequence file into memory 
 def loadsnp(procSnpFasta):
@@ -203,8 +240,10 @@ def buildBottomList():
 	global topList
 	global bottomList
 	
-	print(len(topList))
-	print(len(topList[0]))
+	if v:
+		toPrint = "topList dimensions " + str(len(topList)) + " x " + str(len(topList[0]))
+		print(toPrint)
+	
 	print("Building list of entries to process (may take a few minutes)")
 	
 	# For each SNP-miRNA entry in the top list
@@ -215,12 +254,15 @@ def buildBottomList():
 	for x in range(30):
 		bottomList.append(x)
 	
+	if v:
+		toPrint = str(len(bottomList)) + " sublists in bottomList for multiprocessing support"
+	
 	with Pool() as p:
 		sublists = p.map(buildSubBottomList, bottomList)
 	
 	bottomList = []
 	for list in sublists:
-		print(list[0])
+		#print(list[0])
 		bottomList.append(list)
 	
 # Sub-function to handle parallel processing of each topList section
@@ -261,28 +303,11 @@ def buildSubBottomList(n):
 				sublist.append([mirna, mirnaSeq(mirna), snpAlleleName, checkAllele[1]])
 		count += 1
 	
-	toPrint = "Finished buildSubBottomList " + str(n) + ", sublist length " + str(len(sublist))
-	print(toPrint)
-	return sublist
-
-# Adds sequences to each identification label in the bottom list 
-def addSequences():
-	print('Loading sequences into bottom list (may take a few minutes)')
-	mirnaName = ""
-	snpName = ""
-	count = 0
-	
-	for line in reprocessList:
-		mirnaName = line[0]
-		snpName = line[1]
-		line.insert(1, mirnaSeq(mirnaName))
-		line[2] = snpSeq(snpName)
-		count += 1
+	if v:
+		toPrint = "Finished buildSubBottomList " + str(n) + ", sublist length " + str(len(sublist))
+		print(toPrint)
 		
-		'''
-		if count%100000==0:
-			print(count)
-		'''
+	return sublist
 
 # Iteratively runs miranda on the list of SNP-miRNA pairs to be processed 
 def iterateMiranda(outputFile):
@@ -293,72 +318,19 @@ def iterateMiranda(outputFile):
 	procSnpArray = None
 	procRnaArray = None
 	
-	sig = str(secrets.randbelow(999999999999))
-	count = 0
+	print("Processing list complete, running miranda")
 	
-	'''
-	print(len(reprocessList))
-	'''
-	
-	print("Success: reprocess list complete, running miranda")
-	
-	# Iterate through list of SNP-miRNA pairs that need to be reprocessed 
+	# Iterate through lists of SNP-miRNA pairs that need to be processed 
 	# Add score line to condensed final output file
 	
-	#outputFile = "repass1_sc206_chr1.txt"
-	errorFile = outputFile.strip(".txt") + "_error_log.txt"
-	with open(outputFile, "a") as final_output:
-		with open(errorFile, "a") as error_log:
-			for line in reprocessList:
-				scoreLine = runMiranda(line, sig)
-				
-				# Print to file 
-				if scoreLine != None:
-					print("{}".format(scoreLine), file=final_output)
-				else:
-					print("{}".format(line), file=error_log)
-				
-				count += 1
-				'''
-				if count%100000==0:
-					print(count)
-				'''
-
-# Returns the sequence associated with the given SNP name
-def snpSeq(snpName):
-	nameSplit = snpName.split("|")
-	rsText = nameSplit[2]
-	rsNum = int(rsText[2:])
-
-	for line in procSnpArray:
-		rsStart = line[0][0]
-		rsEnd = line[0][1]
-
-		if ((rsNum > rsStart) and (rsNum <= rsEnd)):
-
-			for entry in line[1:]:
-
-				cmpRsNum = entry[1]
-				if cmpRsNum == rsNum:
-					'''
-					seqArray = [[label1, seq1]
-								[label2, seq2]
-								[label3, seq3]]
-								...
-								'''
-					seqArray = []
-					snpIndex = 1
-					for n in range(entry[2]):
-						label = ">" + snpName + "|" + str(entry[2])
-						label += "|" + entry[snpIndex+2]
-						temp = [label, entry[snpIndex+3]]
-						
-						seqArray.append(temp)
-						snpIndex += 2
-					return seqArray
-					
-	print("Failed to locate SNP Sequence")
-	print(snpName)
+	# Create temp input files for each sublist in bottomList
+	num = 1
+	for list in bottomList:
+		genInput(list, num)
+		num += 1
+		
+	for entry in tempFileList:
+		print(entry)
 	
 # Searches the procSnpArray and returns the line for the given rsNum
 def snpSearch(rs):
@@ -441,3 +413,22 @@ def runMiranda(reprocessLine, sig):
 	
 	# Return the score line
 	return toReturn
+	
+def genInput(sublist, n):
+	tempSnpFileName = dir + sigID + "_snp_" + str(n) + ".fasta"
+	tempRnaFileName = dir + sigID + "_mirna_" + str(n) + ".fasta"
+	
+	with open(tempRnaFileName, "w") as r, open(tempSnpFileName, "w") as s:
+		for entry in sublist:
+			rnaHeader = entry[0]
+			rnaSequence = entry[1] + "\n"
+			snpHeader = entry[2]
+			snpSequence = entry[3] + "\n"
+			
+			# Print to file 
+			print("{}".format(rnaHeader), file=r)
+			print("{}".format(rnaSequence), file=r)
+			print("{}".format(snpHeader), file=s)
+			print("{}".format(snpSequence), file=s)
+	
+	tempFileList.append([tempRnaFileName, tempSnpFileName])

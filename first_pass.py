@@ -23,7 +23,7 @@ rnaSplit = 80 # Number of miRNA entries per subsection
 @click.argument('score')
 @click.option('-snp', default=2000000, help='Number of SNP entries per subsection\nDefault 2000000')
 @click.option('-rna', default=80, help='Number of miRNA entries per subsection\nDefault 80')
-@click.option('-stop', default=0, help='Limits run to the specified number of sections')
+@click.option('-stop', default=0, help='Limits run to the specified number of SNP subsections')
 def cli(snpfile, mirnafile, output, score, snp, rna, stop):
 	global sc 
 	global snpSplit
@@ -61,7 +61,7 @@ def genSig(snpFile, mirnaFile, out):
 		localtime = "# Start: " + time.asctime(time.localtime(time.time()))
 		print("{}".format(localtime), file=o)
 	
-	# Create README info file 
+	# Create README info file in the temp folder
 	infoFile = dir + "README" + ".txt"
 	with open(infoFile, "w") as text_file:
 		header = "Input Parameters: "
