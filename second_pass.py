@@ -328,9 +328,17 @@ def iterateMiranda(outputFile):
 	for list in bottomList:
 		genInput(list, num)
 		num += 1
+	
+	if v:
+		toPrint = "Input files: " + dir
+		print(toPrint)
 		
-	for entry in tempFileList:
-		print(entry)
+		for entry in tempFileList:
+			print(entry)
+			
+	# For each pair of input files, run miranda in parallel 
+	with Pool() as p:
+		p.map(runMiranda, tempFileList)
 	
 # Searches the procSnpArray and returns the line for the given rsNum
 def snpSearch(rs):
@@ -354,7 +362,7 @@ def mirnaSeq(mirnaName):
 			return str(line[1])
 
 # Runs miranda on the given SNP-miRNA pair from the bottom list  			
-def runMiranda(reprocessLine, sig):
+def runMiranda(file):
 	# Create temp input text files for miRNA and SNP fasta seqs
 	# Run miranda on each pair using temp input files
 	# Output to temp output text file
