@@ -320,9 +320,6 @@ def iterateMiranda(outputFile):
 	
 	print("Processing list complete, running miranda")
 	
-	# Iterate through lists of SNP-miRNA pairs that need to be processed 
-	# Add score line to condensed final output file
-	
 	# Create temp input files for each sublist in bottomList
 	num = 1
 	for list in bottomList:
