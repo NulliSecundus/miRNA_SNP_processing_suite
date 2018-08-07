@@ -6,7 +6,7 @@ import click
 @click.option('-stop', default=20, help='''
 Limits processing to the specified number of SNP entries\n
 Parameter only used if debug is flagged\n
-Default: 20
+Default: 20\n
 ''')
 @click.option('--debug', is_flag=True, help='Show debug messages')
 def cli(mirandafile, output, stop, debug):
