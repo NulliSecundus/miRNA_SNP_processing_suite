@@ -267,7 +267,8 @@ def buildBottomList():
 	bottomList = []
 	listNum = 0
 	for list in sublists:
-		#print(list[0])
+		print(list[0])
+		print(listNum)
 		bottomList.append([list, listNum])
 		listNum += 1
 	
