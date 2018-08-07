@@ -45,7 +45,7 @@ def parsemir(mirandaOut, outputFile):
 						snpNum = len(snp) # Count number of SNP alleles in output 
 						snpTot = int(snpInfo[3]) # Get total num of alleles 
 						
-						toPrint = "SNP Alleles: " + snpNum + "\nTotal Alleles: " + snpTot
+						toPrint = "SNP Alleles: " + str(snpNum) + "\nTotal Alleles: " + str(snpTot)
 						print(toPrint)
 						
 						# Compare to total number of SNP alleles 
@@ -61,7 +61,7 @@ def parsemir(mirandaOut, outputFile):
 				else: 
 					snp.append(line.replace("\n", ""))
 				
-				print("End of case")
+				print("End of line")
 				
 				if count%20==0:
 					return
