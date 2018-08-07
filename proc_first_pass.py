@@ -3,14 +3,20 @@ import click
 @click.command()
 @click.argument('mirandafile')
 @click.argument('output')
-def cli(mirandafile, output):
+@click.option('-stop', default=20, help='''
+Limits processing to the specified number of SNP entries\n
+Parameter only used if debug is flagged\n
+Default: 20
+''')
+@click.option('--debug', is_flag=True, help='Show debug messages')
+def cli(mirandafile, output, stop, debug):
 	try:
-		parsemir(mirandafile, output)
+		parsemir(mirandafile, output, stop, debug)
 		print("Success")
 	except:
 		print("Error")
 
-def parsemir(mirandaOut, outputFile):
+def parsemir(mirandaOut, outputFile, stop, d):
 	print("Processing first pass miranda output file")
 	
 	snp = None # SNP container 
@@ -23,37 +29,45 @@ def parsemir(mirandaOut, outputFile):
 		for line in f:
 			if line[0]==">":
 				# Data line 
-				toPrint = "Count number: " + str(count)
-				print(toPrint)
-				print(line)
+				if d:
+					toPrint = "Count number: " + str(count)
+					print(toPrint)
+					print(line)
 				
 				lineSplit = line.split("\t") # Split data line by tabs
 				
-				print(lineSplit)
+				if d:
+					print(lineSplit)
 				
 				snpInfo = lineSplit[1].split("|") # Split the SNP entry ID
 				cmpID = snpInfo[2] # Use the rs number from the SNP entry ID 
 				
-				toPrint = "Compare ID: " + cmpID
-				print(toPrint)
-				toPrint = "SNP ID: " + snpID
-				print(toPrint)
+				if d:
+					toPrint = "Compare ID: " + cmpID
+					print(toPrint)
+					toPrint = "SNP ID: " + snpID
+					print(toPrint)
 				
 				if snpID != cmpID:
 					if snp != None:
 						# For every case except the start 
 						snpNum = len(snp) # Count number of SNP alleles in output 
 						
-						toPrint = "SNP Alleles: " + str(snpNum) + "\nTotal Alleles: " + str(snpTot)
-						print(toPrint)
+						if d:
+							toPrint = "SNP Alleles: " + str(snpNum) + "\nTotal Alleles: " + str(snpTot)
+							print(toPrint)
 						
 						# Compare to total number of SNP alleles 
 						if snpNum < snpTot: 
 							# Print to file 
-							print("Printing previous SNPs")
+							if d:
+								print("Printing previous SNPs:")
+							
 							for entry in snp:
 								print("{}".format(entry), file=o)
-								print(entry)
+								
+								if d:
+									print(entry)
 						
 					# Start new SNP container and info 
 					snp = [line.replace("\n", "")]
@@ -61,15 +75,20 @@ def parsemir(mirandaOut, outputFile):
 					snpTot = int(snpInfo[3]) # Get new total num of alleles 
 					
 				else: 
+					if d:
+						print("Appending SNP line to container")
+					
 					snp.append(line.replace("\n", ""))
 				
-				print("End of line")
-				print("\n")
-				print("\n")
-				
-				if count%20==0:
-					return
-				count += 1
+				if d:
+					print("\nEnd of line")
+					print("\n")
+					print("\n")
+					
+					if count%stop==0:
+						return
+					
+					count += 1
 					
 			elif line[0]=="#":
 				if line[0:5]=="# End":
