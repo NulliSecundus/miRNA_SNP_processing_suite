@@ -17,31 +17,42 @@ def parsemir(mirandaOut, outputFile):
 	snpInfo = None # SNP ref info
 	snpID = "default" # SNP ID
 	
-	with open(mirandaOut) as f, open(outputFile, "a") as o:
+	with open(mirandaOut) as f, open(outputFile, "w") as o:
 		for line in f:
 			if line[0]==">":
 				# Data line 
-				lineSplit = line.split("\t")
-				snpInfo = lineSplit[1].split("|")
-				cmpID = snpInfo[2]
+				lineSplit = line.split("\t") # Split data line by tabs
+				
+				print(lineSplit)
+				
+				snpInfo = lineSplit[1].split("|") # Split the SNP entry ID
+				cmpID = snpInfo[2] # Use the rs number from the SNP entry ID 
+				
+				toPrint = "Compare ID: " + cmpID
+				print(toPrint)
+				toPrint = "SNP ID: " + snpID
+				print(toPrint)
+				print("\n")
+				
 				if snpID != cmpID:
 					if snp != None:
-						# Count number of SNP alleles in output 
-						# Compare to total number of SNP alleles 
-						snpNum = len(snp)
-						snpTot = int(snpInfo[3])
+						# For every case except the start 
+						snpNum = len(snp) # Count number of SNP alleles in output 
+						snpTot = int(snpInfo[3]) # Get total num of alleles 
 						
-						if snpNum < snpTot:
+						# Compare to total number of SNP alleles 
+						if snpNum < snpTot: 
 							# Print to file 
 							for entry in snp:
 								print("{}".format(entry), file=o)
 						
 					# Start new SNP container 
 					snp = [line.replace("\n", "")]
-					snpID = cmpID
+					snpID = cmpID # Set snpID to the new rs number
 					
 				else: 
 					snp.append(line.replace("\n", ""))
+					
 			elif line[0]=="#":
 				if line[0:5]=="# End":
 					# Compare SNP alleles for the last SNP container 
