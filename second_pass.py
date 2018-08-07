@@ -270,7 +270,8 @@ def buildBottomList():
 	for list in sublists:
 		print(list[0])
 		print(listNum)
-		bottomList.append([list, listNum])
+		#bottomList.append([list, listNum])
+		bottomList.append(list)
 		listNum += 1
 	
 # Sub-function to handle parallel processing of each topList section
@@ -375,6 +376,9 @@ def runMiranda(x):
 	# Output to temp output text file
 	# Delete temp input text files
 	# Open output text file, store line, delete output text file
+	
+	print(x[0])
+	return
 	
 	list = x[0]
 	n = x[1]
