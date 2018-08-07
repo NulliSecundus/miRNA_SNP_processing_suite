@@ -10,13 +10,12 @@ import numpy as np
 @click.option('-lt', default=20.0, help='The lower threshold in which the bottom percentile is calculated\nDefault 20.0')
 @click.option('--scorefile', is_flag=True, help='Flag if a pre-processed score file is provided instead of miranda output')
 @click.option('--parsefile', is_flag=True, help='Flag if a parsed miranda output file is provided as input')
-@click.option('-split', default=300000000, help='Splits scores output by the specified number per file\nDefault 300,000,000')
-def cli(mirandafile, out, so, verbose, ut, lt, scorefile, parsefile, split):
+def cli(mirandafile, out, so, verbose, ut, lt, scorefile, parsefile):
 	try:
 		if scorefile:
 			readScore(mirandafile, verbose, ut, lt)
 		elif parsefile:
-			parseScoreNew(mirandafile, out, so, verbose, ut, lt, split)
+			parseScoreNew(mirandafile, out, so, verbose, ut, lt)
 		else:
 			parseScore(mirandafile, out, verbose, ut, lt)
 		print('Success')
