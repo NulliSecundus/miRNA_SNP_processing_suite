@@ -13,6 +13,7 @@ tempFileList = []
 v = False
 sigID = None
 dir = None 
+outputFileName = None 
 
 @click.command()
 @click.argument('mirandafile')
@@ -23,22 +24,25 @@ dir = None
 	the console''')
 def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 	global v
+	global outputFileName
+	
 	v = verbose
+	outputFileName = output
 	
 	try:
-		genSig(mirandafile, procsnpfile, mirnafile, output)
+		genSig(mirandafile, procsnpfile, mirnafile)
 		loadsnp(procsnpfile)
 		loadrna(mirnafile)
 		loadTopList(mirandafile)
 		buildBottomList()
-		iterateMiranda(output)
+		iterateMiranda()
 		print("Success")
 	except:
 		print("Error")
 		return
 	
 # Generates a unique signature ID to be used in file naming
-def genSig(mirandaFile, snpFile, mirnaFile, out):
+def genSig(mirandaFile, snpFile, mirnaFile):
 	global sigID
 	global dir 
 	
@@ -51,7 +55,7 @@ def genSig(mirandaFile, snpFile, mirnaFile, out):
 	dir += "/"
 	
 	# Create output file and add timestamp
-	with open(out, 'w') as o:
+	with open(outputFileName, 'w') as o:
 		localtime = "# Start: " + time.asctime(time.localtime(time.time()))
 		print("{}".format(localtime), file=o)
 	
@@ -65,7 +69,7 @@ def genSig(mirandaFile, snpFile, mirnaFile, out):
 		print("{}".format(mirandaFile), file=text_file)
 		print("{}".format(snpFile), file=text_file)
 		print("{}".format(mirnaFile), file=text_file)
-		print("{}".format(out), file=text_file)
+		print("{}".format(outputFileName), file=text_file)
 	
 # Loads the SNP sequence file into memory 
 def loadsnp(procSnpFasta):
@@ -261,9 +265,11 @@ def buildBottomList():
 		sublists = p.map(buildSubBottomList, bottomList)
 	
 	bottomList = []
+	listNum = 0
 	for list in sublists:
 		#print(list[0])
-		bottomList.append(list)
+		bottomList.append([list, listNum])
+		listNum += 1
 	
 # Sub-function to handle parallel processing of each topList section
 def buildSubBottomList(n):
@@ -310,7 +316,7 @@ def buildSubBottomList(n):
 	return sublist
 
 # Iteratively runs miranda on the list of SNP-miRNA pairs to be processed 
-def iterateMiranda(outputFile):
+def iterateMiranda():
 	global procSnpArray
 	global procRnaArray
 	
@@ -361,53 +367,67 @@ def mirnaSeq(mirnaName):
 			return str(line[1])
 
 # Runs miranda on the given SNP-miRNA pair from the bottom list  			
-def runMiranda(list):
+def runMiranda(x):
 	# Create temp input text files for miRNA and SNP fasta seqs
 	# Run miranda on each pair using temp input files
 	# Output to temp output text file
 	# Delete temp input text files
 	# Open output text file, store line, delete output text file
 	
-	toReturn = None
-		
-	tempmirna = "temp_mirna_" + sig + "_input.fasta"
-	with open(tempmirna, "w") as text_file:
-		header = reprocessLine[0]
-		sequence = reprocessLine[1]
-		
-		# Print to file 
-		print("{}".format(header), file=text_file)
-		print("{}".format(sequence), file=text_file)
-		
-	tempsnp = "temp_snp_" + sig + "_input.fasta"
-	with open(tempsnp, "w") as text_file:
-		snpArray = reprocessLine[2]
-		for entry in snpArray:
-			header = entry[0]
-			sequence = entry[1] + "\n"
+	list = x[0]
+	n = x[1]
+	
+	tempOutputFile = dir + sigID + "_out_" + str(n) + ".txt"
+	mirandaOutput = None
+	
+	for line in list:
+		# For each line in the sublist
+		# Create temp files containing single miRNA/SNP entries 
+		# Then run miranda on these temp files 
+		# Capture the output and append to output part file 
+		tempRnaFileName = dir + sigID + "_mirna_" + str(n) + ".fasta"
+		with open(tempmirna, "w") as text_file:
+			header = line[0]
+			sequence = line[1]
 			
 			# Print to file 
 			print("{}".format(header), file=text_file)
 			print("{}".format(sequence), file=text_file)
+			
+		tempSnpFileName = dir + sigID + "_snp_" + str(n) + ".fasta"
+		with open(tempsnp, "w") as text_file:
+			header = line[2]
+			sequence = line[3]
+			
+			# Print to file 
+			print("{}".format(header), file=text_file)
+			print("{}".format(sequence), file=text_file)
+		
+		# Run miranda
+		toRun = [
+			"miranda", 
+			tempRnaFileName, 
+			tempSnpFileName, 
+			"-sc",
+			"0.0",
+			"-noenergy",
+			"-quiet",
+			"-keyval"
+		]
+		completedProcess = subprocess.run(toRun, stdout=subprocess.PIPE, encoding="utf-8")
+		mirandaText = completedProcess.stdout
+		'''
+		mirandaTextArray = mirandaText.split("\n")
 	
-	# Run miranda
-	toRun = [
-		"miranda", 
-		tempmirna, 
-		tempsnp, 
-		"-sc",
-		"206.0",
-		"-noenergy",
-		"-quiet",
-		"-keyval"
-	]
-	completedProcess = subprocess.run(toRun, stdout=subprocess.PIPE, encoding="utf-8")
-	mirandaText = completedProcess.stdout
-	mirandaTextArray = mirandaText.split("\n")
-	
-	for line in mirandaTextArray:
-		if line[0:2]=='>h':
-			toReturn = line.rstrip()
+		for line in mirandaTextArray:
+			if line[0:2]=='>h':
+				mirandaOutput = line.rstrip()
+		'''
+		
+		with open(tempOutputFile, "a") as o:
+			print("{}".format(mirandaText), file=o)
+			
+		return
 	
 	'''
 	if toReturn==None:
@@ -415,11 +435,8 @@ def runMiranda(list):
 	'''
 	
 	# Delete temp input files
-	toRun = ["rm", tempmirna, tempsnp]
+	toRun = ["rm", tempRnaFileName, tempSnpFileName]
 	subprocess.run(toRun, check=True)
-	
-	# Return the score line
-	return toReturn
 	
 def genInput(sublist, n):
 	tempSnpFileName = dir + sigID + "_snp_" + str(n) + ".fasta"
