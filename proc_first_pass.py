@@ -50,8 +50,10 @@ def parsemir(mirandaOut, outputFile):
 						# Compare to total number of SNP alleles 
 						if snpNum < snpTot: 
 							# Print to file 
+							print("Printing previous SNPs")
 							for entry in snp:
 								print("{}".format(entry), file=o)
+								print(entry)
 						
 					# Start new SNP container 
 					snp = [line.replace("\n", "")]
