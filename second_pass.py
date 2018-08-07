@@ -26,7 +26,7 @@ def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 	v = verbose
 	
 	try:
-		genSig(procsnpfile, mirnafile, output)
+		genSig(mirandafile, procsnpfile, mirnafile, output)
 		loadsnp(procsnpfile)
 		loadrna(mirnafile)
 		loadTopList(mirandafile)
@@ -38,7 +38,7 @@ def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 		return
 	
 # Generates a unique signature ID to be used in file naming
-def genSig(snpFile, mirnaFile, out):
+def genSig(mirandaFile, snpFile, mirnaFile, out):
 	global sigID
 	global dir 
 	
@@ -62,10 +62,10 @@ def genSig(snpFile, mirnaFile, out):
 		
 		# Print to file 
 		print("{}".format(header), file=text_file)
+		print("{}".format(mirandaFile), file=text_file)
 		print("{}".format(snpFile), file=text_file)
 		print("{}".format(mirnaFile), file=text_file)
 		print("{}".format(out), file=text_file)
-		print("{}".format(sc), file=text_file)
 	
 # Loads the SNP sequence file into memory 
 def loadsnp(procSnpFasta):
