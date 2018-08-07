@@ -19,8 +19,9 @@ def cli(mirandafile, out, so, verbose, ut, lt, scorefile, parsefile, split):
 			parseScoreNew(mirandafile, out, so, verbose, ut, lt, split)
 		else:
 			parseScore(mirandafile, out, verbose, ut, lt)
+		print('Success')
 	except:
-		print('Error parsing scores')
+		print('Error')
 
 def parseScore(mirandaOut, outputFile, v, ut, lt):
 	scorelist = []
