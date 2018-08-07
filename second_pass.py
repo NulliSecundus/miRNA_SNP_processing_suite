@@ -260,6 +260,7 @@ def buildBottomList():
 	
 	if v:
 		toPrint = str(len(bottomList)) + " sublists in bottomList for multiprocessing support"
+		print(toPrint)
 	
 	with Pool() as p:
 		sublists = p.map(buildSubBottomList, bottomList)
