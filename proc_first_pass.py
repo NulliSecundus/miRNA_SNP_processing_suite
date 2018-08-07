@@ -22,6 +22,8 @@ def parsemir(mirandaOut, outputFile):
 		for line in f:
 			if line[0]==">":
 				# Data line 
+				toPrint = "Count number: " + str(count)
+				print(toPrint)
 				print(line)
 				
 				lineSplit = line.split("\t") # Split data line by tabs
@@ -43,6 +45,9 @@ def parsemir(mirandaOut, outputFile):
 						snpNum = len(snp) # Count number of SNP alleles in output 
 						snpTot = int(snpInfo[3]) # Get total num of alleles 
 						
+						toPrint = "SNP Alleles: " + snpNum + "\nTotal Alleles: " + snpTot
+						print(toPrint)
+						
 						# Compare to total number of SNP alleles 
 						if snpNum < snpTot: 
 							# Print to file 
@@ -55,6 +60,8 @@ def parsemir(mirandaOut, outputFile):
 					
 				else: 
 					snp.append(line.replace("\n", ""))
+				
+				print("End of case")
 				
 				if count%20==0:
 					return
