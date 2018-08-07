@@ -37,7 +37,6 @@ def parsemir(mirandaOut, outputFile):
 				print(toPrint)
 				toPrint = "SNP ID: " + snpID
 				print(toPrint)
-				print("\n")
 				
 				if snpID != cmpID:
 					if snp != None:
@@ -62,6 +61,8 @@ def parsemir(mirandaOut, outputFile):
 					snp.append(line.replace("\n", ""))
 				
 				print("End of line")
+				print("\n")
+				print("\n")
 				
 				if count%20==0:
 					return
