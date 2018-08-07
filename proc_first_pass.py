@@ -16,6 +16,7 @@ def parsemir(mirandaOut, outputFile):
 	snp = None # SNP container 
 	snpInfo = None # SNP ref info
 	snpID = "default" # SNP ID
+	snpTot = 0 # Total number of SNP alleles
 	count = 1
 	
 	with open(mirandaOut) as f, open(outputFile, "w") as o:
@@ -42,7 +43,6 @@ def parsemir(mirandaOut, outputFile):
 					if snp != None:
 						# For every case except the start 
 						snpNum = len(snp) # Count number of SNP alleles in output 
-						snpTot = int(snpInfo[3]) # Get total num of alleles 
 						
 						toPrint = "SNP Alleles: " + str(snpNum) + "\nTotal Alleles: " + str(snpTot)
 						print(toPrint)
@@ -55,9 +55,10 @@ def parsemir(mirandaOut, outputFile):
 								print("{}".format(entry), file=o)
 								print(entry)
 						
-					# Start new SNP container 
+					# Start new SNP container and info 
 					snp = [line.replace("\n", "")]
 					snpID = cmpID # Set snpID to the new rs number
+					snpTot = int(snpInfo[3]) # Get new total num of alleles 
 					
 				else: 
 					snp.append(line.replace("\n", ""))
