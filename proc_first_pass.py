@@ -16,6 +16,7 @@ def parsemir(mirandaOut, outputFile):
 	snp = None # SNP container 
 	snpInfo = None # SNP ref info
 	snpID = "default" # SNP ID
+	count = 1
 	
 	with open(mirandaOut) as f, open(outputFile, "w") as o:
 		for line in f:
@@ -54,6 +55,10 @@ def parsemir(mirandaOut, outputFile):
 					
 				else: 
 					snp.append(line.replace("\n", ""))
+				
+				if count%20==0:
+					return
+				count += 1
 					
 			elif line[0]=="#":
 				if line[0:5]=="# End":
