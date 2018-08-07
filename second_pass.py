@@ -268,9 +268,11 @@ def buildBottomList():
 	bottomList = []
 	listNum = 0
 	for list in sublists:
+		'''
 		print(list[0])
 		print(listNum)
-		#bottomList.append([list, listNum])
+		'''
+		list.insert(0, listNum)
 		bottomList.append(list)
 		listNum += 1
 	
@@ -378,13 +380,11 @@ def runMiranda(x):
 	# Open output text file, store line, delete output text file
 	
 	print(x[0])
+	print(x[1])
 	return
 	
-	list = x[0]
-	n = x[1]
-	
-	print(listNum)
-	print(list[0])
+	n = x[0]
+	list = x[1:]
 	
 	tempOutputFile = dir + sigID + "_out_" + str(n) + ".txt"
 	mirandaOutput = None
