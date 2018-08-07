@@ -21,6 +21,8 @@ def parsemir(mirandaOut, outputFile):
 		for line in f:
 			if line[0]==">":
 				# Data line 
+				print(line)
+				
 				lineSplit = line.split("\t") # Split data line by tabs
 				
 				print(lineSplit)
