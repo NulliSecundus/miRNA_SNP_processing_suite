@@ -373,7 +373,7 @@ def mirnaSeq(mirnaName):
 			return str(line[1])
 
 # Runs miranda on the given SNP-miRNA pair from the bottom list  			
-def runMirandaOld(x):
+def runMiranda(x):
 	# Create temp input text files for miRNA and SNP fasta seqs
 	# Run miranda on each pair using temp input files
 	# Output to temp output text file
@@ -423,6 +423,7 @@ def runMirandaOld(x):
 			tempSnpFileName, 
 			"-sc",
 			"0.0",
+			"-noenergy",
 			"-quiet",
 			"-keyval"
 		]
@@ -433,10 +434,12 @@ def runMirandaOld(x):
 		# Parse miranda text and append top hit to output file 
 		parseMiranda(mirandaTextArray, tempOutputFile)
 		
+		'''
 		if count%1000==0:
 			print(count)
 			
 		count += 1
+		'''
 		
 		'''
 		# Delete temp input files
@@ -452,7 +455,7 @@ def runMirandaOld(x):
 		'''
 	
 # Runs miranda on the given SNP-miRNA pair from the bottom list  			
-def runMiranda(x):
+def runMirandaTest(x):
 	# Create temp input text files for miRNA and SNP fasta seqs
 	# Run miranda on each pair using temp input files
 	# Output to temp output text file
