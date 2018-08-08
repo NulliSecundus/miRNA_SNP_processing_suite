@@ -68,7 +68,7 @@ def genSig(snpFile, mirnaFile, out):
 	# Create README info file in the temp folder
 	infoFile = dir + "README" + ".txt"
 	with open(infoFile, "w") as text_file:
-		header = "Input Parameters: "
+		header = "First Pass\nInput Parameters: "
 		
 		# Print to file 
 		print("{}".format(header), file=text_file)

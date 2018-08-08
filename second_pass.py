@@ -62,7 +62,7 @@ def genSig(mirandaFile, snpFile, mirnaFile):
 	# Create README info file in the temp folder
 	infoFile = dir + "README" + ".txt"
 	with open(infoFile, "w") as text_file:
-		header = "Input Parameters: "
+		header = "Second Pass\nInput Parameters: "
 		
 		# Print to file 
 		print("{}".format(header), file=text_file)
@@ -397,7 +397,7 @@ def runMiranda(x):
 		# Then run miranda on these temp files 
 		# Capture the output and append to output part file 
 		tempRnaFileName = dir + sigID + "_mirna_" + str(n) + ".fasta"
-		with open(tempmirna, "w") as text_file:
+		with open(tempRnaFileName, "w") as text_file:
 			header = line[0]
 			sequence = line[1]
 			
@@ -406,7 +406,7 @@ def runMiranda(x):
 			print("{}".format(sequence), file=text_file)
 			
 		tempSnpFileName = dir + sigID + "_snp_" + str(n) + ".fasta"
-		with open(tempsnp, "w") as text_file:
+		with open(tempSnpFileName, "w") as text_file:
 			header = line[2]
 			sequence = line[3]
 			
