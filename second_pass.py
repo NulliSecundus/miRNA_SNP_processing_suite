@@ -426,15 +426,14 @@ def runMiranda(x):
 		]
 		completedProcess = subprocess.run(toRun, stdout=subprocess.PIPE, encoding="utf-8")
 		mirandaText = completedProcess.stdout
-		parseMiranda(mirandaText, tempOutputFile)
-		
-		'''
 		mirandaTextArray = mirandaText.split("\n")
-	
-		for line in mirandaTextArray:
-			if line[0:2]=='>h':
-				mirandaOutput = line.rstrip()
-		'''
+		
+		# Parse miranda text and append top hit to output file 
+		parseMiranda(mirandaTextArray, tempOutputFile)
+		
+		# Delete temp input files
+		toRun = ["rm", tempRnaFileName, tempSnpFileName]
+		subprocess.run(toRun, check=True)
 		
 		'''
 		with open(tempOutputFile, "a") as o:
@@ -442,16 +441,6 @@ def runMiranda(x):
 			
 		break
 		'''
-	
-	
-	'''
-	if toReturn==None:
-		print(mirandaText)
-	'''
-	
-	# Delete temp input files
-	toRun = ["rm", tempRnaFileName, tempSnpFileName]
-	subprocess.run(toRun, check=True)
 	
 def parseMiranda(text, out):
 	output_container = [] # container for final output
