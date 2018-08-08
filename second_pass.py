@@ -266,7 +266,7 @@ def buildBottomList():
 		sublists = p.map(buildSubBottomList, bottomList)
 	
 	bottomList = []
-	listNum = 0
+	listNum = 1
 	for list in sublists:
 		'''
 		print(list[0])
@@ -421,12 +421,13 @@ def runMiranda(x):
 			tempSnpFileName, 
 			"-sc",
 			"0.0",
-			"-noenergy",
 			"-quiet",
 			"-keyval"
 		]
 		completedProcess = subprocess.run(toRun, stdout=subprocess.PIPE, encoding="utf-8")
 		mirandaText = completedProcess.stdout
+		parseMiranda(mirandaText, tempOutputFile)
+		
 		'''
 		mirandaTextArray = mirandaText.split("\n")
 	
@@ -435,12 +436,13 @@ def runMiranda(x):
 				mirandaOutput = line.rstrip()
 		'''
 		
+		'''
 		with open(tempOutputFile, "a") as o:
 			print("{}".format(mirandaText), file=o)
 			
 		break
+		'''
 	
-	return 
 	
 	'''
 	if toReturn==None:
@@ -450,6 +452,50 @@ def runMiranda(x):
 	# Delete temp input files
 	toRun = ["rm", tempRnaFileName, tempSnpFileName]
 	subprocess.run(toRun, check=True)
+	
+def parseMiranda(text, out):
+	output_container = [] # container for final output
+	container = [] # temporary container for comparison within a group
+	
+	for line in text:
+		# for each line in the miranda output text
+		if line[0:2]=='>h':
+			# if line is a data line
+			container.append(line.rstrip())
+					
+		elif line[0:2]=='>>':
+			# if line is a summary line
+			# end case for a grouping
+			# copy top score from from container
+			topLine = ""
+			
+			if len(container)==1 :
+				# if the group only has one data line 
+				topLine = str(container[0])
+			else:
+				# if multiple data lines in grouping
+				# determine top score line
+				# send top score line to output_container
+				topScore = -1
+				
+				for dataline in container:
+					# for each data line in the grouping
+					splitdline = dataline.split("\t")
+					compare = float(splitdline[2])
+					if compare > topScore :
+						topScore = compare
+						topLine = dataline
+			
+			# append topLine to output_container
+			output_container.append(topLine)
+				
+			# reset the temporary container
+			container = [] 
+	
+	with open(out, 'a') as o:	
+		for line in output_container:
+			# write each topLine to the output file 
+			print('{}'.format(line), file=o)
 	
 def genInput(sublist, n):
 	tempSnpFileName = dir + sigID + "_snp_" + str(n) + ".fasta"
