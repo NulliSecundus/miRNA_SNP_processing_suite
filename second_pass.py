@@ -3,6 +3,7 @@ import subprocess
 import secrets
 import time
 import math
+import io
 from multiprocessing import Pool
 
 procSnpArray = []
@@ -372,7 +373,7 @@ def mirnaSeq(mirnaName):
 			return str(line[1])
 
 # Runs miranda on the given SNP-miRNA pair from the bottom list  			
-def runMiranda(x):
+def runMirandaOld(x):
 	# Create temp input text files for miRNA and SNP fasta seqs
 	# Run miranda on each pair using temp input files
 	# Output to temp output text file
@@ -449,6 +450,60 @@ def runMiranda(x):
 			
 		break
 		'''
+	
+# Runs miranda on the given SNP-miRNA pair from the bottom list  			
+def runMiranda(x):
+	# Create temp input text files for miRNA and SNP fasta seqs
+	# Run miranda on each pair using temp input files
+	# Output to temp output text file
+	# Delete temp input text files
+	# Open output text file, store line, delete output text file
+	
+	n = x[0]
+	list = x[1:]
+	
+	tempOutputFile = dir + sigID + "_out_" + str(n) + ".txt"
+	mirandaOutput = None
+	count = 1
+	
+	for line in list:
+		# For each line in the sublist
+		# Create temp files containing single miRNA/SNP entries 
+		# Then run miranda on these temp files 
+		# Capture the output and append to output part file 
+		tempRnaFileName = io.StringIO()
+		header1 = line[0]
+		sequence1 = line[1]
+		tempRnaFileName.write(header1)
+		tempRnaFileName.write(sequence1)
+		
+		tempSnpFileName = io.StringIO()
+		header2 = line[2]
+		sequence2 = line[3]
+		tempSnpFileName.write(header2)
+		tempSnpFileName.write(sequence2)
+		
+		# Run miranda
+		toRun = [
+			"miranda", 
+			tempRnaFileName, 
+			tempSnpFileName, 
+			"-sc",
+			"0.0",
+			"-quiet",
+			"-keyval"
+		]
+		completedProcess = subprocess.run(toRun, stdout=subprocess.PIPE, encoding="utf-8")
+		mirandaText = completedProcess.stdout
+		mirandaTextArray = mirandaText.split("\n")
+		
+		# Parse miranda text and append top hit to output file 
+		parseMiranda(mirandaTextArray, tempOutputFile)
+		
+		if count%1000==0:
+			print(count)
+			
+		count += 1
 	
 def parseMiranda(text, out):
 	container = [] # temporary container for comparison within a group
