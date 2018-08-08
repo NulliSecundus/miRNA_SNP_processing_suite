@@ -390,6 +390,7 @@ def runMiranda(x):
 	
 	tempOutputFile = dir + sigID + "_out_" + str(n) + ".txt"
 	mirandaOutput = None
+	count = 1
 	
 	for line in list:
 		# For each line in the sublist
@@ -431,9 +432,16 @@ def runMiranda(x):
 		# Parse miranda text and append top hit to output file 
 		parseMiranda(mirandaTextArray, tempOutputFile)
 		
+		if count%1000==0:
+			print(count)
+			
+		count += 1
+		
+		'''
 		# Delete temp input files
 		toRun = ["rm", tempRnaFileName, tempSnpFileName]
 		subprocess.run(toRun, check=True)
+		'''
 		
 		'''
 		with open(tempOutputFile, "a") as o:
@@ -443,7 +451,6 @@ def runMiranda(x):
 		'''
 	
 def parseMiranda(text, out):
-	output_container = [] # container for final output
 	container = [] # temporary container for comparison within a group
 	
 	for line in text:
@@ -464,7 +471,6 @@ def parseMiranda(text, out):
 			else:
 				# if multiple data lines in grouping
 				# determine top score line
-				# send top score line to output_container
 				topScore = -1
 				
 				for dataline in container:
@@ -474,17 +480,13 @@ def parseMiranda(text, out):
 					if compare > topScore :
 						topScore = compare
 						topLine = dataline
-			
-			# append topLine to output_container
-			output_container.append(topLine)
 				
 			# reset the temporary container
 			container = [] 
 	
 	with open(out, 'a') as o:	
-		for line in output_container:
-			# write each topLine to the output file 
-			print('{}'.format(line), file=o)
+		# write topLine to the output file 
+		print('{}'.format(topLine), file=o)
 	
 def genInput(sublist, n):
 	tempSnpFileName = dir + sigID + "_snp_" + str(n) + ".fasta"
