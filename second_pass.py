@@ -382,9 +382,11 @@ def runMiranda(x):
 	n = x[0]
 	list = x[1:]
 	
+	'''
 	print(n)
 	print(list[0])
 	return
+	'''
 	
 	tempOutputFile = dir + sigID + "_out_" + str(n) + ".txt"
 	mirandaOutput = None
