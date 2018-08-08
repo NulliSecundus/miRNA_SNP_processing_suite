@@ -379,12 +379,12 @@ def runMiranda(x):
 	# Delete temp input text files
 	# Open output text file, store line, delete output text file
 	
-	print(x[0])
-	print(x[1])
-	return
-	
 	n = x[0]
 	list = x[1:]
+	
+	print(n)
+	print(list[0])
+	return
 	
 	tempOutputFile = dir + sigID + "_out_" + str(n) + ".txt"
 	mirandaOutput = None
