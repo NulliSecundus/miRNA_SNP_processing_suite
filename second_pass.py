@@ -483,9 +483,7 @@ def genInput(sublist, n):
 	tempRestrictFileName = dir + sigID + "_restrict_" + str(n) + ".txt"
 	tempOutFileName = dir + sigID + "_out_" + str(n) + ".txt"
 	
-	with open(tempRnaFileName, "w") as r, 
-		open(tempSnpFileName, "w") as s,
-		open(tempRestrictFileName, "w") as res:
+	with open(tempRnaFileName, "w") as r, open(tempSnpFileName, "w") as s, open(tempRestrictFileName, "w") as res:
 		
 		for entry in sublist:
 			rnaHeader = entry[0]
