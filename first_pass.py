@@ -2,7 +2,7 @@ import click
 import subprocess
 import secrets
 from multiprocessing import Pool
-import time;
+import time
 
 snpList = [] # List to hold SNP entries
 snpFileList = [] # List to hold names of SNP temp files 
@@ -15,21 +15,33 @@ dir = None # Directory for temp file storage
 sc = None # Input score threshold (float) 
 snpSplit = 2000000 # Number of SNP entries per subsection
 rnaSplit = 80 # Number of miRNA entries per subsection
+noEnergy = False # miranda no energy option 
 
 @click.command()
 @click.argument('snpfile')
 @click.argument('mirnafile')
 @click.argument('output')
 @click.argument('score')
-def cli(snpfile, mirnafile, output, score):
+@click.option('-snp', default=2000000, help='Number of SNP entries per subsection\nDefault 2000000')
+@click.option('-rna', default=80, help='Number of miRNA entries per subsection\nDefault 80')
+@click.option('-stop', default=0, help='Limits run to the specified number of SNP subsections')
+@click.option('--noenergy', is_flag=True, help='Flag for miranda -noenergy option')
+def cli(snpfile, mirnafile, output, score, snp, rna, stop, noenergy):
 	global sc 
+	global snpSplit
+	global rnaSplit
+	global noEnergy
+	
 	sc = float(score)
+	snpSplit = snp 
+	rnaSplit = rna 
+	noEnergy = noenergy
 	
 	try:
 		genSig(snpfile, mirnafile, output)
 		loadsnp(snpfile)
 		loadrna(mirnafile)
-		iterateMiranda(output)
+		iterateMiranda(output, stop)
 		print("Success")
 	except:
 		print("Error")
@@ -53,10 +65,10 @@ def genSig(snpFile, mirnaFile, out):
 		localtime = "# Start: " + time.asctime(time.localtime(time.time()))
 		print("{}".format(localtime), file=o)
 	
-	# Create README info file 
+	# Create README info file in the temp folder
 	infoFile = dir + "README" + ".txt"
 	with open(infoFile, "w") as text_file:
-		header = "Input Parameters: "
+		header = "First Pass\nInput Parameters: "
 		
 		# Print to file 
 		print("{}".format(header), file=text_file)
@@ -127,7 +139,7 @@ def loadrna(mirnaFile):
 		outName = dir + sigID + "_out_" + str(n+1) + ".txt"
 		outputFileList.append(outName)
 	
-def iterateMiranda(out):
+def iterateMiranda(out, stop):
 	# Setup lists of files to iterate miranda over 
 	for entry in snpFileList:
 		tempMiranda = []
@@ -144,6 +156,10 @@ def iterateMiranda(out):
 			p.map(runMiranda, entry)
 		parseMiranda(num)
 		appendOutput(out)
+		
+		if (stop!=0) and (num%stop==0):
+			break
+		
 		num += 1
 		
 	# Delete all temp files and folder
@@ -211,18 +227,31 @@ def runMiranda(x):
 	tempOut = dir + sigID + "_out_" + fileNum + ".txt"
 	
 	# Run miranda
-	toRun = [
-		"miranda", 
-		tempRnaFile, 
-		tempSnpFile, 
-		"-sc",
-		str(sc),
-		"-noenergy",
-		"-quiet",
-		"-keyval",
-		"-out",
-		tempOut
-	]
+	if noEnergy:
+		toRun = [
+			"miranda", 
+			tempRnaFile, 
+			tempSnpFile, 
+			"-sc",
+			str(sc),
+			"-noenergy",
+			"-quiet",
+			"-keyval",
+			"-out",
+			tempOut
+		]
+	else:
+		toRun = [
+			"miranda", 
+			tempRnaFile, 
+			tempSnpFile, 
+			"-sc",
+			str(sc),
+			"-quiet",
+			"-keyval",
+			"-out",
+			tempOut
+		]
 	subprocess.run(toRun, check=True)
 
 # Utility function for parsing temp miranda outputs into final format 	
