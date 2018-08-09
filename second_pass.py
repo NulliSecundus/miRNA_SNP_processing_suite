@@ -36,6 +36,7 @@ def cli(mirandafile, snpfile, mirnafile, output, snp, rna, stop, noenergy):
 	global snpSplit
 	global rnaSplit
 	global noEnergy
+	global outputFileName
 	
 	outputFileName = output
 	snpSplit = snp 
