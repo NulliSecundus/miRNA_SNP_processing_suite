@@ -22,6 +22,7 @@ sc = None # Input score threshold (float)
 snpSplit = 2000000 # Number of SNP entries per subsection
 rnaSplit = 80 # Number of miRNA entries per subsection
 noEnergy = False # miranda no energy option 
+v = False
 
 @click.command()
 @click.argument('mirandafile')
