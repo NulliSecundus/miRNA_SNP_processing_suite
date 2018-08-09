@@ -43,7 +43,7 @@ def cli(mirandafile, snpfile, mirnafile, output, snp, rna, stop, noenergy):
 	noEnergy = noenergy
 	
 	try:
-		genSig(mirandafile, procsnpfile, mirnafile)
+		genSig(mirandafile, snpfile, mirnafile)
 		printsnp(snpfile)
 		printrna(mirnafile)
 		loadsnp(snpfile)
