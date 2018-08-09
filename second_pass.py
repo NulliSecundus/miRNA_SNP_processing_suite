@@ -6,41 +6,53 @@ import math
 from multiprocessing import Pool
 
 procSnpArray = []
-procRnaArray = []
+snpList = [] # List to hold SNP entries
+snpFileList = [] # List to hold names of SNP temp files 
+rnaList = [] # List to hold miRNA entries
+rnaFileList = [] # List to hold names of miRNA temp files 
 topList = []
 bottomList = []
-tempFileList = []
-outputFileList = []
-v = False
-sigID = None
-dir = None 
-outputFileName = None 
+mirandaList = [] # Ordered parameters to iterate miranda
+outputFileList = [] # List to hold names of temp miranda output files
+outputFileName = None
+tempRestrictFileName = None 
+sigID = None # Unique signature ID for naming temp files and folder 
+dir = None # Directory for temp file storage 
+sc = None # Input score threshold (float) 
+snpSplit = 2000000 # Number of SNP entries per subsection
+rnaSplit = 80 # Number of miRNA entries per subsection
 noEnergy = False # miranda no energy option 
 
 @click.command()
 @click.argument('mirandafile')
-@click.argument('procsnpfile')
+@click.argument('snpfile')
 @click.argument('mirnafile')
 @click.argument('output')
+@click.argument('score')
+@click.option('-snp', default=2000000, help='Number of SNP entries per subsection\nDefault 2000000')
+@click.option('-rna', default=80, help='Number of miRNA entries per subsection\nDefault 80')
+@click.option('-stop', default=0, help='Limits run to the specified number of SNP subsections')
 @click.option('--noenergy', is_flag=True, help='Flag for miranda -noenergy option')
-@click.option('--verbose', is_flag=True, help='''Output additional information to
-	the console''')
-def cli(mirandafile, procsnpfile, mirnafile, output, noenergy, verbose):
-	global v
-	global outputFileName
+def cli(mirandafile, snpfile, mirnafile, output, score, snp, rna, stop, noenergy):
+	global sc 
+	global snpSplit
+	global rnaSplit
 	global noEnergy
 	
-	v = verbose
+	sc = float(score)
 	outputFileName = output
+	snpSplit = snp 
+	rnaSplit = rna 
 	noEnergy = noenergy
 	
 	try:
 		genSig(mirandafile, procsnpfile, mirnafile)
-		loadsnp(procsnpfile)
-		loadrna(mirnafile)
+		printsnp(snpfile)
+		printrna(mirnafile)
+		loadsnp(snpfile)
 		loadTopList(mirandafile)
 		buildBottomList()
-		iterateMiranda()
+		iterateMiranda(stop)
 		print("Success")
 	except:
 		print("Error")
@@ -50,6 +62,7 @@ def cli(mirandafile, procsnpfile, mirnafile, output, noenergy, verbose):
 def genSig(mirandaFile, snpFile, mirnaFile):
 	global sigID
 	global dir 
+	global tempRestrictFileName
 	
 	sigID = str(secrets.randbelow(999999999999))
 	dir = "temp_" + sigID
@@ -58,6 +71,7 @@ def genSig(mirandaFile, snpFile, mirnaFile):
 	subprocess.run(toRun, check=True)
 	
 	dir += "/"
+	tempRestrictFileName = dir + sigID + "_restrict.txt"
 	
 	# Create output file and add timestamp
 	with open(outputFileName, 'w') as o:
@@ -75,7 +89,69 @@ def genSig(mirandaFile, snpFile, mirnaFile):
 		print("{}".format(snpFile), file=text_file)
 		print("{}".format(mirnaFile), file=text_file)
 		print("{}".format(outputFileName), file=text_file)
+
+# Loads the SNP file into memory and splits it every 2 million entries
+# Outputs each split section as a temp file for miranda 	
+def printsnp(snpFile):
+	global snpList
 	
+	print("Loading SNP fasta file")
+	
+	snpBlock = None
+	fileNum = 1
+	count = 0
+	
+	with open(snpFile) as f:
+		for line in f:
+			if line[0]==">":
+				snpBlock = [line.replace('\n', ''), "seq"]
+			elif line[0]=="\n": 	
+				if snpBlock != None:
+					snpList.append(snpBlock)
+					count += 1
+					if count%snpSplit==0:
+						outputSnp(fileNum)
+						fileNum += 1
+			else:
+				snpBlock[1] = line.replace('\n', '')
+	
+	# Output any remaining SNP entries
+	if count%snpSplit!=0:
+		outputSnp(fileNum)
+	
+# Loads the miRNA file into memory and splits it every 80 entries 
+# Outputs each split section as a temp file for miranda 
+def printrna(mirnaFile):
+	global rnaList
+	global outputFileList
+	
+	print("Loading miRNA fasta file")
+	
+	rnaBlock = None
+	fileNum = 1
+	count = 0
+	
+	with open(mirnaFile) as f:
+		for line in f:
+			if line[0]==">":
+				rnaBlock = [line.replace('\n', ''), "seq"]
+			else:
+				rnaBlock[1] = line.replace('\n', '')
+				rnaList.append(rnaBlock)
+				count += 1
+				if count%rnaSplit==0:
+					outputRna(fileNum)
+					fileNum += 1
+				
+	# Output any remaining miRNA entries
+	if count%rnaSplit!=0:
+		outputRna(fileNum)
+		
+	# Populate list of output files based on miRNA input files
+	for n in range(fileNum):
+		outName = dir + sigID + "_out_" + str(n+1) + ".txt"
+		outputFileList.append(outName)
+		
 # Loads the SNP sequence file into memory 
 def loadsnp(procSnpFasta):
 	global procSnpArray
@@ -139,16 +215,6 @@ def loadsnp(procSnpFasta):
 				
 				snpAllele[1] = sequence
 				snpLine.append(snpAllele)
-				
-				'''
-				if count%1000000 == 0:
-					print(count)
-					
-					for line in procSnpArray:
-						print(line)
-					
-					return
-					'''
 					
 			elif line[0]=="#":
 				#Do nothing, it's a comment line
@@ -162,43 +228,7 @@ def loadsnp(procSnpFasta):
 		headerLine = [rsNum+1]
 		snpSubArray.insert(0, headerLine)
 		procSnpArray.append(snpSubArray)
-	
-# Loads the miRNA file into memory 
-def loadrna(miRNA):
-	global procRnaArray
-	
-	print("Loading miRNA file")
-	
-	count = 0
-	header = ""
-	sequence = ""
-	
-	with open(miRNA) as f:
-		for line in f:
-			if line[0]==">":
-				header = line
-				header = header.replace('\n', '')
-				
-			else:
-				# Sequence line 
-				sequence = line
-				sequence = sequence.replace('\n', '')
-				
-				temp = [header, sequence]
-				procRnaArray.append(temp)
-				
-				'''
-				if count%100000 == 0:
-					print(count)
-					
-					for line in procRnaArray:
-						print(line)
-					
-					return
-				'''
-				
-				count = count+1
-
+		
 # Populates the list of top hit pairs
 def loadTopList(mirandaFile):
 	global topList
@@ -243,7 +273,7 @@ def loadTopList(mirandaFile):
 				if count%topSplit==0:
 					topList.append(subTopList)
 					subTopList = []
-
+					
 # Populates the list of pairs to process with miranda
 def buildBottomList():
 	global topList
@@ -274,25 +304,19 @@ def buildBottomList():
 	listNum = 1
 	for list in sublists:
 		#list.insert(0, listNum)
-		bottomList.append(list)
-		listNum += 1
+		
+		#bottomList.append(list)
+		#listNum += 1
+		
+		genRestrict(list)
+			
 	
 # Sub-function to handle parallel processing of each topList section
 def buildSubBottomList(n):
 	count = 0
 	sublist = []
 	
-	'''
-	toPrint = "buildSubBottomList " + str(n)
-	print(toPrint)
-	'''
-	
 	for line in topList[n]:
-		'''
-		if count%100000==0:
-			localtime = str(count) + " at " + time.asctime(time.localtime(time.time()))
-			print(localtime)
-			'''
 		
 		mirna = line[0]
 		rsNum = int(line[1])
@@ -312,7 +336,7 @@ def buildSubBottomList(n):
 			checkAllele = snpLine[3+x]
 			if checkAllele[0] != allele:
 				snpAlleleName = snpName + checkAllele[0]
-				sublist.append([mirna, mirnaSeq(mirna), snpAlleleName, checkAllele[1]])
+				sublist.append([mirna, "seq", snpAlleleName, checkAllele[1]])
 		count += 1
 	
 	if v:
@@ -320,61 +344,79 @@ def buildSubBottomList(n):
 		print(toPrint)
 		
 	return sublist
-
-# Iteratively runs miranda on the list of SNP-miRNA pairs to be processed 
-def iterateMiranda():
-	global procSnpArray
-	global procRnaArray
 	
-	# Clear memory of unused variables
-	procSnpArray = None
-	procRnaArray = None
+def iterateMiranda(stop):
+	# Setup lists of files to iterate miranda over 
+	for entry in snpFileList:
+		tempMiranda = []
+		for line in rnaFileList:
+			tempMiranda.append([entry, line])
+		mirandaList.append(tempMiranda)
 	
-	print("Processing list complete, running miranda")
-	
-	
-	# Create temp input files for each sublist in bottomList
+	# Iteratively run miranda
 	num = 1
-	for list in bottomList:
-		genInput(list, num)
-		num += 1
-	
-	if v:
-		toPrint = "Input files: " + dir
+	for entry in mirandaList:
+		toPrint = "Running miranda on SNP part " + str(num)
 		print(toPrint)
+		with Pool() as p:
+			p.map(runMiranda, entry)
+		parseMiranda(num)
+		appendOutput(outputFileName)
 		
-		for entry in tempFileList:
-			print(entry)
-	
-			
-	# For each sublist in bottomList, run miranda in parallel 
-	with Pool() as p:
-		p.map(runMiranda, tempFileList)
+		if (stop!=0) and (num%stop==0):
+			break
 		
-	parseMiranda()
-	appendOutput(outputFileName)
-	
-# Searches the procSnpArray and returns the line for the given rsNum
-def snpSearch(rs):
-	for subsection in procSnpArray:
-		if rs < subsection[0][0]:
-			for line in subsection:
-				#print(line[0])
-				if rs == line[0]:
-					return line
-	toPrint = "Error: could not find SNP " + str(rs)
+		num += 1
+		
+	# Delete all temp files and folder
+	toPrint = "Clearing temporary files and folder"
 	print(toPrint)
-	return None
+	toRun = ["rm", "-rf", dir.replace('/', '')]
+	subprocess.run(toRun, check=True)
 	
-# Returns the sequence associated with the given miRNA name	
-def mirnaSeq(mirnaName):
-	for line in procRnaArray:
-		mirnaCmp = line[0]
-		mirnaCmp = mirnaCmp.split(" ")
-		mirnaCmp = mirnaCmp[0]
-		if mirnaCmp == mirnaName:
-			return str(line[1])
- 			
+	# Add ending timestamp to output file 
+	with open(outputFileName, 'a') as o:
+		localtime = "# End: " + time.asctime(time.localtime(time.time()))
+		print("{}".format(localtime), file=o)
+	
+# Utility function for printing current snpList to file
+def outputSnp(n):
+	global snpList
+	global sigID
+	global dir
+	
+	tempSnpFileName = dir + sigID + "_snp_" + str(n) + ".fasta"
+	with open(tempSnpFileName, "w") as text_file:
+		for entry in snpList:
+			header = entry[0]
+			sequence = entry[1] + "\n"
+			
+			# Print to file 
+			print("{}".format(header), file=text_file)
+			print("{}".format(sequence), file=text_file)
+	
+	snpFileList.append(tempSnpFileName)
+	snpList = []
+	
+# Utility function for printing current rnaList to file
+def outputRna(n):
+	global rnaList
+	global sigID
+	global dir
+	
+	tempRnaFileName = dir + sigID + "_mirna_" + str(n) + ".fasta"
+	with open(tempRnaFileName, "w") as text_file:
+		for entry in rnaList:
+			header = entry[0]
+			sequence = entry[1] + "\n"
+			
+			# Print to file 
+			print("{}".format(header), file=text_file)
+			print("{}".format(sequence), file=text_file)
+	
+	rnaFileList.append(tempRnaFileName)
+	rnaList = []
+	
 # Utility function for handling each iteration of miranda 
 def runMiranda(x):
 	global dir
@@ -382,8 +424,13 @@ def runMiranda(x):
 	
 	tempSnpFile = x[0]
 	tempRnaFile = x[1]
-	tempRestrictFile = x[2]
-	tempOut = x[3]
+	
+	# Get the file number for output naming
+	textArray = tempRnaFile.replace('.fasta', '').split("_")
+	fileNum = textArray[3]
+	
+	# Assign name of temp output file 
+	tempOut = dir + sigID + "_out_" + fileNum + ".txt"
 	
 	# Run miranda
 	if noEnergy:
@@ -392,12 +439,12 @@ def runMiranda(x):
 			tempRnaFile, 
 			tempSnpFile, 
 			"-sc",
-			"0.0",
+			str(sc),
 			"-noenergy",
 			"-quiet",
 			"-keyval",
 			"-restrict",
-			tempRestrictFile,
+			tempRestrictFileName,
 			"-out",
 			tempOut
 		]
@@ -407,19 +454,19 @@ def runMiranda(x):
 			tempRnaFile, 
 			tempSnpFile, 
 			"-sc",
-			"0.0",
+			str(sc),
 			"-quiet",
 			"-keyval",
 			"-restrict",
-			tempRestrictFile,
+			tempRestrictFileName,
 			"-out",
 			tempOut
 		]
 	subprocess.run(toRun, check=True)
-	
+
 # Utility function for parsing temp miranda outputs into final format 	
-def parseMiranda():
-	toPrint = "Parsing miranda outputs"
+def parseMiranda(n):
+	toPrint = "Parsing part " + str(n) + " miranda outputs"
 	print(toPrint)
 	
 	for entry in outputFileList:
@@ -476,36 +523,7 @@ def parseMiranda():
 		# Delete temp miranda output file
 		toRun = ["rm", entry]
 		subprocess.run(toRun, check=True)
-	
-def genInput(sublist, n):
-	tempSnpFileName = dir + sigID + "_snp_" + str(n) + ".fasta"
-	tempRnaFileName = dir + sigID + "_mirna_" + str(n) + ".fasta"
-	tempRestrictFileName = dir + sigID + "_restrict_" + str(n) + ".txt"
-	tempOutFileName = dir + sigID + "_out_" + str(n) + ".txt"
-	
-	with open(tempRnaFileName, "w") as r, open(tempSnpFileName, "w") as s, open(tempRestrictFileName, "w") as res:
 		
-		for entry in sublist:
-			rnaHeader = entry[0]
-			rnaSequence = entry[1] + "\n"
-			snpHeader = entry[2]
-			snpSequence = entry[3] + "\n"
-			restrict = rnaHeader + "\t" + snpHeader
-			
-			# Print to miRNA file
-			print("{}".format(rnaHeader), file=r)
-			print("{}".format(rnaSequence), file=r)
-			
-			# Print to SNP file
-			print("{}".format(snpHeader), file=s)
-			print("{}".format(snpSequence), file=s)
-			
-			# Print to restrict file
-			print("{}".format(restrict), file=res)
-	
-	tempFileList.append([tempRnaFileName, tempSnpFileName, tempRestrictFileName, tempOutFileName])
-	outputFileList.append(tempOutFileName)
-	
 # Utility function for appending each compressed temp output to final
 def appendOutput(out):
 	for entry in outputFileList:
@@ -518,3 +536,26 @@ def appendOutput(out):
 		# Delete compressed temp output files
 		toRun = ["rm", cmpOut]
 		subprocess.run(toRun, check=True)
+		
+# Searches the procSnpArray and returns the line for the given rsNum
+def snpSearch(rs):
+	for subsection in procSnpArray:
+		if rs < subsection[0][0]:
+			for line in subsection:
+				#print(line[0])
+				if rs == line[0]:
+					return line
+	toPrint = "Error: could not find SNP " + str(rs)
+	print(toPrint)
+	return None
+	
+def genRestrict(sublist):
+	with open(tempRestrictFileName, "a") as res:
+		
+		for entry in sublist:
+			rnaHeader = entry[0]
+			snpHeader = entry[2]
+			restrict = rnaHeader.replace(">", "") + "\t" + snpHeader.replace(">", "")
+			
+			# Print to restrict file
+			print("{}".format(restrict), file=res)
