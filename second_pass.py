@@ -18,7 +18,6 @@ outputFileName = None
 tempRestrictFileName = None 
 sigID = None # Unique signature ID for naming temp files and folder 
 dir = None # Directory for temp file storage 
-sc = None # Input score threshold (float) 
 snpSplit = 2000000 # Number of SNP entries per subsection
 rnaSplit = 80 # Number of miRNA entries per subsection
 noEnergy = False # miranda no energy option 
@@ -29,18 +28,15 @@ v = False
 @click.argument('snpfile')
 @click.argument('mirnafile')
 @click.argument('output')
-@click.argument('score')
 @click.option('-snp', default=2000000, help='Number of SNP entries per subsection\nDefault 2000000')
 @click.option('-rna', default=80, help='Number of miRNA entries per subsection\nDefault 80')
 @click.option('-stop', default=0, help='Limits run to the specified number of SNP subsections')
 @click.option('--noenergy', is_flag=True, help='Flag for miranda -noenergy option')
-def cli(mirandafile, snpfile, mirnafile, output, score, snp, rna, stop, noenergy):
-	global sc 
+def cli(mirandafile, snpfile, mirnafile, output, snp, rna, stop, noenergy):
 	global snpSplit
 	global rnaSplit
 	global noEnergy
 	
-	sc = float(score)
 	outputFileName = output
 	snpSplit = snp 
 	rnaSplit = rna 
@@ -440,7 +436,7 @@ def runMiranda(x):
 			tempRnaFile, 
 			tempSnpFile, 
 			"-sc",
-			str(sc),
+			"0.0",
 			"-noenergy",
 			"-quiet",
 			"-keyval",
@@ -455,7 +451,7 @@ def runMiranda(x):
 			tempRnaFile, 
 			tempSnpFile, 
 			"-sc",
-			str(sc),
+			"0.0",
 			"-quiet",
 			"-keyval",
 			"-restrict",
