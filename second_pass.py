@@ -3,7 +3,6 @@ import subprocess
 import secrets
 import time
 import math
-import io
 from multiprocessing import Pool
 
 procSnpArray = []
@@ -11,24 +10,29 @@ procRnaArray = []
 topList = []
 bottomList = []
 tempFileList = []
+outputFileList = []
 v = False
 sigID = None
 dir = None 
 outputFileName = None 
+noEnergy = False # miranda no energy option 
 
 @click.command()
 @click.argument('mirandafile')
 @click.argument('procsnpfile')
 @click.argument('mirnafile')
 @click.argument('output')
+@click.option('--noenergy', is_flag=True, help='Flag for miranda -noenergy option')
 @click.option('--verbose', is_flag=True, help='''Output additional information to
 	the console''')
-def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
+def cli(mirandafile, procsnpfile, mirnafile, output, noenergy, verbose):
 	global v
 	global outputFileName
+	global noEnergy
 	
 	v = verbose
 	outputFileName = output
+	noEnergy = noenergy
 	
 	try:
 		genSig(mirandafile, procsnpfile, mirnafile)
@@ -269,11 +273,7 @@ def buildBottomList():
 	bottomList = []
 	listNum = 1
 	for list in sublists:
-		'''
-		print(list[0])
-		print(listNum)
-		'''
-		list.insert(0, listNum)
+		#list.insert(0, listNum)
 		bottomList.append(list)
 		listNum += 1
 	
@@ -332,7 +332,7 @@ def iterateMiranda():
 	
 	print("Processing list complete, running miranda")
 	
-	'''
+	
 	# Create temp input files for each sublist in bottomList
 	num = 1
 	for list in bottomList:
@@ -345,11 +345,14 @@ def iterateMiranda():
 		
 		for entry in tempFileList:
 			print(entry)
-	'''
+	
 			
 	# For each sublist in bottomList, run miranda in parallel 
 	with Pool() as p:
-		p.map(runMiranda, bottomList)
+		p.map(runMiranda, tempFileList)
+		
+	parseMiranda()
+	appendOutput(outputFileName)
 	
 # Searches the procSnpArray and returns the line for the given rsNum
 def snpSearch(rs):
@@ -371,196 +374,149 @@ def mirnaSeq(mirnaName):
 		mirnaCmp = mirnaCmp[0]
 		if mirnaCmp == mirnaName:
 			return str(line[1])
-
-# Runs miranda on the given SNP-miRNA pair from the bottom list  			
+ 			
+# Utility function for handling each iteration of miranda 
 def runMiranda(x):
-	# Create temp input text files for miRNA and SNP fasta seqs
-	# Run miranda on each pair using temp input files
-	# Output to temp output text file
-	# Delete temp input text files
-	# Open output text file, store line, delete output text file
+	global dir
+	global sigID
 	
-	n = x[0]
-	list = x[1:]
+	tempSnpFile = x[0]
+	tempRnaFile = x[1]
+	tempRestrictFile = x[2]
+	tempOut = x[3]
 	
-	'''
-	print(n)
-	print(list[0])
-	return
-	'''
-	
-	tempOutputFile = dir + sigID + "_out_" + str(n) + ".txt"
-	mirandaOutput = None
-	count = 1
-	
-	for line in list:
-		# For each line in the sublist
-		# Create temp files containing single miRNA/SNP entries 
-		# Then run miranda on these temp files 
-		# Capture the output and append to output part file 
-		tempRnaFileName = dir + sigID + "_mirna_" + str(n) + ".fasta"
-		with open(tempRnaFileName, "w") as text_file:
-			header = line[0]
-			sequence = line[1]
-			
-			# Print to file 
-			print("{}".format(header), file=text_file)
-			print("{}".format(sequence), file=text_file)
-			
-		tempSnpFileName = dir + sigID + "_snp_" + str(n) + ".fasta"
-		with open(tempSnpFileName, "w") as text_file:
-			header = line[2]
-			sequence = line[3]
-			
-			# Print to file 
-			print("{}".format(header), file=text_file)
-			print("{}".format(sequence), file=text_file)
-		
-		# Run miranda
+	# Run miranda
+	if noEnergy:
 		toRun = [
 			"miranda", 
-			tempRnaFileName, 
-			tempSnpFileName, 
+			tempRnaFile, 
+			tempSnpFile, 
 			"-sc",
 			"0.0",
 			"-noenergy",
 			"-quiet",
-			"-keyval"
+			"-keyval",
+			"-restrict",
+			tempRestrictFile,
+			"-out",
+			tempOut
 		]
-		completedProcess = subprocess.run(toRun, stdout=subprocess.PIPE, encoding="utf-8")
-		mirandaText = completedProcess.stdout
-		mirandaTextArray = mirandaText.split("\n")
-		
-		# Parse miranda text and append top hit to output file 
-		parseMiranda(mirandaTextArray, tempOutputFile)
-		
-		'''
-		if count%1000==0:
-			print(count)
-			
-		count += 1
-		'''
-		
-		'''
-		# Delete temp input files
-		toRun = ["rm", tempRnaFileName, tempSnpFileName]
-		subprocess.run(toRun, check=True)
-		'''
-		
-		'''
-		with open(tempOutputFile, "a") as o:
-			print("{}".format(mirandaText), file=o)
-			
-		break
-		'''
-	
-# Runs miranda on the given SNP-miRNA pair from the bottom list  			
-def runMirandaTest(x):
-	# Create temp input text files for miRNA and SNP fasta seqs
-	# Run miranda on each pair using temp input files
-	# Output to temp output text file
-	# Delete temp input text files
-	# Open output text file, store line, delete output text file
-	
-	n = x[0]
-	list = x[1:]
-	
-	tempOutputFile = dir + sigID + "_out_" + str(n) + ".txt"
-	mirandaOutput = None
-	count = 1
-	
-	for line in list:
-		# For each line in the sublist
-		# Create temp files containing single miRNA/SNP entries 
-		# Then run miranda on these temp files 
-		# Capture the output and append to output part file 
-		tempRnaFileName = io.StringIO()
-		header1 = line[0]
-		sequence1 = line[1]
-		tempRnaFileName.write(header1)
-		tempRnaFileName.write(sequence1)
-		
-		tempSnpFileName = io.StringIO()
-		header2 = line[2]
-		sequence2 = line[3]
-		tempSnpFileName.write(header2)
-		tempSnpFileName.write(sequence2)
-		
-		# Run miranda
+	else:
 		toRun = [
 			"miranda", 
-			tempRnaFileName, 
-			tempSnpFileName, 
+			tempRnaFile, 
+			tempSnpFile, 
 			"-sc",
 			"0.0",
 			"-quiet",
-			"-keyval"
+			"-keyval",
+			"-restrict",
+			tempRestrictFile,
+			"-out",
+			tempOut
 		]
-		completedProcess = subprocess.run(toRun, stdout=subprocess.PIPE, encoding="utf-8")
-		mirandaText = completedProcess.stdout
-		mirandaTextArray = mirandaText.split("\n")
+	subprocess.run(toRun, check=True)
+	
+# Utility function for parsing temp miranda outputs into final format 	
+def parseMiranda():
+	toPrint = "Parsing miranda outputs"
+	print(toPrint)
+	
+	for entry in outputFileList:
+		output_container = [] # container for lines of final output
+		container = [] # temporary container for comparison within a group
 		
-		# Parse miranda text and append top hit to output file 
-		parseMiranda(mirandaTextArray, tempOutputFile)
-		
-		if count%1000==0:
-			print(count)
+		with open(entry) as f:
 			
-		count += 1
-	
-def parseMiranda(text, out):
-	container = [] # temporary container for comparison within a group
-	
-	for line in text:
-		# for each line in the miranda output text
-		if line[0:2]=='>h':
-			# if line is a data line
-			container.append(line.rstrip())
+			count = 0
+			sumcount = 0
+			
+			for line in f:
+				# for each line in the miranda output file
+				if line[0:2]=='>h':
+					# if line is a data line
+					container.append(line.rstrip())
+							
+				elif line[0:2]=='>>':
+					# if line is a summary line
+					# end case for a grouping
+					# copy top score from from container
+					sumcount += 1
+					topLine = ""
 					
-		elif line[0:2]=='>>':
-			# if line is a summary line
-			# end case for a grouping
-			# copy top score from from container
-			topLine = ""
-			
-			if len(container)==1 :
-				# if the group only has one data line 
-				topLine = str(container[0])
-			else:
-				# if multiple data lines in grouping
-				# determine top score line
-				topScore = -1
-				
-				for dataline in container:
-					# for each data line in the grouping
-					splitdline = dataline.split("\t")
-					compare = float(splitdline[2])
-					if compare > topScore :
-						topScore = compare
-						topLine = dataline
-				
-			# reset the temporary container
-			container = [] 
-	
-	with open(out, 'a') as o:	
-		# write topLine to the output file 
-		print('{}'.format(topLine), file=o)
+					if len(container)==1 :
+						# if the group only has one data line 
+						topLine = str(container[0])
+					else:
+						# if multiple data lines in grouping
+						# determine top score line
+						# send top score line to output_container
+						topScore = -1
+						
+						for dataline in container:
+							# for each data line in the grouping
+							splitdline = dataline.split("\t")
+							compare = float(splitdline[2])
+							if compare > topScore :
+								topScore = compare
+								topLine = dataline
+					
+					# append topLine to output_container
+					output_container.append(topLine)
+						
+					# reset the temporary container
+					container = [] 
+		
+		cmpOut = entry.replace('.txt', '_cmp.txt')
+		with open(cmpOut, 'w') as o:	
+			for line in output_container:
+				# write each topLine to the output file 
+				print('{}'.format(line), file=o)
+
+		# Delete temp miranda output file
+		toRun = ["rm", entry]
+		subprocess.run(toRun, check=True)
 	
 def genInput(sublist, n):
 	tempSnpFileName = dir + sigID + "_snp_" + str(n) + ".fasta"
 	tempRnaFileName = dir + sigID + "_mirna_" + str(n) + ".fasta"
+	tempRestrictFileName = dir + sigID + "_restrict_" + str(n) + ".txt"
+	tempOutFileName = dir + sigID + "_out_" + str(n) + ".txt"
 	
-	with open(tempRnaFileName, "w") as r, open(tempSnpFileName, "w") as s:
+	with open(tempRnaFileName, "w") as r, 
+		open(tempSnpFileName, "w") as s,
+		open(tempRestrictFileName, "w") as res:
+		
 		for entry in sublist:
 			rnaHeader = entry[0]
 			rnaSequence = entry[1] + "\n"
 			snpHeader = entry[2]
 			snpSequence = entry[3] + "\n"
+			restrict = rnaHeader + "\t" + snpHeader
 			
-			# Print to file 
+			# Print to miRNA file
 			print("{}".format(rnaHeader), file=r)
 			print("{}".format(rnaSequence), file=r)
+			
+			# Print to SNP file
 			print("{}".format(snpHeader), file=s)
 			print("{}".format(snpSequence), file=s)
+			
+			# Print to restrict file
+			print("{}".format(restrict), file=res)
 	
-	tempFileList.append([tempRnaFileName, tempSnpFileName])
+	tempFileList.append([tempRnaFileName, tempSnpFileName, tempRestrictFileName, tempOutFileName])
+	outputFileList.append(tempOutFileName)
+	
+# Utility function for appending each compressed temp output to final
+def appendOutput(out):
+	for entry in outputFileList:
+		cmpOut = entry.replace('.txt', '_cmp.txt')
+		with open(cmpOut) as f:
+			with open(out, 'a') as o:
+				for line in f:
+					print('{}'.format(line.replace('\n', '')), file=o)
+		
+		# Delete compressed temp output files
+		toRun = ["rm", cmpOut]
+		subprocess.run(toRun, check=True)
