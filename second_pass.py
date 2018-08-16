@@ -260,6 +260,8 @@ def buildSubBottomList(n):
 	count = 0
 	sublist = []
 	
+	print("buildSubBottomList")
+	
 	for line in topList[n]:
 		
 		mirna = line[0]
