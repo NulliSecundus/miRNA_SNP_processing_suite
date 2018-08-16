@@ -10,6 +10,8 @@ procSnpArray = []
 procRnaArray = []
 topList = []
 bottomList = []
+bottomRnaList = []
+bottomSnpList = []
 tempFileList = []
 v = False
 sigID = None
@@ -36,6 +38,7 @@ def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 		loadrna(mirnafile)
 		loadTopList(mirandafile)
 		buildBottomList()
+		processBottomList()
 		iterateMiranda()
 		print("Success")
 	except:
@@ -289,6 +292,17 @@ def buildSubBottomList(n):
 		print(toPrint)
 		
 	return sublist
+	
+def processBottomList():
+	print("processing bottomList")
+	
+	for list in bottomList:
+		for entry in list:
+			if searchBottomRna(entry):
+				bottomRnaList.append(entry)
+				
+	toPrint = "miRNA number: " + str(len(bottomRnaList))
+	print(toPrint)
 
 # Iteratively runs miranda on the list of SNP-miRNA pairs to be processed 
 def iterateMiranda():
@@ -474,3 +488,20 @@ def genInput(sublist, n):
 			print("{}".format(snpSequence), file=s)
 	
 	tempFileList.append([tempRnaFileName, tempSnpFileName])
+	
+def searchBottomRna(rna):
+	# True means the miRNA was not found
+	# False means the miRNA was found
+	
+	# if the list is empty return False
+	if len(bottomRnaList)==0:
+		return True
+		
+	# if the list is not empty then perform search
+	for entry in bottomRnaList:
+		if entry == rna:
+			# return True if found
+			return False
+			
+		# return False if not found 
+	return True
