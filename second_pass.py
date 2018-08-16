@@ -260,8 +260,6 @@ def buildSubBottomList(n):
 	count = 0
 	sublist = []
 	
-	print("buildSubBottomList")
-	
 	for line in topList[n]:
 		
 		mirna = line[0]
@@ -283,7 +281,7 @@ def buildSubBottomList(n):
 			if checkAllele[0] != allele:
 				snpAlleleName = snpName + checkAllele[0]
 				#sublist.append([mirna, mirnaSeq(mirna), snpAlleleName, checkAllele[1]])
-				sublist.append([mirn, snpAlleleName])
+				sublist.append([mirna, snpAlleleName])
 		count += 1
 	
 	if v:
