@@ -249,10 +249,8 @@ def buildBottomList():
 	bottomList = []
 	listNum = 1
 	for list in sublists:
-		'''
 		print(list[0])
 		print(listNum)
-		'''
 		list.insert(0, listNum)
 		bottomList.append(list)
 		listNum += 1
