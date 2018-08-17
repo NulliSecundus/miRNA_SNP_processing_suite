@@ -13,6 +13,7 @@ bottomList = []
 bottomRnaList = []
 bulkRnaList = []
 bottomSnpList = []
+bulkSnpList = []
 tempFileList = []
 v = False
 sigID = None
@@ -229,6 +230,7 @@ def buildBottomList():
 	global topList
 	global bottomList
 	global bulkRnaList
+	global bulkSnpList
 	
 	if v:
 		toPrint = "topList dimensions " + str(len(topList)) + " x " + str(len(topList[0]))
@@ -261,6 +263,7 @@ def buildBottomList():
 		
 		bottomPairs = list[0]
 		bulkRnaList.extend(list[1])
+		bulkSnpList.extend(list[2])
 		
 		bottomPairs.insert(0, listNum)
 		bottomList.append(bottomPairs)
@@ -272,6 +275,7 @@ def buildSubBottomList(n):
 	count = 0
 	sublist = []
 	bulkRnaSublist = []
+	bulkSnpSublist = []
 	
 	for line in topList[n]:
 		
@@ -296,13 +300,14 @@ def buildSubBottomList(n):
 				#sublist.append([mirna, mirnaSeq(mirna), snpAlleleName, checkAllele[1]])
 				sublist.append([mirna, snpAlleleName])
 				bulkRnaSublist.append([mirna])
+				bulkSnpSublist.append([snpAlleleName])
 		count += 1
 	
 	if v:
 		toPrint = "Finished buildSubBottomList " + str(n) + ", sublist length " + str(len(sublist))
 		print(toPrint)
 		
-	return [sublist, bulkRnaSublist]
+	return [sublist, bulkRnaSublist, bulkSnpSublist]
 	
 def processBottomList():
 	global bulkRnaList
@@ -310,7 +315,6 @@ def processBottomList():
 	
 	toPrint = "BulkRnaList length: " + str(len(bulkRnaList))
 	print(toPrint)
-	print(bulkRnaList[0])
 	
 	count=0
 	for mirna in bulkRnaList:
@@ -318,18 +322,28 @@ def processBottomList():
 			bottomRnaList.append(mirna)
 		count+=1
 		
-		if count%10000==0:
+		if count%50000==0:
 			print(count)
 			toPrint = "BottomRnaList length: " + str(len(bottomRnaList))
 			print(toPrint)
+	
+	toPrint = "BulkSnpList length: " + str(len(bulkSnpList))
+	print(toPrint)
+	
+	count=0
+	for snp in bulkSnpList:
+		if snp not in bottomSnpList:
+			bottomSnpList.append(snp)
+		count+=1
 		
-		'''
-		for entry in list:
-			if searchBottomRna(entry):
-				bottomRnaList.append(entry)
-			'''
+		if count%50000==0:
+			print(count)
+			toPrint = "BottomSnpList length: " + str(len(bottomSnpList))
+			print(toPrint)
 				
 	toPrint = "miRNA number: " + str(len(bottomRnaList))
+	print(toPrint)
+	toPrint = "SNP number: " + str(len(bottomSnpList))
 	print(toPrint)
 
 # Iteratively runs miranda on the list of SNP-miRNA pairs to be processed 
