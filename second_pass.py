@@ -261,6 +261,8 @@ def buildBottomList():
 	
 # Sub-function to handle parallel processing of each topList section
 def buildSubBottomList(n):
+	global bulkRnaList
+	
 	count = 0
 	sublist = []
 	
