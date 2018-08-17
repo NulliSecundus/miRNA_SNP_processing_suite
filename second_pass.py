@@ -298,10 +298,12 @@ def buildSubBottomList(n):
 	return sublist
 	
 def processBottomList():
+	global bulkRnaList
 	print("processing bottomList")
 	
 	toPrint = "BulkRnaList length: " + str(len(bulkRnaList))
 	print(toPrint)
+	print(bulkRnaList[0])
 	
 	count=0
 	for mirna in bulkRnaList:
