@@ -253,10 +253,11 @@ def buildBottomList():
 	bottomList = []
 	listNum = 1
 	for list in sublists:
-	'''
+		'''
 		print(list[0])
 		print(listNum)
 		'''
+		
 		bottomPairs = list[0]
 		bulkRnaList = bulkRnaList + list[1]
 		
