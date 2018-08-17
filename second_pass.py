@@ -253,15 +253,19 @@ def buildBottomList():
 	bottomList = []
 	listNum = 1
 	for list in sublists:
+	'''
 		print(list[0])
 		print(listNum)
-		list.insert(0, listNum)
-		bottomList.append(list)
+		'''
+		bottomPairs = list[0]
+		bulkRnaList = bulkRnaList + list[1]
+		
+		bottomPairs.insert(0, listNum)
+		bottomList.append(bottomPairs)
 		listNum += 1
 	
 # Sub-function to handle parallel processing of each topList section
 def buildSubBottomList(n):
-	global bulkRnaList
 	
 	count = 0
 	sublist = []
@@ -288,14 +292,14 @@ def buildSubBottomList(n):
 				snpAlleleName = snpName + checkAllele[0]
 				#sublist.append([mirna, mirnaSeq(mirna), snpAlleleName, checkAllele[1]])
 				sublist.append([mirna, snpAlleleName])
-				bulkRnaList.append([mirna, snpAlleleName])
+				bulkRnaSublist.append([mirna])
 		count += 1
 	
 	if v:
 		toPrint = "Finished buildSubBottomList " + str(n) + ", sublist length " + str(len(sublist))
 		print(toPrint)
 		
-	return sublist
+	return [sublist, bulkRnaSublist]
 	
 def processBottomList():
 	global bulkRnaList
