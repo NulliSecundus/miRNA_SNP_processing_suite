@@ -11,6 +11,7 @@ procRnaArray = []
 topList = []
 bottomList = []
 bottomRnaList = []
+bulkRnaList = []
 bottomSnpList = []
 tempFileList = []
 v = False
@@ -285,6 +286,7 @@ def buildSubBottomList(n):
 				snpAlleleName = snpName + checkAllele[0]
 				#sublist.append([mirna, mirnaSeq(mirna), snpAlleleName, checkAllele[1]])
 				sublist.append([mirna, snpAlleleName])
+				bulkRnaList.append(mirna)
 		count += 1
 	
 	if v:
@@ -297,16 +299,15 @@ def processBottomList():
 	print("processing bottomList")
 	
 	count=0
-	for list in bottomList:
-		tempRnaList = list[:][0]
-		for mirna in tempRnaList:
-			if mirna not in bottomRnaList:
-				bottomRnaList.append(mirna)
-			count+=1
-			if count%10000==0:
-				print(count)
-				toPrint = "BottomRnaList length: " + len(bottomRnaList)
-				print(toPrint)
+	for mirna in bulkRnaList:
+		if mirna not in bottomRnaList:
+			bottomRnaList.append(mirna)
+		count+=1
+		
+		if count%10000==0:
+			print(count)
+			toPrint = "BottomRnaList length: " + len(bottomRnaList)
+			print(toPrint)
 		
 		'''
 		for entry in list:
