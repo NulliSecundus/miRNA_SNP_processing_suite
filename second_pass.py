@@ -298,6 +298,9 @@ def buildSubBottomList(n):
 def processBottomList():
 	print("processing bottomList")
 	
+	toPrint = "BulkRnaList length: " + str(len(bulkRnaList))
+	print(toPrint)
+	
 	count=0
 	for mirna in bulkRnaList:
 		if mirna not in bottomRnaList:
@@ -306,7 +309,7 @@ def processBottomList():
 		
 		if count%10000==0:
 			print(count)
-			toPrint = "BottomRnaList length: " + len(bottomRnaList)
+			toPrint = "BottomRnaList length: " + str(len(bottomRnaList))
 			print(toPrint)
 		
 		'''
