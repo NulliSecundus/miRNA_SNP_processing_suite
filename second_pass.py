@@ -288,7 +288,7 @@ def buildSubBottomList(n):
 				snpAlleleName = snpName + checkAllele[0]
 				#sublist.append([mirna, mirnaSeq(mirna), snpAlleleName, checkAllele[1]])
 				sublist.append([mirna, snpAlleleName])
-				bulkRnaList.append([mirna])
+				bulkRnaList.append([mirna, snpAlleleName])
 		count += 1
 	
 	if v:
