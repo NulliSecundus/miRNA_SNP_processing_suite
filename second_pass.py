@@ -228,6 +228,7 @@ def loadTopList(mirandaFile):
 def buildBottomList():
 	global topList
 	global bottomList
+	global bulkRnaList
 	
 	if v:
 		toPrint = "topList dimensions " + str(len(topList)) + " x " + str(len(topList[0]))
@@ -259,7 +260,7 @@ def buildBottomList():
 		'''
 		
 		bottomPairs = list[0]
-		bulkRnaList = bulkRnaList + list[1]
+		bulkRnaList.extend(list[1])
 		
 		bottomPairs.insert(0, listNum)
 		bottomList.append(bottomPairs)
