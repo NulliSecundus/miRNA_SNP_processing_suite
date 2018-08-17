@@ -270,6 +270,7 @@ def buildSubBottomList(n):
 	
 	count = 0
 	sublist = []
+	bulkRnaSublist = []
 	
 	for line in topList[n]:
 		
