@@ -296,10 +296,23 @@ def buildSubBottomList(n):
 def processBottomList():
 	print("processing bottomList")
 	
+	count=0
 	for list in bottomList:
+		tempRnaList = list[:][0]
+		for mirna in tempRnaList:
+			if mirna not in bottomRnaList:
+				bottomRnaList.append(mirna)
+			count+=1
+			if count%10000==0:
+				print(count)
+				toPrint = "BottomRnaList length: " + len(bottomRnaList)
+				print(toPrint)
+		
+		'''
 		for entry in list:
 			if searchBottomRna(entry):
 				bottomRnaList.append(entry)
+			'''
 				
 	toPrint = "miRNA number: " + str(len(bottomRnaList))
 	print(toPrint)
