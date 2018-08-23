@@ -10,6 +10,9 @@ import numpy as np
 @click.option('--scorefile', is_flag=True, help='Flag if a pre-processed score file is provided instead of miranda output')
 @click.option('--parsefile', is_flag=True, help='Flag if a parsed miranda output file is provided as input')
 def cli(mirandafile, ut, lt, out, so, scorefile, parsefile):
+
+	"""Utility command for generating statistical data from miranda output."""
+
 	try:
 		if scorefile:
 			readScore(mirandafile, ut, lt)

@@ -4,6 +4,9 @@ import click
 @click.argument('mirandafile')
 @click.argument('output')
 def cli(mirandafile, output):
+
+	"""Parses the miranda output for the second pass."""
+
 	try:
 		parsemir(mirandafile, output)
 	except:

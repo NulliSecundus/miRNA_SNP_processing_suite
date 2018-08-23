@@ -31,7 +31,7 @@ Primary Commands:
 		SNP ID in the upper 80th percentile. 
 
     secondpass [OPTIONS] 
-		Wrapper interface for running a miranda first pass.
+		Wrapper interface for running a miranda second pass.
 		
 	procsecondpass [OPTIONS]
 		Parses the miranda output for the second pass. 

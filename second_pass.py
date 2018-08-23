@@ -28,6 +28,9 @@ outputFileName = None
 @click.option('--verbose', is_flag=True, help='''Output additional information to
 	the console''')
 def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
+
+	"""Wrapper interface for running a miranda second pass."""
+
 	global v
 	global outputFileName
 	
