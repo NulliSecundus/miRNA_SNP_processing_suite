@@ -4,6 +4,7 @@ refInfo = []
 index = 0
 
 @click.command()
+@click.argument('refflat')
 @click.argument('reportfile')
 @click.argument('snpfile')
 @click.argument('output')
@@ -13,6 +14,7 @@ def cli(reportfile, snpfile, output, verbose):
 	"""
 	\b
 	Arguments: 
+		REFFLAT (refFlat.txt) - INPUT gene annotation file. 
 		REPORTFILE (chr_N.txt) - INPUT chromosome report file containing SNP 
 			reference information. 
 			See ftp://ftp.ncbi.nlm.nih.gov/snp/00readme.txt 
@@ -25,15 +27,22 @@ def cli(reportfile, snpfile, output, verbose):
 	the 5' or 3' UTR or CDS of any gene. Trims rs_chrN.fas entries to 25 bp
 	each side of SNP and creates separate FASTA entries for each allele."""
 	try:
-		processInput(reportfile, snpfile, output, verbose)
+		loadRef(refflat)
+		loadReport(reportfile)
+		procSNP(snpfile, output, verbose)
 		print("Success")
 	except:
 		print("Error")
+		
+# Function for loading refFlat.txt
+def loadRef(refFlat):
+	print("Loading refFlat.txt")
 
-def processInput(chromReport, snpFasta, outputFile, v):
+# Function for loading the chromosome report file 
+def loadReport(chromReport):
 	global refInfo
 	
-	print("Processing SNPs in chromosome")
+	print("Loading SNPs in chromosome")
 	
 	# Open the chromosome report file to extract reference info 
 	with open(chromReport) as f:
@@ -52,6 +61,8 @@ def processInput(chromReport, snpFasta, outputFile, v):
 			]
 			refInfo.append(tempLine)
 			
+# Function for processing the SNP fasta file	
+def procSNP(snpFasta, outputFile, v):
 	# Initialize vars 
 	sequence = ""
 	header = ""

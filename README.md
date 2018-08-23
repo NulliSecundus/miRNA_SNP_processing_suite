@@ -12,8 +12,9 @@ Please send bug reports to: jyang75@wisc.edu
 
 Primary Commands:
 
-    procchrom [OPTIONS] REPORTFILE SNPFILE OUTPUT
+    procchrom [OPTIONS] REFFLAT REPORTFILE SNPFILE OUTPUT
 		Arguments: 
+			REFFLAT (refFlat.txt) - INPUT gene annotation file. 
 			REPORTFILE (chr_N.txt) - INPUT chromosome report file containing SNP 
 				reference information. 
 				See ftp://ftp.ncbi.nlm.nih.gov/snp/00readme.txt 
