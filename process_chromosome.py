@@ -11,14 +11,16 @@ index = 0
 	the console''')
 def cli(reportfile, snpfile, output, verbose):
 	"""
-	Arguments:\n\tREPORTFILE (chr_N.txt) - INPUT chromosome report file 
-	containing SNP reference information. 
-	\n\n\tSee ftp://ftp.ncbi.nlm.nih.gov/snp/00readme.txt 
-	\n\tSNPFILE (rs_chrN.fas) - INPUT SNP sequence files by chromosome in fasta
-	format. \n\n\tSee ftp://ftp.ncbi.nlm.nih.gov/snp/00readme.txt 
-	\n\tOUTPUT (proc_chrN.fasta) - processed fasta formatted file containing 
-	entries with sequences for each validated SNP. 
-	\n\n
+	\b
+	Arguments: 
+		REPORTFILE (chr_N.txt) - INPUT chromosome report file containing SNP 
+			reference information. 
+			See ftp://ftp.ncbi.nlm.nih.gov/snp/00readme.txt 
+		SNPFILE (rs_chrN.fas) - INPUT SNP sequence files by chromosome in fasta 
+			format. See ftp://ftp.ncbi.nlm.nih.gov/snp/00readme.txt 
+		OUTPUT (proc_chrN.fasta) - processed fasta formatted file 
+			containing entries with sequences for each validated SNP. 
+	
 	Extracts validated SNPs with a unique genomic position located within 
 	the 5' or 3' UTR or CDS of any gene. Trims rs_chrN.fas entries to 25 bp
 	each side of SNP and creates separate FASTA entries for each allele."""
