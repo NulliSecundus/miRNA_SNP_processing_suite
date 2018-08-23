@@ -22,7 +22,10 @@ def cli(mirandafile, ut, lt, out, so, scorefile, parsefile):
 			* parsed miRanda output containing only data lines 
 			* pre-processed score file containing only parsed scores 
 	
-	Utility command for generating statistical data from miranda output."""
+	Utility command for generating statistical data from miranda output.
+	
+	Unless specified in the options, the script will assume standard 
+	miRanda output has been provided as the input file."""
 
 	try:
 		if scorefile:
