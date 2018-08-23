@@ -11,7 +11,18 @@ import numpy as np
 @click.option('--parsefile', is_flag=True, help='Flag if a parsed miranda output file is provided as input')
 def cli(mirandafile, ut, lt, out, so, scorefile, parsefile):
 
-	"""Utility command for generating statistical data from miranda output."""
+	"""
+	\b 
+	Arguments:
+		MIRANDAFILE - miRanda output file or other acceptable format file 
+			containing miRanda score information. 
+			
+			Acceptable file formats are *
+			* direct miRanda output containing '>>' summary lines
+			* parsed miRanda output containing only data lines 
+			* pre-processed score file containing only parsed scores 
+	
+	Utility command for generating statistical data from miranda output."""
 
 	try:
 		if scorefile:
