@@ -13,7 +13,15 @@ Please send bug reports to: jyang75@wisc.edu
 Primary Commands:
 
     procchrom [OPTIONS] REPORTFILE SNPFILE OUTPUT
-		Inputs: REPORTFILE (chr_N.txt), SNPFILE (rs_chrN.fas)
+		Arguments: 
+		
+			REPORTFILE (chr_N.txt) - INPUT chromosome report file containing SNP 
+				reference information. 
+				See ftp://ftp.ncbi.nlm.nih.gov/snp/00readme.txt 
+			SNPFILE (rs_chrN.fas) - INPUT SNP sequence files by chromosome in fasta 
+				format. 
+			OUTPUT (proc_chrN.fasta) - OUTPUT processed fasta formatted file 
+				containing entries with sequences for each validated SNP. 
 		
 		Extracts validated SNPs with a unique genomic position located within 
 		the 5' or 3' UTR or CDS of any gene. Trims rs_chrN.fas entries to 25 bp
