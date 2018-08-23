@@ -78,21 +78,15 @@ Utility Commands:
 		Utility command for generating statistical data from miranda output.
 
 		Options:
-			-ut FLOAT		The upper threshold in which the top percentile is 
-							calculated.
-							Default 80.0
-			-lt FLOAT		The lower threshold in which the bottom percentile 
-							is calculated.
-							Default 20.0
-			-out TEXT		Print the parsed scores to the specified output 
-							file.
-			--so			Scores only option (for large files). Will only 
-							output scores without stats.
-			--scorefile 	Flag if a pre-processed score file is provided 
-							instead of miranda output.
-			--parsefile  	Flag if a parsed miranda output file is provided as
-							input. 
-			--help			Show this message and exit.
+			-ut FLOAT	The upper threshold in which the top percentile is calculated.
+						Default 80.0
+			-lt FLOAT	The lower threshold in which the bottom percentile is calculated.
+						Default 20.0
+			-out TEXT	Print the parsed scores to the specified output file.
+			--so		Scores only option (for large files). Will only output scores without stats.
+			--scorefile	Flag if a pre-processed score file is provided instead of miranda output.
+			--parsefile	Flag if a parsed miranda output file is provided as input. 
+			--help		Show this message and exit.
 
 Files:
 
