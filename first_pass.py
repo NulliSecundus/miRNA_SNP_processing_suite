@@ -28,7 +28,15 @@ noEnergy = False # miranda no energy option
 @click.option('--noenergy', is_flag=True, help='Flag for miranda -noenergy option')
 def cli(snpfile, mirnafile, output, score, snp, rna, stop, noenergy):
 
-	"""Wrapper interface for running a miranda first pass. For the given 
+	"""
+	\b
+	Arguments:
+		SNPFILE - INPUT fasta-formatted processed chromosomal SNP file 
+		MIRNAFILE - INPUT fasta-formatted mature miRNA file 
+		OUTPUT - final processed file from first pass miRanda
+		SCORE - score threshold parameter for miRanda 
+	
+	Wrapper interface for running a miranda first pass. For the given 
 	snpFile, mirnaFile, and score threshold, iteratively runs miranda in 
 	parallel on small subsections of the input files and combines the 
 	outputs to a final processed output file."""

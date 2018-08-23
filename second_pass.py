@@ -29,7 +29,15 @@ outputFileName = None
 	the console''')
 def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 
-	"""Wrapper interface for running a miranda second pass."""
+	"""
+	\b 
+	Arguments:
+		MIRANDAFILE - INPUT processed output from procfirstpass script 
+		PROCSNPFILE - INPUT processed SNP file from procchrom script 
+		MIRNAFILE - INPUT fasta-formatted mature miRNA file 
+		OUTPUT - processed output from second pass of miRanda 
+	
+	Wrapper interface for running a miranda second pass."""
 
 	global v
 	global outputFileName
