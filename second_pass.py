@@ -5,6 +5,7 @@ import time
 import math
 import io
 from multiprocessing import Pool
+from operator import itemgetter
 
 procSnpArray = []
 procRnaArray = []
@@ -50,9 +51,11 @@ def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 		loadsnp(procsnpfile)
 		loadrna(mirnafile)
 		loadTopList(mirandafile)
+		"""
 		buildBottomList()
 		processBottomList()
 		iterateMiranda()
+		"""
 		print("Success")
 	except:
 		print("Error")
@@ -228,6 +231,14 @@ def loadTopList(mirandaFile):
 				
 				allele = refSplit[4]
 				
+				# Search if rsNum already entered
+				rsEntry = searchTopRs(rsNum, allele, mirnaName)
+				
+				if rsEntry == None:
+					temp = [rsNum, allele, mirnaName]
+					topList.append(temp)
+				
+				'''
 				temp = [mirnaName, rsNum, allele]
 				subTopList.append(temp)
 				count += 1
@@ -235,6 +246,9 @@ def loadTopList(mirandaFile):
 				if count%topSplit==0:
 					topList.append(subTopList)
 					subTopList = []
+				'''
+				
+	print(topList[0:10])
 
 # Populates the list of pairs to process with miranda
 def buildBottomList():
@@ -558,3 +572,13 @@ def searchBottomRna(rna):
 			
 		# return False if not found 
 	return True
+	
+def searchTopRs(rsNum, allele, rna):
+	for entry in topList:
+		cmpNum = entry[0]
+		cmpAllele = entry[1]
+		if cmpNum==rsNum and cmpAllele==allele:
+			entry.append(rna)
+			return 1
+			
+	return None
