@@ -274,7 +274,7 @@ def loadTopList(mirandaFile):
 	validateTopListOrder()
 	
 	toPrint = "Length of topList: " + str(topListLen)
-	print(toPrint)
+	#print(toPrint)
 	
 # Populates the list of pairs to process with miranda
 def buildBottomList():
@@ -303,9 +303,12 @@ def buildBottomList():
 					bottomAlleleList = [checkAllele] + alleleList[1:]
 					bottomLine.append(bottomAlleleList)
 		bottomList.append(bottomLine)
-		
+		'''
 		print(bottomList)
 		return
+		'''
+		
+	toPrint = "Length of bottomList: " + str(len(bottomList))
 
 # Populates the list of pairs to process with miranda
 def buildBottomListOLD():
