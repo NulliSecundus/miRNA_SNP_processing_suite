@@ -117,18 +117,14 @@ def loadsnp(procSnpFasta):
 	
 	# Determine the number of entries in snp file 
 	toRun = [
-		"grep",
-		"-o",
-		"'>'",
-		procSnpFasta,
-		"|",
 		"wc", 
-		"-l"
+		"-l",
+		procSnpFasta
 	]
 	completedProcess = subprocess.run(toRun, stdout=subprocess.PIPE, encoding="utf-8")
 	stdOutText = completedProcess.stdout
 	textArray = stdOutText.split(" ")
-	numLines = int(textArray[0])
+	numLines = float(textArray[0]) / 3
 	snpSplit = int(math.ceil(math.sqrt(numLines)))
 	
 	with open(procSnpFasta) as f:
