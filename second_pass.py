@@ -650,7 +650,7 @@ def insertTopList(rsNum, allele, rna):
 		
 	# Define increment value as sqrt of topListLen
 	print("high entries")
-	topSqrt = sqrt(topListLen)
+	topSqrt = math.sqrt(topListLen)
 	topListInc = int(math.floor(topSqrt))
 	topListIncSize = int(math.ceil(topSqrt))
 	
