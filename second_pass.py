@@ -714,9 +714,19 @@ def validateTopListOrder():
 		post = topList[x+1]
 		if cur <= pre:
 			print("Failed")
+			toPrint = "Pre: " + str(pre)
+			toPrint += " Cur: " + str(cur)
+			toPrint += " Post: " + str(post)
+			toPrint += " X: " + str(x)
+			print(toPrint)
 			return
 		elif cur >= post:
 			print("Failed")
+			toPrint = "Pre: " + str(pre)
+			toPrint += " Cur: " + str(cur)
+			toPrint += " Post: " + str(post)
+			toPrint += " X: " + str(x)
+			print(toPrint)
 			return
 			
 	print("Validated")
