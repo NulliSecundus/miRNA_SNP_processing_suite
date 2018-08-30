@@ -628,9 +628,6 @@ def searchTopSublist(rsNum, allele, rna, topStart, topStop):
 			return
 		index += 1
 	
-	print("Failed")
-	return
-	
 	# If new rsNum is higher than all entries in list 
 	# Then append to end of the list 
 	temp = [rsNum, [allele, rna]]
@@ -649,7 +646,7 @@ def insertTopList(rsNum, allele, rna):
 		return
 		
 	elif topListLen < 10:
-		searchTopSublist(rsNum, allele, rna, 0, -1)
+		searchTopSublist(rsNum, allele, rna, 0, topListLen)
 		return
 		
 	# Define increment value as sqrt of topListLen
@@ -677,6 +674,7 @@ def insertTopList(rsNum, allele, rna):
 		topStart = topStop
 		
 	# If rsNum is higher than all entries in list
+	# Then append to end of topList 
 	temp = [rsNum, [allele, rna]]
 	topList.append(temp)
 	
