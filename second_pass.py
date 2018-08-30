@@ -719,7 +719,7 @@ def validateTopListOrder():
 			toPrint += " Post: " + str(post)
 			toPrint += " X: " + str(x)
 			print(toPrint)
-			return
+			#return
 		elif cur >= post:
 			print("Failed")
 			toPrint = "Pre: " + str(pre)
@@ -727,6 +727,6 @@ def validateTopListOrder():
 			toPrint += " Post: " + str(post)
 			toPrint += " X: " + str(x)
 			print(toPrint)
-			return
+			#return
 			
 	print("Validated")
