@@ -668,6 +668,10 @@ def insertTopList(rsNum, allele, rna):
 		topStartRs = topList[topStart][0]
 		topStopRs = topList[topStop][0]
 		print("determined boundaries")
+		print(topStartRs)
+		print(topStopRs)
+		print(rsNum)
+		print("")
 		
 		# If rsNum falls between the boundaries
 		if rsNum > topStartRs and rsNum < topStopRs:
