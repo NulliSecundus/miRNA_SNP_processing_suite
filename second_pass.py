@@ -578,6 +578,7 @@ def searchBottomRna(rna):
 	return True
 	
 def searchTopSublist(rsNum, allele, rna, sublist):
+	print("searchTopSublist")
 	# Search in order
 	index = 0
 	for entry in sublist:
@@ -652,19 +653,26 @@ def insertTopList(rsNum, allele, rna):
 	topSqrt = sqrt(topListLen)
 	topListInc = int(math.floor(topSqrt))
 	topListIncSize = int(math.ceil(topSqrt))
+	
+	print("calculated increment")
 		
 	for x in range(topListIncSize):
 		topStop = topStart + topListInc
 		if topStop > topListLen:
 			topStop = topListLen
 			
+		print(topStart)
+		print(topStop)
+			
 		# Determine sublist boundaries
 		topStartRs = topList[topStart][0]
 		topStopRs = topList[topStop][0]
+		print("determined boundaries")
 		
 		# If rsNum falls between the boundaries
 		if rsNum > topStartRs and rsNum < topStopRs:
 			# Search the sublist 
+			print("searching sublist")
 			sublist = topList[topStart:topStop]
 			searchTopSublist(rsNum, allele, rna, sublist)
 			return
