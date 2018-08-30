@@ -16,6 +16,7 @@ bulkRnaList = []
 bottomSnpList = []
 bulkSnpList = []
 tempFileList = []
+rnaFileList = []
 v = False
 sigID = None
 dir = None 
@@ -125,7 +126,7 @@ def loadsnp(procSnpFasta):
 	stdOutText = completedProcess.stdout
 	textArray = stdOutText.split(" ")
 	numLines = float(textArray[0])
-	print(numLines)
+	#print(numLines)
 	snpSplit = int(math.ceil(math.sqrt(numLines/3)))
 	
 	with open(procSnpFasta) as f:
@@ -186,6 +187,8 @@ def loadsnp(procSnpFasta):
 		headerLine = [rsNum+1]
 		snpSubArray.insert(0, headerLine)
 		procSnpArray.append(snpSubArray)
+		
+		printSnp()
 	
 # Loads the miRNA file into memory 
 def loadrna(miRNA):
@@ -212,6 +215,8 @@ def loadrna(miRNA):
 				procRnaArray.append(temp)
 				
 				count = count+1
+				
+	printRna()
 
 # Populates the list of top hit pairs
 def loadTopList(mirandaFile):
@@ -775,3 +780,42 @@ def validateTopListOrder():
 			return
 			
 	print("Validated")
+	
+def printSnp():
+	#TODO
+	print("Printing SNP File")
+	
+def printRna():
+	print("Printing RNA File")
+	
+	rnaNum = len(procRnaArray)
+	rnaSplit = int(math.ceil(rnaNum / 30))
+	
+	count = 0
+	n = 0
+	
+	rnaSublist = []
+	for entry in procRnaArray:
+		rnaSublist.append(entry)
+		count += 1
+		if count%rnaSplit==0:
+			printSubRna(rnaSublist, n)
+			rnaSublist = []
+			n += 1
+			
+	if count%rnaSplit!=0:
+		printSubRna(rnaSublist, n)
+		rnaSublist = []
+		
+def printSubRna(sublist, n):
+	tempRnaFileName = dir + sigID + "_mirna_" + str(n) + ".fasta"
+	with open(tempRnaFileName, "w") as text_file:
+		for entry in sublist:
+			header = entry[0]
+			sequence = entry[1] + "\n"
+			
+			# Print to file 
+			print("{}".format(header), file=text_file)
+			print("{}".format(sequence), file=text_file)
+	
+	rnaFileList.append(tempRnaFileName)
