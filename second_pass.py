@@ -708,7 +708,7 @@ def insertTopList(rsNum, allele, rna):
 def validateTopListOrder():
 	length = len(topList)
 	
-	for x in range(1:length-1):
+	for x in range(1, length-1):
 		pre = topList[x-1]
 		cur = topList[x]
 		post = topList[x+1]
