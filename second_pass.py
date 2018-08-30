@@ -257,7 +257,7 @@ def loadTopList(mirandaFile):
 					subTopList = []
 				'''
 				
-	for entry in topList[0:20]:
+	for entry in topList[420:]:
 		print(entry)
 		
 	toPrint = "Length of topList: " + str(topListLen)
