@@ -625,32 +625,7 @@ def insertTopList(rsNum, allele, rna):
 		return
 		
 	elif topListLen < 10:
-		#print("low entries")
-		# Simply search in order
-		index = 0
-		for entry in topList:
-			cmpNum = entry[0]
-			if rsNum < cmpNum:
-				temp = [rsNum, [allele, rna]]
-				topList.insert(index, temp)
-				return
-			elif rsNum == cmpNum:
-				# If a matching rsNum is found
-				# Check the allele(s)
-				for alleleList in entry[1:]:
-					cmpAllele = alleleList[0]
-					if cmpAllele == allele:
-						alleleList.append(rna)
-						return
-				temp = [allele, rna]
-				entry.append(temp)
-				return
-			index += 1
-			
-		# If new rsNum is higher than all entries in list 
-		# Then append to end of the list 
-		temp = [rsNum, [allele, rna]]
-		topList.append(temp)
+		searchTopSublist(rsNum, allele, rna, topList)
 		return
 		
 	# Define increment value as sqrt of topListLen
