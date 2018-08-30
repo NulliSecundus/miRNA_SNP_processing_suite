@@ -676,15 +676,18 @@ def insertTopList(rsNum, allele, rna):
 		
 	for x in range(topListIncSize):
 		topStop = topStart + topListInc
-		if topStop > topListLen:
-			topStop = topListLen
+		
+		# If sublist is the last section of topList 
+		if topStop > topListLen-1:
+			searchTopSublist(rsNum, allele, rna, topStart, topListLen)
+			return
 			
 		# Determine sublist boundaries
 		topStartRs = topList[topStart][0]
-		topStopRs = topList[topStop-1][0]
+		topStopRs = topList[topStop][0]
 		
 		# If rsNum falls between the boundaries
-		if rsNum >= topStartRs and rsNum <= topStopRs:
+		if rsNum >= topStartRs and rsNum < topStopRs:
 			# Search the sublist 
 			#sublist = topList[topStart:topStop]
 			searchTopSublist(rsNum, allele, rna, topStart, topStop)
@@ -698,12 +701,12 @@ def insertTopList(rsNum, allele, rna):
 	temp = [rsNum, [allele, rna]]
 	topList.append(temp)
 	
-	'''
+	
 	print("Failed")
 	print(rsNum)
 	print(allele)
 	print(rna)
-	'''
+	
 	
 def validateTopListOrder():
 	length = len(topList)
@@ -719,7 +722,7 @@ def validateTopListOrder():
 			toPrint += " Post: " + str(post)
 			toPrint += " X: " + str(x)
 			print(toPrint)
-			#return
+			return
 		elif cur >= post:
 			print("Failed")
 			toPrint = "Pre: " + str(pre)
@@ -727,6 +730,6 @@ def validateTopListOrder():
 			toPrint += " Post: " + str(post)
 			toPrint += " X: " + str(x)
 			print(toPrint)
-			#return
+			return
 			
 	print("Validated")
