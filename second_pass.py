@@ -52,8 +52,8 @@ def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 		loadsnp(procsnpfile)
 		loadrna(mirnafile)
 		loadTopList(mirandafile)
-		"""
 		buildBottomList()
+		"""
 		processBottomList()
 		iterateMiranda()
 		"""
@@ -257,16 +257,36 @@ def loadTopList(mirandaFile):
 		
 	toPrint = "Length of topList: " + str(topListLen)
 	print(toPrint)
-
+	
 # Populates the list of pairs to process with miranda
 def buildBottomList():
+	global topList
+	global bottomList
+	
+	if v:
+		toPrint = "Length of topList: " + str(len(topList))
+		print(toPrint)
+	
+	print("Building list of entries to process (may take a few minutes)")
+	
+	# For each SNP-miRNA entry in the top list
+	# Search the processed SNP list for alternative SNP alleles ID
+	# Add the alternative alleles to the bottom list for processing
+	for entry in topList:
+		rsNum = entry[0]
+		snpLine = snpSearch(rsNum)
+		print(snpLine)
+		return
+
+# Populates the list of pairs to process with miranda
+def buildBottomListOLD():
 	global topList
 	global bottomList
 	global bulkRnaList
 	global bulkSnpList
 	
 	if v:
-		toPrint = "topList dimensions " + str(len(topList)) + " x " + str(len(topList[0]))
+		toPrint = "Length of topList: " + str(len(topList))
 		print(toPrint)
 	
 	print("Building list of entries to process (may take a few minutes)")
@@ -582,7 +602,6 @@ def searchBottomRna(rna):
 	return True
 	
 def searchTopSublist(rsNum, allele, rna, sublist):
-	#print("searchTopSublist")
 	# Search in order
 	index = 0
 	for entry in sublist:
@@ -616,10 +635,7 @@ def insertTopList(rsNum, allele, rna):
 	topStart = 0
 	topStop = 0
 	
-	#print("start")
-	
 	if topListLen==0:
-		#print("first entry")
 		temp = [rsNum, [allele, rna]]
 		topList.append(temp)
 		return
@@ -629,37 +645,22 @@ def insertTopList(rsNum, allele, rna):
 		return
 		
 	# Define increment value as sqrt of topListLen
-	#print("high entries")
 	topSqrt = math.sqrt(topListLen)
 	topListInc = int(math.floor(topSqrt))
 	topListIncSize = int(math.ceil(topSqrt))
-	
-	#print("calculated increment")
 		
 	for x in range(topListIncSize):
 		topStop = topStart + topListInc
 		if topStop > (topListLen-1):
 			topStop = topListLen-1
-		'''	
-		print(topStart)
-		print(topStop)
-		'''
 			
 		# Determine sublist boundaries
 		topStartRs = topList[topStart][0]
 		topStopRs = topList[topStop][0]
-		'''
-		print("determined boundaries")
-		print(topStartRs)
-		print(topStopRs)
-		print(rsNum)
-		print("")
-		'''
 		
 		# If rsNum falls between the boundaries
 		if rsNum >= topStartRs and rsNum <= topStopRs:
 			# Search the sublist 
-			#print("searching sublist")
 			sublist = topList[topStart:topStop]
 			searchTopSublist(rsNum, allele, rna, sublist)
 			return
