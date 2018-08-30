@@ -653,6 +653,13 @@ def insertTopList(rsNum, allele, rna):
 		searchTopSublist(rsNum, allele, rna, 0, topListLen)
 		return
 		
+	# First check if rsNum is less than first entry in topList
+	cmpNum = topList[0][0]
+	if rsNum < cmpNum:
+		temp = [rsNum, [allele, rna]]
+		topList.insert(0, temp)
+		return
+	
 	# Define increment value as sqrt of topListLen
 	topSqrt = math.sqrt(topListLen)
 	topListInc = int(math.floor(topSqrt))
@@ -665,7 +672,7 @@ def insertTopList(rsNum, allele, rna):
 			
 		# Determine sublist boundaries
 		topStartRs = topList[topStart][0]
-		topStopRs = topList[topStop][0]
+		topStopRs = topList[topStop-1][0]
 		
 		# If rsNum falls between the boundaries
 		if rsNum >= topStartRs and rsNum <= topStopRs:
