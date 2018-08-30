@@ -610,12 +610,16 @@ def insertTopList(rsNum, allele, rna):
 	topStart = 0
 	topStop = 0
 	
+	print("start")
+	
 	if topListLen==0:
+		print("first entry")
 		temp = [rsNum, [allele, rna]]
 		topList.append(temp)
 		return
 		
 	elif topListLen < 10:
+		print("low entries")
 		# Simply search in order
 		index = 0
 		for entry in topList:
@@ -634,6 +638,7 @@ def insertTopList(rsNum, allele, rna):
 						return
 				temp = [allele, rna]
 				entry.append(temp)
+				return
 			index += 1
 			
 		# If new rsNum is higher than all entries in list 
@@ -643,6 +648,7 @@ def insertTopList(rsNum, allele, rna):
 		return
 		
 	# Define increment value as sqrt of topListLen
+	print("high entries")
 	topSqrt = sqrt(topListLen)
 	topListInc = int(math.floor(topSqrt))
 	topListIncSize = int(math.ceil(topSqrt))
