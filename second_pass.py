@@ -606,14 +606,14 @@ def searchBottomRna(rna):
 		# return False if not found 
 	return True
 	
-def searchTopSublist(rsNum, allele, rna, sublist):
+def searchTopSublist(rsNum, allele, rna, topStart, topStop):
 	# Search in order
 	index = 0
-	for entry in sublist:
+	for entry in topList[topStart:topStop]:
 		cmpNum = entry[0]
 		if rsNum < cmpNum:
 			temp = [rsNum, [allele, rna]]
-			sublist.insert(index, temp)
+			topList.insert(topStart + index, temp)
 			return
 		elif rsNum == cmpNum:
 			# If a matching rsNum is found
@@ -627,11 +627,14 @@ def searchTopSublist(rsNum, allele, rna, sublist):
 			entry.append(temp)
 			return
 		index += 1
-		
+	
+	print("Failed")
+	return
+	
 	# If new rsNum is higher than all entries in list 
 	# Then append to end of the list 
 	temp = [rsNum, [allele, rna]]
-	sublist.append(temp)
+	topList.append(temp)
 	
 def insertTopList(rsNum, allele, rna):
 	global topListLen
@@ -646,7 +649,7 @@ def insertTopList(rsNum, allele, rna):
 		return
 		
 	elif topListLen < 10:
-		searchTopSublist(rsNum, allele, rna, topList)
+		searchTopSublist(rsNum, allele, rna, 0, -1)
 		return
 		
 	# Define increment value as sqrt of topListLen
@@ -666,8 +669,8 @@ def insertTopList(rsNum, allele, rna):
 		# If rsNum falls between the boundaries
 		if rsNum >= topStartRs and rsNum <= topStopRs:
 			# Search the sublist 
-			sublist = topList[topStart:topStop]
-			searchTopSublist(rsNum, allele, rna, sublist)
+			#sublist = topList[topStart:topStop]
+			searchTopSublist(rsNum, allele, rna, topStart, topStop)
 			return
 		
 		# Otherwise, move to the next sublist 
