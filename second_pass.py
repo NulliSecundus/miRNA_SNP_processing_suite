@@ -234,10 +234,11 @@ def loadTopList(mirandaFile):
 				
 				# Insert information into topList 
 				insertTopList(rsNum, allele, mirnaName)
-				
+				'''
 				count +=1
 				if count%1000==0:
 					return
+				'''
 				
 				'''
 				rsEntry = searchTopRs(rsNum, allele, mirnaName)
@@ -668,17 +669,17 @@ def insertTopList(rsNum, allele, rna):
 			sublist = topList[topStart:topStop]
 			searchTopSublist(rsNum, allele, rna, sublist)
 			return
-			
-		# If rsNum is higher than all entries in list
-		elif rsNum > topStopRs:
-			temp = [rsNum, [allele, rna]]
-			topList.append(temp)
-			return
 		
 		# Otherwise, move to the next sublist 
 		topStart = topStop
 		
+	# If rsNum is higher than all entries in list
+	temp = [rsNum, [allele, rna]]
+	topList.append(temp)
+	
+	'''
 	print("Failed")
 	print(rsNum)
 	print(allele)
 	print(rna)
+	'''
