@@ -255,7 +255,7 @@ def loadTopList(mirandaFile):
 	for entry in topList[0:10]:
 		print(entry)
 		
-	toPrint = "Length of topList: " + topListLen
+	toPrint = "Length of topList: " + str(topListLen)
 	print(toPrint)
 
 # Populates the list of pairs to process with miranda
@@ -595,12 +595,13 @@ def searchTopSublist(rsNum, allele, rna, sublist):
 			# If a matching rsNum is found
 			# Check the allele(s)
 			for alleleList in entry[1:]:
-				cmpAllele = alleleList[1]
+				cmpAllele = alleleList[0]
 				if cmpAllele == allele:
 					alleleList.append(rna)
 					return
 			temp = [allele, rna]
 			entry.append(temp)
+			return
 		index += 1
 		
 	# If new rsNum is higher than all entries in list 
@@ -637,7 +638,7 @@ def insertTopList(rsNum, allele, rna):
 				# If a matching rsNum is found
 				# Check the allele(s)
 				for alleleList in entry[1:]:
-					cmpAllele = alleleList[1]
+					cmpAllele = alleleList[0]
 					if cmpAllele == allele:
 						alleleList.append(rna)
 						return
