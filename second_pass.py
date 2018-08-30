@@ -124,8 +124,9 @@ def loadsnp(procSnpFasta):
 	completedProcess = subprocess.run(toRun, stdout=subprocess.PIPE, encoding="utf-8")
 	stdOutText = completedProcess.stdout
 	textArray = stdOutText.split(" ")
-	numLines = float(textArray[0]) / 3
-	snpSplit = int(math.ceil(math.sqrt(numLines)))
+	numLines = float(textArray[0])
+	print(numLines)
+	snpSplit = int(math.ceil(math.sqrt(numLines/3)))
 	
 	with open(procSnpFasta) as f:
 	
