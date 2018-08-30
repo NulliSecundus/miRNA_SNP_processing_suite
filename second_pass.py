@@ -257,7 +257,7 @@ def loadTopList(mirandaFile):
 					subTopList = []
 				'''
 				
-	for entry in topList[420:]:
+	for entry in topList[0:20]:
 		print(entry)
 		
 	toPrint = "Length of topList: " + str(topListLen)
@@ -631,7 +631,7 @@ def searchTopSublist(rsNum, allele, rna, topStart, topStop):
 	# If new rsNum is higher than all entries in list 
 	# Then append to end of the list 
 	temp = [rsNum, [allele, rna]]
-	topList.append(temp)
+	topList.insert(topStart + index, temp)
 	
 def insertTopList(rsNum, allele, rna):
 	global topListLen
