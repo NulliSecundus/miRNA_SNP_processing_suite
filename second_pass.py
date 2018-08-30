@@ -679,3 +679,6 @@ def insertTopList(rsNum, allele, rna):
 		topStart = topStop
 		
 	print("Failed")
+	print(rsNum)
+	print(allele)
+	print(rna)
