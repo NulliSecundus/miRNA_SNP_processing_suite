@@ -119,11 +119,11 @@ def loadsnp(procSnpFasta):
 	toRun = [
 		"grep",
 		"-o",
-		"\'>\'",
+		"'>'",
 		procSnpFasta,
 		"|",
 		"wc", 
-		"-l", 
+		"-l"
 	]
 	completedProcess = subprocess.run(toRun, stdout=subprocess.PIPE, encoding="utf-8")
 	stdOutText = completedProcess.stdout
