@@ -10,6 +10,7 @@ from operator import itemgetter
 procSnpArray = []
 procRnaArray = []
 topList = []
+topListLen = 0
 bottomList = []
 bottomRnaList = []
 bulkRnaList = []
@@ -232,13 +233,16 @@ def loadTopList(mirandaFile):
 				allele = refSplit[4]
 				
 				# Search if rsNum already entered
+				insertTopList(rsNum, allele, mirnaName)
+				
+				'''
 				rsEntry = searchTopRs(rsNum, allele, mirnaName)
 				
 				if rsEntry == None:
 					temp = [rsNum, allele, mirnaName]
 					topList.append(temp)
 				
-				'''
+				
 				temp = [mirnaName, rsNum, allele]
 				subTopList.append(temp)
 				count += 1
@@ -573,12 +577,89 @@ def searchBottomRna(rna):
 		# return False if not found 
 	return True
 	
-def searchTopRs(rsNum, allele, rna):
-	for entry in topList:
+def searchTopSublist(rsNum, allele, rna, sublist):
+	# Search in order
+	index = 0
+	for entry in sublist:
 		cmpNum = entry[0]
-		cmpAllele = entry[1]
-		if cmpNum==rsNum and cmpAllele==allele:
-			entry.append(rna)
-			return 1
+		if rsNum < cmpNum:
+			temp = [rsNum, [allele, rna]]
+			sublist.insert(index, temp)
+			return
+		elif rsNum == cmpNum:
+			# If a matching rsNum is found
+			# Check the allele(s)
+			for alleleList in entry[1:]
+				cmpAllele = alleleList[1]
+				if cmpAllele == allele:
+					alleleList.append(rna)
+					return
+			temp = [allele, rna]
+			entry.append(temp)
+		index += 1
+		
+	# If new rsNum is higher than all entries in list 
+	# Then append to end of the list 
+	temp = [rsNum, [allele, rna]]
+	sublist.append(temp)
+	
+def insertTopList(rsNum, allele, rna):
+	global topListLen = len(topList)
+	topStart = 0
+	topStop = 0
+	
+	if topListLen==0:
+		temp = [rsNum, [allele, rna]]
+		topList.append(temp)
+		return
+		
+	elif topListLen < 10:
+		# Simply search in order
+		index = 0
+		for entry in topList:
+			cmpNum = entry[0]
+			if rsNum < cmpNum:
+				temp = [rsNum, [allele, rna]]
+				topList.insert(index, temp)
+				return
+			elif rsNum == cmpNum:
+				# If a matching rsNum is found
+				# Check the allele(s)
+				for alleleList in entry[1:]
+					cmpAllele = alleleList[1]
+					if cmpAllele == allele:
+						alleleList.append(rna)
+						return
+				temp = [allele, rna]
+				entry.append(temp)
+			index += 1
 			
-	return None
+		# If new rsNum is higher than all entries in list 
+		# Then append to end of the list 
+		temp = [rsNum, [allele, rna]]
+		topList.append(temp)
+		return
+		
+	# Define increment value as sqrt of topListLen
+	topSqrt = sqrt(topListLen)
+	topListInc = int(math.floor(topSqrt))
+	topListIncSize = int(math.ceil(topSqrt))
+		
+	for x in range(topListIncSize):
+		topStop = topStart + topListInc
+		if topStop > topListLen:
+			topStop = topListLen
+			
+		# Determine sublist boundaries
+		topStartRs = topList[topStart][0]
+		topStopRs = topList[topStop][0]
+		
+		# If rsNum falls between the boundaries
+		if rsNum > topStartRs and rsNum < topStopRs:
+			# Search the sublist 
+			sublist = topList[topStart:topStop]
+			searchTopSublist(rsNum, allele, rna, sublist)
+			return
+		
+		# Otherwise, move to the next sublist 
+		topStart = topStop
