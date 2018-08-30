@@ -261,7 +261,7 @@ def loadTopList(mirandaFile):
 	if v:
 		toPrint = "Total data lines processed: " + str(count)
 		print(toPrint)
-	
+	'''
 	for entry in topList[0:10]:
 		print(entry)
 	
@@ -270,9 +270,9 @@ def loadTopList(mirandaFile):
 	
 	for entry in topList[-10:-1]:
 		print(entry)
-		
+	'''
 	validateTopListOrder()
-		
+	
 	toPrint = "Length of topList: " + str(topListLen)
 	print(toPrint)
 	
@@ -293,7 +293,18 @@ def buildBottomList():
 	for entry in topList:
 		rsNum = entry[0]
 		snpLine = snpSearch(rsNum)
-		print(snpLine)
+		bottomLine = [rsNum]
+		
+		for alleleList in entry[1:]:
+			topAllele = alleleList[0]
+			for checkAlleleList in snpLine[3:]:
+				checkAllele = checkAlleleList[0]
+				if checkAllele != topAllele:
+					bottomAlleleList = [checkAllele] + alleleList[1:]
+					bottomLine.append(bottomAlleleList)
+		bottomList.append(bottomLine)
+		
+		print(bottomList)
 		return
 
 # Populates the list of pairs to process with miranda
@@ -716,7 +727,7 @@ def insertTopList(rsNum, allele, rna):
 	print(allele)
 	print(rna)
 	
-	
+# DEBUG: utility method for verify that topList is correctly sorted 
 def validateTopListOrder():
 	length = len(topList)
 	
