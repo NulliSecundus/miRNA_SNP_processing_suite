@@ -268,8 +268,10 @@ def loadTopList(mirandaFile):
 	for entry in topList[10000:10010]:
 		print(entry)
 	
-	for entry in topList[-25:-1]:
+	for entry in topList[-10:-1]:
 		print(entry)
+		
+	validateTopListOrder()
 		
 	toPrint = "Length of topList: " + str(topListLen)
 	print(toPrint)
@@ -702,3 +704,19 @@ def insertTopList(rsNum, allele, rna):
 	print(allele)
 	print(rna)
 	'''
+	
+def validateTopListOrder():
+	length = len(topList)
+	
+	for x in range(1:length-1):
+		pre = topList[x-1]
+		cur = topList[x]
+		post = topList[x+1]
+		if cur <= pre:
+			print("Failed")
+			return
+		elif cur >= post:
+			print("Failed")
+			return
+			
+	print("Validated")
