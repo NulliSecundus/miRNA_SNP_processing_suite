@@ -668,16 +668,24 @@ def insertTopList(rsNum, allele, rna):
 		temp = [rsNum, [allele, rna]]
 		topList.insert(0, temp)
 		return
+		
+	# Check if rsNum is greater than last entry in topList
+	cmpNum = topList[-1][0]
+	elif rsNum > cmpNum:
+		temp = [rsNum, [allele, rna]]
+		topList.append(temp)
+		return
 	
 	# Define increment value as sqrt of topListLen
 	topSqrt = math.sqrt(topListLen)
-	topListInc = int(math.floor(topSqrt))
+	topListInc = int(math.ceil(topSqrt))
 	topListIncSize = int(math.ceil(topSqrt))
 		
 	for x in range(topListIncSize):
 		topStop = topStart + topListInc
 		
 		# If sublist is the last section of topList 
+		# Special case search 
 		if topStop > topListLen-1:
 			searchTopSublist(rsNum, allele, rna, topStart, topListLen)
 			return
@@ -687,7 +695,7 @@ def insertTopList(rsNum, allele, rna):
 		topStopRs = topList[topStop][0]
 		
 		# If rsNum falls between the boundaries
-		if rsNum >= topStartRs and rsNum < topStopRs:
+		if rsNum >= topStartRs and rsNum <= topStopRs:
 			# Search the sublist 
 			#sublist = topList[topStart:topStop]
 			searchTopSublist(rsNum, allele, rna, topStart, topStop)
@@ -696,11 +704,12 @@ def insertTopList(rsNum, allele, rna):
 		# Otherwise, move to the next sublist 
 		topStart = topStop
 		
+	'''
 	# If rsNum is higher than all entries in list
 	# Then append to end of topList 
 	temp = [rsNum, [allele, rna]]
 	topList.append(temp)
-	
+	'''
 	
 	print("Failed")
 	print(rsNum)
