@@ -236,10 +236,10 @@ def loadTopList(mirandaFile):
 				insertTopList(rsNum, allele, mirnaName)
 				
 				count +=1
-				
+				'''
 				if count%100==0:
 					break
-				
+				'''
 				
 				'''
 				rsEntry = searchTopRs(rsNum, allele, mirnaName)
@@ -261,7 +261,7 @@ def loadTopList(mirandaFile):
 	toPrint = "Count: " + str(count)
 	print(toPrint)
 	
-	for entry in topList[-20:-1]:
+	for entry in topList[-25:-1]:
 		print(entry)
 		
 	toPrint = "Length of topList: " + str(topListLen)
