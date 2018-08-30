@@ -709,9 +709,9 @@ def validateTopListOrder():
 	length = len(topList)
 	
 	for x in range(1, length-1):
-		pre = topList[x-1]
-		cur = topList[x]
-		post = topList[x+1]
+		pre = topList[x-1][0]
+		cur = topList[x][0]
+		post = topList[x+1][0]
 		if cur <= pre:
 			print("Failed")
 			toPrint = "Pre: " + str(pre)
