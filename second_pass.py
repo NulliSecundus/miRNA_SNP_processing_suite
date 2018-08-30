@@ -236,10 +236,10 @@ def loadTopList(mirandaFile):
 				insertTopList(rsNum, allele, mirnaName)
 				
 				count +=1
-				'''
-				if count%1000==0:
-					return
-				'''
+				
+				if count%100==0:
+					break
+				
 				
 				'''
 				rsEntry = searchTopRs(rsNum, allele, mirnaName)
