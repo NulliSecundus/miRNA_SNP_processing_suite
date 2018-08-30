@@ -604,7 +604,9 @@ def searchTopSublist(rsNum, allele, rna, sublist):
 	sublist.append(temp)
 	
 def insertTopList(rsNum, allele, rna):
-	global topListLen = len(topList)
+	global topListLen
+	topListLen = len(topList)
+	
 	topStart = 0
 	topStop = 0
 	
