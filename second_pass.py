@@ -50,7 +50,8 @@ def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 		genSig(mirandafile, procsnpfile, mirnafile)
 		loadsnp(procsnpfile)
 		loadrna(mirnafile)
-		print(procSnpArray[0][0])
+		print(procSnpArray[0][1])
+		print(procRnaArray[0])
 		loadTopList(mirandafile)
 		buildBottomList()
 		
