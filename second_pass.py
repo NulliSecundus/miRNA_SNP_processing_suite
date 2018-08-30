@@ -258,8 +258,15 @@ def loadTopList(mirandaFile):
 					subTopList = []
 				'''
 	
-	toPrint = "Count: " + str(count)
-	print(toPrint)
+	if v:
+		toPrint = "Total data lines processed: " + str(count)
+		print(toPrint)
+	
+	for entry in topList[0:10]:
+		print(entry)
+	
+	for entry in topList[10000:10010]:
+		print(entry)
 	
 	for entry in topList[-25:-1]:
 		print(entry)
