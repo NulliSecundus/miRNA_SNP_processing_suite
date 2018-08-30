@@ -252,7 +252,8 @@ def loadTopList(mirandaFile):
 					subTopList = []
 				'''
 				
-	print(topList[0:10])
+	for entry in topList[0:10]
+		print(entry)
 
 # Populates the list of pairs to process with miranda
 def buildBottomList():
