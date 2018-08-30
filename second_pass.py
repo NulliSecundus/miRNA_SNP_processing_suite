@@ -695,7 +695,7 @@ def insertTopList(rsNum, allele, rna):
 		topStopRs = topList[topStop][0]
 		
 		# If rsNum falls between the boundaries
-		if rsNum >= topStartRs and rsNum <= topStopRs:
+		if rsNum >= topStartRs and rsNum < topStopRs:
 			# Search the sublist 
 			#sublist = topList[topStart:topStop]
 			searchTopSublist(rsNum, allele, rna, topStart, topStop)
