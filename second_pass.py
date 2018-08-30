@@ -50,6 +50,8 @@ def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 		genSig(mirandafile, procsnpfile, mirnafile)
 		loadsnp(procsnpfile)
 		loadrna(mirnafile)
+		print(len(procSnpArray))
+		print(len(procSnpArray[0]))
 		print(procSnpArray[0][1])
 		print(procRnaArray[0])
 		loadTopList(mirandafile)
@@ -113,7 +115,24 @@ def loadsnp(procSnpFasta):
 	sequence = ""
 	rsSet = -1
 	
+	# Determine the number of entries in snp file 
+	toRun = [
+		"grep",
+		"-o",
+		"'>'",
+		procSnpFasta,
+		"|",
+		"wc", 
+		"-l", 
+	]
+	completedProcess = subprocess.run(toRun, stdout=subprocess.PIPE, encoding="utf-8")
+	stdOutText = completedProcess.stdout
+	textArray = stdOutText.split(" ")
+	numLines = int(textArray[0])
+	snpSplit = int(math.ceil(math.sqrt(numLines)))
+	
 	with open(procSnpFasta) as f:
+	
 		for line in f:
 			if line[0]==">":
 				
@@ -136,7 +155,7 @@ def loadsnp(procSnpFasta):
 						# Store current SNP line 
 						snpSubArray.append(snpLine)
 						
-						if count%3850 == 0:
+						if count%snpSplit == 0:
 							headerLine = [rsNum]
 							snpSubArray.insert(0, headerLine)
 							procSnpArray.append(snpSubArray)
