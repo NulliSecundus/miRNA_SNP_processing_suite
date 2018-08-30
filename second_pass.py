@@ -658,8 +658,8 @@ def insertTopList(rsNum, allele, rna):
 		
 	for x in range(topListIncSize):
 		topStop = topStart + topListInc
-		if topStop > topListLen:
-			topStop = topListLen
+		if topStop > (topListLen-1):
+			topStop = topListLen-1
 			
 		print(topStart)
 		print(topStop)
@@ -674,11 +674,17 @@ def insertTopList(rsNum, allele, rna):
 		print("")
 		
 		# If rsNum falls between the boundaries
-		if rsNum > topStartRs and rsNum < topStopRs:
+		if rsNum >= topStartRs and rsNum <= topStopRs:
 			# Search the sublist 
 			print("searching sublist")
 			sublist = topList[topStart:topStop]
 			searchTopSublist(rsNum, allele, rna, sublist)
+			return
+			
+		# If rsNum is higher than all entries in list
+		elif rsNum > topStopRs:
+			temp = [rsNum, [allele, rna]]
+			topList.append(temp)
 			return
 		
 		# Otherwise, move to the next sublist 
