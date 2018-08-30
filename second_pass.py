@@ -236,7 +236,7 @@ def loadTopList(mirandaFile):
 				insertTopList(rsNum, allele, mirnaName)
 				
 				count +=1
-				if count%20==0:
+				if count%100==0:
 					return
 				
 				'''
