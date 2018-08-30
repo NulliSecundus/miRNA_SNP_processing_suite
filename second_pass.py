@@ -627,7 +627,7 @@ def insertTopList(rsNum, allele, rna):
 			elif rsNum == cmpNum:
 				# If a matching rsNum is found
 				# Check the allele(s)
-				for alleleList in entry[1:]
+				for alleleList in entry[1:]:
 					cmpAllele = alleleList[1]
 					if cmpAllele == allele:
 						alleleList.append(rna)
