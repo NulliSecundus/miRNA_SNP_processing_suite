@@ -670,7 +670,7 @@ def insertTopList(rsNum, allele, rna):
 		return
 		
 	# Check if rsNum is greater than last entry in topList
-	cmpNum = topList[-1][0]
+	cmpNum = topList[1][0]
 	elif rsNum > cmpNum:
 		temp = [rsNum, [allele, rna]]
 		topList.append(temp)
