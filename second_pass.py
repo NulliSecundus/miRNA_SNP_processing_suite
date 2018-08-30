@@ -119,7 +119,7 @@ def loadsnp(procSnpFasta):
 	toRun = [
 		"grep",
 		"-o",
-		"'>'",
+		"\'>\'",
 		procSnpFasta,
 		"|",
 		"wc", 
