@@ -5,7 +5,6 @@ import time
 import math
 import io
 from multiprocessing import Pool
-from operator import itemgetter
 
 procSnpArray = []
 procRnaArray = []
@@ -51,8 +50,10 @@ def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 		genSig(mirandafile, procsnpfile, mirnafile)
 		loadsnp(procsnpfile)
 		loadrna(mirnafile)
+		print(procSnpArray[0][0])
 		loadTopList(mirandafile)
 		buildBottomList()
+		
 		"""
 		processBottomList()
 		iterateMiranda()
