@@ -667,8 +667,8 @@ def insertTopList(rsNum, allele, rna):
 		
 	for x in range(topListIncSize):
 		topStop = topStart + topListInc
-		if topStop > (topListLen-1):
-			topStop = topListLen-1
+		if topStop > topListLen:
+			topStop = topListLen
 			
 		# Determine sublist boundaries
 		topStartRs = topList[topStart][0]
