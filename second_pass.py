@@ -232,7 +232,7 @@ def loadTopList(mirandaFile):
 				
 				allele = refSplit[4]
 				
-				# Search if rsNum already entered
+				# Insert information into topList 
 				insertTopList(rsNum, allele, mirnaName)
 				
 				'''
@@ -673,3 +673,5 @@ def insertTopList(rsNum, allele, rna):
 		
 		# Otherwise, move to the next sublist 
 		topStart = topStop
+		
+	print("Failed")
