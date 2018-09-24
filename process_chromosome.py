@@ -1,6 +1,7 @@
 import click
 
 refInfo = []
+refGenes = []
 index = 0
 
 @click.command()
@@ -28,6 +29,7 @@ def cli(reportfile, snpfile, output, verbose):
 	each side of SNP and creates separate FASTA entries for each allele."""
 	try:
 		loadRef(refflat)
+		print(refGenes[0:5])
 		loadReport(reportfile)
 		procSNP(snpfile, output, verbose)
 		print("Success")
@@ -36,7 +38,15 @@ def cli(reportfile, snpfile, output, verbose):
 		
 # Function for loading refFlat.txt
 def loadRef(refFlat):
+	global refGenes
+	
 	print("Loading refFlat.txt")
+	
+	with open(refFlat) as f:
+		for line in f:
+			lineSplit = line.split("\t") # Split line by tabs
+			geneName = lineSplit[0] # First item is the gene's name
+			refGenes.append(geneName)
 
 # Function for loading the chromosome report file 
 def loadReport(chromReport):
