@@ -11,7 +11,7 @@ index = 0
 @click.argument('output')
 @click.option('--verbose', is_flag=True, help='''Output additional information to
 	the console''')
-def cli(reportfile, snpfile, output, verbose):
+def cli(refflat, reportfile, snpfile, output, verbose):
 	"""
 	\b
 	Arguments: 
