@@ -30,7 +30,9 @@ def cli(refflat, reportfile, snpfile, output, verbose):
 	try:
 		loadRef(refflat)
 		print(refGenes[0:5])
+		print(len(refGenes))
 		loadReport(reportfile)
+		print(refInfo[0:5])
 		procSNP(snpfile, output, verbose)
 		print("Success")
 	except:
@@ -52,7 +54,7 @@ def loadRef(refFlat):
 def loadReport(chromReport):
 	global refInfo
 	
-	print("Loading SNPs in chromosome")
+	print("Loading SNP reference info")
 	
 	# Open the chromosome report file to extract reference info 
 	with open(chromReport) as f:
@@ -73,6 +75,8 @@ def loadReport(chromReport):
 			
 # Function for processing the SNP fasta file	
 def procSNP(snpFasta, outputFile, v):
+	print("Building processed SNP list")
+	
 	# Initialize vars 
 	sequence = ""
 	header = ""
@@ -103,7 +107,8 @@ def procSNP(snpFasta, outputFile, v):
 				else:
 					# Otherwise assign values and continue 
 					unique = (tempLine[1]==2)
-					gene = (len(tempLine[2])>1)
+					gene = str(tempLine[2])
+					g = (len(gene)>1)
 
 				pos = headerSplt[3]
 				pos = int(pos[4:]) # Position of SNP in sequence 
@@ -120,7 +125,7 @@ def procSNP(snpFasta, outputFile, v):
 				
 			elif line[0]=="\n":
 				# Newline indicates moving to next SNP 
-				if unique and gene and stdSNP and (pos>25):
+				if unique and g and validateGene(gene) and stdSNP and (pos>25):
 					# If prev SNP satisfies criteria
 					# Begin formatting for printing 
 					
@@ -174,3 +179,11 @@ def rsSearch(rsNumber):
 			index = n 
 			return refInfo[n] # Return whole dataline 
 	return None
+	
+def validateGene(gene):
+	global refGenes
+	
+	if gene in refGenes:
+		return True
+	else:
+		return False
