@@ -183,7 +183,7 @@ def rsSearch(rsNumber):
 def validateGene(unique, gene):
 	global refGenes
 	
-	if !unique:
+	if not unique:
 		# SNP must be unique (mapped to single location in chromosome)
 		# If not, return False
 		return False
