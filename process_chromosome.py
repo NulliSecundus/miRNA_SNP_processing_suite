@@ -125,7 +125,7 @@ def procSNP(snpFasta, outputFile, v):
 				
 			elif line[0]=="\n":
 				# Newline indicates moving to next SNP 
-				if unique and validateGene(gene) and stdSNP and (pos>25):
+				if validateGene(unique, gene) and stdSNP and (pos>25):
 					# If prev SNP satisfies criteria
 					# Begin formatting for printing 
 					
@@ -180,13 +180,22 @@ def rsSearch(rsNumber):
 			return refInfo[n] # Return whole dataline 
 	return None
 	
-def validateGene(gene):
+def validateGene(unique, gene):
 	global refGenes
 	
+	if !unique:
+		# SNP must be unique (mapped to single location in chromosome)
+		# If not, return False
+		return False
+	
 	if len(gene)<1 :
+		# SNP must be mapped to a gene
+		# If not, return False
 		return False
 	
 	if gene in refGenes:
+		# Mapped gene must be in refGenes list
 		return True
 		
+	# If mapped gene cannot be found in refGenes, return False
 	return False
