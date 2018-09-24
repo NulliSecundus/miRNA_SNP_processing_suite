@@ -125,7 +125,7 @@ def procSNP(snpFasta, outputFile, v):
 				
 			elif line[0]=="\n":
 				# Newline indicates moving to next SNP 
-				if unique and g and validateGene(gene) and stdSNP and (pos>25):
+				if unique and validateGene(gene) and stdSNP and (pos>25):
 					# If prev SNP satisfies criteria
 					# Begin formatting for printing 
 					
@@ -183,7 +183,10 @@ def rsSearch(rsNumber):
 def validateGene(gene):
 	global refGenes
 	
+	if len(gene)<1 :
+		return False
+	
 	if gene in refGenes:
 		return True
-	else:
-		return False
+		
+	return False
