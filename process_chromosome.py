@@ -99,7 +99,13 @@ def loadReport(chromReport):
 			refInfo.append(tempLine)
 			
 	chr = lineSplit[6]
-	print(chr)
+	if chr == "X":
+		chromosome = 22
+	elif chr == "Y":
+		chromosome = 23
+	else:
+		chromosome = int(chr)-1
+	print(chromosome)
 			
 # Function for processing the SNP fasta file	
 def procSNP(snpFasta, outputFile, v):
