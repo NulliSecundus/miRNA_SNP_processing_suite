@@ -58,16 +58,14 @@ def loadRef(refFlat):
 			chr = lineSplit[2] # Chromosome number where gene is located
 			chrNum = -1
 			chr = chr[3:]
-			print(chr)
-			return
 			if chr == "X":
 				chrNum = 22
 			elif chr == "Y":
 				chrNum = 23
 			else:
-				chrNum = int(chr)
+				chrNum = int(chr)-1
 			
-			refGenes.append(geneName)
+			refGenes[chrNum].append(geneName)
 
 # Function for loading the chromosome report file 
 def loadReport(chromReport):
