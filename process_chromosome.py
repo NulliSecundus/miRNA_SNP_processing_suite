@@ -73,7 +73,7 @@ def loadRef(refFlat):
 				#print(chrNum)
 				refGenes[chrNum].append(geneName)
 			except:
-				print(chr)
+				continue
 
 # Function for loading the chromosome report file 
 def loadReport(chromReport):
