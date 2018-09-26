@@ -64,7 +64,7 @@ def loadRef(refFlat):
 				chrNum = 23
 			else:
 				chrNum = int(chr)-1
-			
+			print(chrNum)
 			refGenes[chrNum].append(geneName)
 
 # Function for loading the chromosome report file 
