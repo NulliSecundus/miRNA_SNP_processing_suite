@@ -3,6 +3,7 @@ import click
 refInfo = []
 refGenes = []
 index = 0
+chromosome = -1
 
 @click.command()
 @click.argument('refflat')
@@ -31,6 +32,7 @@ def cli(refflat, reportfile, snpfile, output, verbose):
 		loadRef(refflat)
 		print(refGenes[0][0:5])
 		print(len(refGenes))
+		print(len(refGenes[0]))
 		return
 		
 		loadReport(reportfile)
@@ -70,7 +72,6 @@ def loadRef(refFlat):
 					chrNum = 23
 				else:
 					chrNum = int(chr)-1
-				#print(chrNum)
 				refGenes[chrNum].append(geneName)
 			except:
 				continue
@@ -82,6 +83,7 @@ def loadReport(chromReport):
 	print("Loading SNP reference info")
 	
 	# Open the chromosome report file to extract reference info 
+	lineSplit = None
 	with open(chromReport) as f:
 		# Skip the first 7 lines
 		for x in range(7):
@@ -97,6 +99,9 @@ def loadReport(chromReport):
 				lineSplit[12] # Genes at this same position on the chromosome 
 			]
 			refInfo.append(tempLine)
+			
+	chr = lineSplit[6]
+	print(chr)
 			
 # Function for processing the SNP fasta file	
 def procSNP(snpFasta, outputFile, v):
