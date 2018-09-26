@@ -44,8 +44,8 @@ def cli(refflat, reportfile, snpfile, output, verbose):
 def loadRef(refFlat):
 	global refGenes
 	
-	for x in range(1,25):
-		refGenes.append([x])
+	for x in range(0,24):
+		refGenes.append([])
 		
 	print(refGenes)
 	
@@ -55,6 +55,18 @@ def loadRef(refFlat):
 		for line in f:
 			lineSplit = line.split("\t") # Split line by tabs
 			geneName = lineSplit[0] # First item is the gene's name
+			chr = lineSplit[2] # Chromosome number where gene is located
+			chrNum = -1
+			chr = chr[3:]
+			print(chr)
+			return
+			if chr == "X":
+				chrNum = 22
+			else if chr == "Y":
+				chrNum = 23
+			else:
+				chrNum = int(chr)
+			
 			refGenes.append(geneName)
 
 # Function for loading the chromosome report file 
