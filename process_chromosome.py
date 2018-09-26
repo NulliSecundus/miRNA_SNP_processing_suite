@@ -29,8 +29,10 @@ def cli(refflat, reportfile, snpfile, output, verbose):
 	each side of SNP and creates separate FASTA entries for each allele."""
 	try:
 		loadRef(refflat)
-		print(refGenes[0:5])
+		#print(refGenes[0:5])
 		print(len(refGenes))
+		return
+		
 		loadReport(reportfile)
 		print(refInfo[0:5])
 		procSNP(snpfile, output, verbose)
@@ -41,6 +43,11 @@ def cli(refflat, reportfile, snpfile, output, verbose):
 # Function for loading refFlat.txt
 def loadRef(refFlat):
 	global refGenes
+	
+	for x in range(1,25):
+		refGenes.append([x])
+		
+	print(refGenes)
 	
 	print("Loading refFlat.txt")
 	
