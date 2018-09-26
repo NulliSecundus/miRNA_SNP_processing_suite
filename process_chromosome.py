@@ -30,11 +30,10 @@ def cli(refflat, reportfile, snpfile, output, verbose):
 	each side of SNP and creates separate FASTA entries for each allele."""
 	try:
 		loadRef(refflat)
-		print(refGenes[0][0:5])
-		print(len(refGenes))
-		print(len(refGenes[0]))
 		loadReport(reportfile)
-		return
+		print(refGenes[chromosome][0:5])
+		print(len(refGenes))
+		print(len(refGenes[chromosome]))
 		procSNP(snpfile, output, verbose)
 		print("Success")
 	except:
@@ -77,6 +76,7 @@ def loadRef(refFlat):
 # Function for loading the chromosome report file 
 def loadReport(chromReport):
 	global refInfo
+	global chromosome
 	
 	print("Loading SNP reference info")
 	
@@ -216,6 +216,7 @@ def rsSearch(rsNumber):
 	
 def validateGene(unique, gene):
 	global refGenes
+	global chromosome
 	
 	if not unique:
 		# SNP must be unique (mapped to single location in chromosome)
@@ -227,7 +228,7 @@ def validateGene(unique, gene):
 		# If not, return False
 		return False
 	
-	if gene in refGenes:
+	if gene in refGenes[chromosome]:
 		# Mapped gene must be in refGenes list
 		return True
 		
