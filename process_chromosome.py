@@ -31,9 +31,6 @@ def cli(refflat, reportfile, snpfile, output, verbose):
 	try:
 		loadRef(refflat)
 		loadReport(reportfile)
-		print(refGenes[chromosome][0:5])
-		print(len(refGenes))
-		print(len(refGenes[chromosome]))
 		procSNP(snpfile, output, verbose)
 		print("Success")
 	except:
@@ -45,8 +42,6 @@ def loadRef(refFlat):
 	
 	for x in range(0,24):
 		refGenes.append([])
-		
-	print(refGenes)
 	
 	print("Loading refFlat.txt")
 	
@@ -105,7 +100,7 @@ def loadReport(chromReport):
 		chromosome = 23
 	else:
 		chromosome = int(chr)-1
-	print(chromosome)
+	
 			
 # Function for processing the SNP fasta file	
 def procSNP(snpFasta, outputFile, v):
