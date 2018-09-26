@@ -62,7 +62,7 @@ def loadRef(refFlat):
 			return
 			if chr == "X":
 				chrNum = 22
-			else if chr == "Y":
+			elif chr == "Y":
 				chrNum = 23
 			else:
 				chrNum = int(chr)
