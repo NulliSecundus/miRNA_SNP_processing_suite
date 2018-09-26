@@ -29,7 +29,7 @@ def cli(refflat, reportfile, snpfile, output, verbose):
 	each side of SNP and creates separate FASTA entries for each allele."""
 	try:
 		loadRef(refflat)
-		#print(refGenes[0:5])
+		print(refGenes[0][0:5])
 		print(len(refGenes))
 		return
 		
@@ -57,15 +57,13 @@ def loadRef(refFlat):
 			geneName = lineSplit[0] # First item is the gene's name
 			chr = lineSplit[2] # Chromosome number where gene is located
 			
-			"""
-			if len(chr) > 5:
-				chrSplit = chr.split("_")
-				chr = chrSplit[0]
-			"""
-			
-			chrNum = -1
-			chr = chr[3:]
 			try:
+				if len(chr) > 5:
+					chrSplit = chr.split("_")
+					chr = chrSplit[0]
+				
+				chrNum = -1
+				chr = chr[3:]
 				if chr == "X":
 					chrNum = 22
 				elif chr == "Y":
