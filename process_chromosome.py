@@ -56,20 +56,26 @@ def loadRef(refFlat):
 			lineSplit = line.split("\t") # Split line by tabs
 			geneName = lineSplit[0] # First item is the gene's name
 			chr = lineSplit[2] # Chromosome number where gene is located
+			
+			"""
 			if len(chr) > 5:
 				chrSplit = chr.split("_")
 				chr = chrSplit[0]
+			"""
 			
 			chrNum = -1
 			chr = chr[3:]
-			if chr == "X":
-				chrNum = 22
-			elif chr == "Y":
-				chrNum = 23
-			else:
-				chrNum = int(chr)-1
-			print(chrNum)
-			refGenes[chrNum].append(geneName)
+			try:
+				if chr == "X":
+					chrNum = 22
+				elif chr == "Y":
+					chrNum = 23
+				else:
+					chrNum = int(chr)-1
+				#print(chrNum)
+				refGenes[chrNum].append(geneName)
+			except:
+				print(chr)
 
 # Function for loading the chromosome report file 
 def loadReport(chromReport):
