@@ -56,6 +56,10 @@ def loadRef(refFlat):
 			lineSplit = line.split("\t") # Split line by tabs
 			geneName = lineSplit[0] # First item is the gene's name
 			chr = lineSplit[2] # Chromosome number where gene is located
+			if len(chr) > 5:
+				chrSplit = chr.split("_")
+				chr = chrSplit[0]
+			
 			chrNum = -1
 			chr = chr[3:]
 			if chr == "X":
