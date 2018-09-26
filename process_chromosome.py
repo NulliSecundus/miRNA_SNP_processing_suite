@@ -33,10 +33,8 @@ def cli(refflat, reportfile, snpfile, output, verbose):
 		print(refGenes[0][0:5])
 		print(len(refGenes))
 		print(len(refGenes[0]))
-		return
-		
 		loadReport(reportfile)
-		print(refInfo[0:5])
+		return
 		procSNP(snpfile, output, verbose)
 		print("Success")
 	except:
