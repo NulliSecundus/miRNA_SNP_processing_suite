@@ -53,6 +53,8 @@ def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 		loadrna(mirnafile)
 		print(len(procSnpArray))
 		print(len(procSnpArray[0]))
+		print(len(procSnpArray[1]))
+		print(len(procSnpArray[143]))
 		print(procSnpArray[0][1])
 		print(procRnaArray[0])
 		loadTopList(mirandafile)
