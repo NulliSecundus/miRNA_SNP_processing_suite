@@ -19,6 +19,7 @@ tempFileList = []
 rnaFileList = []
 snpFileList = []
 mirandaList = [] # Ordered parameters to iterate miranda
+outputFileList = [] # List to hold names of temp miranda output files
 noEnergy = False # miranda no energy option 
 v = False
 sigID = None
@@ -491,8 +492,8 @@ def iterateMiranda():
 		print(toPrint)
 		with Pool() as p:
 			p.map(runMiranda, entry)
-		#parseMiranda(num)
-		#appendOutput(out)
+		parseMiranda(num)
+		appendOutput(outputFileName)
 		num += 1
 		
 	# Delete all temp files and folder
@@ -502,7 +503,7 @@ def iterateMiranda():
 	subprocess.run(toRun, check=True)
 	
 	# Add ending timestamp to output file 
-	with open(out, 'a') as o:
+	with open(outputFileName, 'a') as o:
 		localtime = "# End: " + time.asctime(time.localtime(time.time()))
 		print("{}".format(localtime), file=o)
 	
@@ -570,43 +571,78 @@ def runMiranda(x):
 		]
 	subprocess.run(toRun, check=True)
 	
-def parseMiranda(text, out):
-	container = [] # temporary container for comparison within a group
+# Utility function for parsing temp miranda outputs into final format 	
+def parseMiranda(n):
+	toPrint = "Parsing part " + str(n) + " miranda outputs"
+	print(toPrint)
 	
-	for line in text:
-		# for each line in the miranda output text
-		if line[0:2]=='>h':
-			# if line is a data line
-			container.append(line.rstrip())
-					
-		elif line[0:2]=='>>':
-			# if line is a summary line
-			# end case for a grouping
-			# copy top score from from container
-			topLine = ""
+	for entry in outputFileList:
+		output_container = [] # container for lines of final output
+		container = [] # temporary container for comparison within a group
+		
+		with open(entry) as f:
 			
-			if len(container)==1 :
-				# if the group only has one data line 
-				topLine = str(container[0])
-			else:
-				# if multiple data lines in grouping
-				# determine top score line
-				topScore = -1
-				
-				for dataline in container:
-					# for each data line in the grouping
-					splitdline = dataline.split("\t")
-					compare = float(splitdline[2])
-					if compare > topScore :
-						topScore = compare
-						topLine = dataline
-				
-			# reset the temporary container
-			container = [] 
-	
-	with open(out, 'a') as o:	
-		# write topLine to the output file 
-		print('{}'.format(topLine), file=o)
+			count = 0
+			sumcount = 0
+			
+			for line in f:
+				# for each line in the miranda output file
+				if line[0:2]=='>h':
+					# if line is a data line
+					container.append(line.rstrip())
+							
+				elif line[0:2]=='>>':
+					# if line is a summary line
+					# end case for a grouping
+					# copy top score from from container
+					sumcount += 1
+					topLine = ""
+					
+					if len(container)==1 :
+						# if the group only has one data line 
+						topLine = str(container[0])
+					else:
+						# if multiple data lines in grouping
+						# determine top score line
+						# send top score line to output_container
+						topScore = -1
+						
+						for dataline in container:
+							# for each data line in the grouping
+							splitdline = dataline.split("\t")
+							compare = float(splitdline[2])
+							if compare > topScore :
+								topScore = compare
+								topLine = dataline
+					
+					# append topLine to output_container
+					output_container.append(topLine)
+						
+					# reset the temporary container
+					container = [] 
+		
+		cmpOut = entry.replace('.txt', '_cmp.txt')
+		with open(cmpOut, 'w') as o:	
+			for line in output_container:
+				# write each topLine to the output file 
+				print('{}'.format(line), file=o)
+
+		# Delete temp miranda output file
+		toRun = ["rm", entry]
+		subprocess.run(toRun, check=True)
+		
+# Utility function for appending each compressed temp output to final
+def appendOutput(out):
+	for entry in outputFileList:
+		cmpOut = entry.replace('.txt', '_cmp.txt')
+		with open(cmpOut) as f:
+			with open(out, 'a') as o:
+				for line in f:
+					print('{}'.format(line.replace('\n', '')), file=o)
+		
+		# Delete compressed temp output files
+		toRun = ["rm", cmpOut]
+		subprocess.run(toRun, check=True)
 	
 def genInput(sublist, n):
 	tempSnpFileName = dir + sigID + "_snp_" + str(n) + ".fasta"
