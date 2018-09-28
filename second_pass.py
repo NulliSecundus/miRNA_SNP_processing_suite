@@ -19,6 +19,7 @@ tempFileList = []
 rnaFileList = []
 snpFileList = []
 mirandaList = [] # Ordered parameters to iterate miranda
+noEnergy = False # miranda no energy option 
 v = False
 sigID = None
 dir = None 
@@ -29,9 +30,10 @@ outputFileName = None
 @click.argument('procsnpfile')
 @click.argument('mirnafile')
 @click.argument('output')
+@click.option('--noenergy', is_flag=True, help='Flag for miranda -noenergy option')
 @click.option('--verbose', is_flag=True, help='''Output additional information to
 	the console''')
-def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
+def cli(mirandafile, procsnpfile, mirnafile, output, noenergy, verbose):
 
 	"""
 	\b 
@@ -48,6 +50,7 @@ def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 	
 	v = verbose
 	outputFileName = output
+	noEnergy = noenergy
 	
 	try:
 		genSig(mirandafile, procsnpfile, mirnafile)
@@ -546,7 +549,7 @@ def runMiranda(x):
 			tempRnaFile, 
 			tempSnpFile, 
 			"-sc",
-			str(sc),
+			"0.0",
 			"-noenergy",
 			"-quiet",
 			"-keyval",
@@ -559,7 +562,7 @@ def runMiranda(x):
 			tempRnaFile, 
 			tempSnpFile, 
 			"-sc",
-			str(sc),
+			"0.0",
 			"-quiet",
 			"-keyval",
 			"-out",
