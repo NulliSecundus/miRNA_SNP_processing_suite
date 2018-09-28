@@ -466,7 +466,7 @@ def iterateMiranda():
 	procRnaArray = None
 	
 	print("Processing list complete, running miranda")
-	return
+	#return
 	
 	# Setup lists of files to iterate miranda over 
 	for entry in snpFileList:
