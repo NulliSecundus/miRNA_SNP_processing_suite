@@ -813,6 +813,7 @@ def printSubSnp(sublist, n):
 		for entry in sublist:
 			print(1.5)
 			header = entry[1]
+			print(1.75)
 			alleleList = entry[3:]
 			print(2)
 			for allele in alleleList:
