@@ -62,9 +62,9 @@ def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 		buildBottomList()
 		iterateMiranda()
 		print("Success")
-	except Exception:
+	except Exception as error:
 		print("Error")
-		print(Exception)
+		print(error)
 		return
 	
 # Generates a unique signature ID to be used in file naming
