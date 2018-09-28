@@ -17,6 +17,7 @@ bottomSnpList = []
 bulkSnpList = []
 tempFileList = []
 rnaFileList = []
+snpFileList = []
 v = False
 sigID = None
 dir = None 
@@ -786,8 +787,37 @@ def validateTopListOrder():
 	print("Validated")
 	
 def printSnp():
-	#TODO
 	print("Printing SNP File")
+	
+	# Assign properties and increment value
+	length = len(procSnpArray)
+	inc = math.ceil(length / 30)
+	
+	# Loop through procSnpArray
+	start = 0
+	end = inc
+	for n in range(30):
+		sublist = procSnpArray[start:end]
+		printSubSnp(sublist, n)
+		
+		start = end
+		end = end + inc
+		if end > length:
+			end = length
+	
+def printSubSnp(sublist, n):
+	tempSnpFileName = dir + sigID + "_snp_" + str(n) + ".fasta"
+	with open(tempSnpFileName, "w") as text_file:
+		for list in sublist:
+			for entry in list[1:]:
+				header = entry[0]
+				sequence = entry[1] + "\n"
+				
+				# Print to file 
+				print("{}".format(header), file=text_file)
+				print("{}".format(sequence), file=text_file)
+	
+	snpFileList.append(tempSnpFileName)
 	
 def printRna():
 	print("Printing RNA File")
