@@ -333,6 +333,8 @@ def buildBottomList():
 		
 	toPrint = "Length of bottomList: " + str(len(bottomList))
 	print(toPrint)
+	toPrint = bottomList[0]
+	print(toPrint)
 
 # Populates the list of pairs to process with miranda
 def buildBottomListOLD():
