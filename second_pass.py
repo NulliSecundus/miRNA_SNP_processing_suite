@@ -812,6 +812,7 @@ def printSubSnp(sublist, n):
 	with open(tempSnpFileName, "w") as text_file:
 		for entry in sublist:
 			print(1.5)
+			print(entry)
 			header = entry[1]
 			print(1.75)
 			alleleList = entry[3:]
