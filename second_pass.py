@@ -18,6 +18,7 @@ bulkSnpList = []
 tempFileList = []
 rnaFileList = []
 snpFileList = []
+mirandaList = [] # Ordered parameters to iterate miranda
 v = False
 sigID = None
 dir = None 
@@ -63,8 +64,12 @@ def cli(mirandafile, procsnpfile, mirnafile, output, verbose):
 		iterateMiranda()
 		print("Success")
 	except Exception as error:
+		toPrint = "Error: " + str(error)
+		print(toPrint)
+		'''
 		print("Error")
 		print(error)
+		'''
 		return
 	
 # Generates a unique signature ID to be used in file naming
