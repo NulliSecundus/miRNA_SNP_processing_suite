@@ -808,13 +808,16 @@ def printSnp():
 	
 def printSubSnp(sublist, n):
 	tempSnpFileName = dir + sigID + "_snp_" + str(n) + ".fasta"
+	print(1)
 	with open(tempSnpFileName, "w") as text_file:
 		for entry in sublist:
 			header = entry[1]
 			alleleList = entry[3:]
+			print(2)
 			for allele in alleleList:
 				subheader = header + allele[0]
 				sequence = allele[1] + "\n"
+				print(3)
 				
 				# Print to file 
 				print("{}".format(subheader), file=text_file)
