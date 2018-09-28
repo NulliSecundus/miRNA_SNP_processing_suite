@@ -791,30 +791,33 @@ def printSnp():
 	
 	# Assign properties and increment value
 	length = len(procSnpArray)
-	inc = math.ceil(length / 30)
+	#inc = math.ceil(length / 30)
 	
 	# Loop through procSnpArray
-	start = 0
-	end = inc
-	for n in range(30):
-		sublist = procSnpArray[start:end]
+	#start = 0
+	#end = inc
+	for n in range(length):
+		sublist = procSnpArray[n]
 		printSubSnp(sublist, n)
-		
+		'''
 		start = end
 		end = end + inc
 		if end > length:
 			end = length
+		'''
 	
 def printSubSnp(sublist, n):
 	tempSnpFileName = dir + sigID + "_snp_" + str(n) + ".fasta"
 	with open(tempSnpFileName, "w") as text_file:
-		for list in sublist:
-			for entry in list[1:]:
-				header = entry[0]
-				sequence = entry[1] + "\n"
+		for entry in sublist:
+			header = entry[1]
+			alleleList = entry[3:]
+			for allele in alleleList:
+				subheader = header + allele[0]
+				sequence = allele[1] + "\n"
 				
 				# Print to file 
-				print("{}".format(header), file=text_file)
+				print("{}".format(subheader), file=text_file)
 				print("{}".format(sequence), file=text_file)
 	
 	snpFileList.append(tempSnpFileName)
