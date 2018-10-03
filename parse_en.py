@@ -82,7 +82,7 @@ def parseScoreNew(mirandaOut, outputFile, so, ut, lt):
 					lineSplit = line.split('\t')
 					score = lineSplit[2]
 					print('{}'.format(score), file=text_file)
-		print("Scores printed to output file")
+		print("Success")
 	else:
 		with open(mirandaOut) as f:
 			print('Processing miranda output file')

@@ -57,12 +57,14 @@ def cli(mirandafile, procsnpfile, mirnafile, output, noenergy, verbose):
 		genSig(mirandafile, procsnpfile, mirnafile)
 		loadsnp(procsnpfile)
 		loadrna(mirnafile)
+		'''
 		print(len(procSnpArray))
 		print(len(procSnpArray[0]))
 		print(len(procSnpArray[1]))
 		print(len(procSnpArray[143]))
 		print(procSnpArray[0][1])
 		print(procRnaArray[0])
+		'''
 		loadTopList(mirandafile)
 		buildBottomList()
 		iterateMiranda()
@@ -340,131 +342,11 @@ def buildBottomList():
 		return
 		'''
 		
-	toPrint = "Length of bottomList: " + str(len(bottomList))
-	print(toPrint)
-	toPrint = bottomList[0]
-	print(toPrint)
-
-# Populates the list of pairs to process with miranda
-def buildBottomListOLD():
-	global topList
-	global bottomList
-	global bulkRnaList
-	global bulkSnpList
-	
 	if v:
-		toPrint = "Length of topList: " + str(len(topList))
+		toPrint = "Length of bottomList: " + str(len(bottomList))
 		print(toPrint)
-	
-	print("Building list of entries to process (may take a few minutes)")
-	
-	# For each SNP-miRNA entry in the top list
-	# Search the processed SNP list for alternative SNP alleles ID
-	# Add the alternative alleles to the bottom list for processing
-	
-	# Setup 30 entries in bottomList
-	for x in range(30):
-		bottomList.append(x)
-	
-	if v:
-		toPrint = str(len(bottomList)) + " sublists in bottomList for multiprocessing support"
+		toPrint = bottomList[0]
 		print(toPrint)
-	
-	with Pool() as p:
-		sublists = p.map(buildSubBottomList, bottomList)
-	
-	bottomList = []
-	listNum = 1
-	for list in sublists:
-		'''
-		print(list[0])
-		print(listNum)
-		'''
-		
-		bottomPairs = list[0]
-		bulkRnaList.extend(list[1])
-		bulkSnpList.extend(list[2])
-		
-		bottomPairs.insert(0, listNum)
-		bottomList.append(bottomPairs)
-		listNum += 1
-	
-# Sub-function to handle parallel processing of each topList section
-def buildSubBottomList(n):
-	
-	count = 0
-	sublist = []
-	bulkRnaSublist = []
-	bulkSnpSublist = []
-	
-	for line in topList[n]:
-		
-		mirna = line[0]
-		rsNum = int(line[1])
-		allele = line[2]
-		
-		snpLine = snpSearch(rsNum)
-		
-		if snpLine == None:
-			toPrint = "Error in buildSubBottomList " + str(n)
-			print(toPrint)
-			pass
-		
-		snpName = snpLine[1]
-		alleleNum = snpLine[2]
-		
-		for x in range(alleleNum):
-			checkAllele = snpLine[3+x]
-			if checkAllele[0] != allele:
-				snpAlleleName = snpName + checkAllele[0]
-				#sublist.append([mirna, mirnaSeq(mirna), snpAlleleName, checkAllele[1]])
-				sublist.append([mirna, snpAlleleName])
-				bulkRnaSublist.append([mirna])
-				bulkSnpSublist.append([snpAlleleName])
-		count += 1
-	
-	if v:
-		toPrint = "Finished buildSubBottomList " + str(n) + ", sublist length " + str(len(sublist))
-		print(toPrint)
-		
-	return [sublist, bulkRnaSublist, bulkSnpSublist]
-	
-def processBottomList():
-	global bulkRnaList
-	print("processing bottomList")
-	
-	toPrint = "BulkRnaList length: " + str(len(bulkRnaList))
-	print(toPrint)
-	
-	count=0
-	for mirna in bulkRnaList:
-		if mirna not in bottomRnaList:
-			bottomRnaList.append(mirna)
-		count+=1
-		
-		if count%50000==0:
-			print(count)
-			toPrint = "BottomRnaList length: " + str(len(bottomRnaList))
-			print(toPrint)
-	
-	toPrint = "BulkSnpList length: " + str(len(bulkSnpList))
-	print(toPrint)
-	
-	count=0
-	for snp in bulkSnpList:
-		if snp not in bottomSnpList:
-			bottomSnpList.append(snp)
-		count+=1
-		
-		if count%50000==0:
-			print(count)
-			toPrint = "BottomSnpList length: " + str(len(bottomSnpList))
-			print(toPrint)
-				
-	toPrint = "miRNA number: " + str(len(bottomRnaList))
-	print(toPrint)
-	toPrint = "SNP number: " + str(len(bottomSnpList))
-	print(toPrint)
 
 # Iteratively runs miranda on the list of SNP-miRNA pairs to be processed 
 def iterateMiranda():
@@ -854,6 +736,7 @@ def printRna():
 		
 def printSubRna(sublist, n):
 	tempRnaFileName = dir + sigID + "_mirna_" + str(n) + ".fasta"
+	outName = dir + sigID + "_out_" + str(n) + ".txt"
 	with open(tempRnaFileName, "w") as text_file:
 		for entry in sublist:
 			header = entry[0]
@@ -864,3 +747,4 @@ def printSubRna(sublist, n):
 			print("{}".format(sequence), file=text_file)
 	
 	rnaFileList.append(tempRnaFileName)
+	outputFileList.append(outName)
