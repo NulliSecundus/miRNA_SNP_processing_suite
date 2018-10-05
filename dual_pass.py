@@ -18,15 +18,15 @@ v = False
 sigID = None # Unique signature ID for naming temp files and folder 
 dir = None # Directory for temp file storage 
 outputFileName = None
-upperThreshold = 0 # Upper score threshold cutoff 
-lowerThreshold = 0 # Lower score threshold cutoff
+upperThreshold = 0.0 # Upper score threshold cutoff 
+lowerThreshold = 0.0 # Lower score threshold cutoff
 
 @click.command()
 @click.argument('procsnpfile')
 @click.argument('mirnafile')
 @click.argument('output')
-@click.option('-ut', default=102, help='Upper score threshold cutoff\nDefault 102')
-@click.option('-lt', default=72, help='Lower score threshold cutoff\nDefault 72')
+@click.option('-ut', default=102.0, help='Upper score threshold cutoff\nDefault 102')
+@click.option('-lt', default=72.0, help='Lower score threshold cutoff\nDefault 72')
 @click.option('--noenergy', is_flag=True, help='Flag for miranda -noenergy option')
 @click.option('--verbose', is_flag=True, help='''Output additional information to
 	the console''')
@@ -394,8 +394,8 @@ def appendOutput(out):
 				
 				mirnaName = lineSplit[0]
 				refName = lineSplit[1]
-				refScore = lineSplit[2]
-				refEn = lineSplit[3]
+				refScore = float(lineSplit[2])
+				refEn = float(lineSplit[3])
 				
 				refSplit = refName.split("|")
 				rsNum = int(refSplit[2].replace("rs", ""))
