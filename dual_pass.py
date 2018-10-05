@@ -25,8 +25,8 @@ lowerThreshold = 0.0 # Lower score threshold cutoff
 @click.argument('procsnpfile')
 @click.argument('mirnafile')
 @click.argument('output')
-@click.option('-ut', default=102.0, help='Upper score threshold cutoff\nDefault 102')
-@click.option('-lt', default=72.0, help='Lower score threshold cutoff\nDefault 72')
+@click.option('-ut', default=125.0, help='Upper score threshold cutoff\nDefault 125')
+@click.option('-lt', default=60.0, help='Lower score threshold cutoff\nDefault 60')
 @click.option('--noenergy', is_flag=True, help='Flag for miranda -noenergy option')
 @click.option('--verbose', is_flag=True, help='''Output additional information to
 	the console''')
@@ -79,18 +79,25 @@ def genSig(snpFile, mirnaFile):
 	# Create output file and add timestamp
 	with open(outputFileName, 'w') as o:
 		localtime = "# Start: " + time.asctime(time.localtime(time.time()))
+		thresholdText = "# Upper score threshold: " + str(upperThreshold)
+		thresholdText += " Lower score threshold: " + str(lowerThreshold)
 		print("{}".format(localtime), file=o)
+		print("{}".format(thresholdText), file=o)
 	
 	# Create README info file in the temp folder
 	infoFile = dir + "README" + ".txt"
 	with open(infoFile, "w") as text_file:
 		header = "Dual Pass\nInput Parameters: "
+		ut = "Upper score threshold: " + str(upperThreshold)
+		lt = "Lower score threshold: " + str(lowerThreshold)
 		
 		# Print to file 
 		print("{}".format(header), file=text_file)
 		print("{}".format(snpFile), file=text_file)
 		print("{}".format(mirnaFile), file=text_file)
 		print("{}".format(outputFileName), file=text_file)
+		print("{}".format(ut), file=text_file)
+		print("{}".format(lt), file=text_file)
 	
 # Loads the SNP sequence file into memory 
 def loadsnp(procSnpFasta):
