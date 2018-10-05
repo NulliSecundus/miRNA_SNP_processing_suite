@@ -25,8 +25,8 @@ lowerThreshold = 0.0 # Lower score threshold cutoff
 @click.argument('procsnpfile')
 @click.argument('mirnafile')
 @click.argument('output')
-@click.option('-ut', default=125.0, help='Upper score threshold cutoff\nDefault 125')
-@click.option('-lt', default=60.0, help='Lower score threshold cutoff\nDefault 60')
+@click.option('-ut', default=102.0, help='Upper score threshold cutoff\nDefault 102.0')
+@click.option('-lt', default=72.0, help='Lower score threshold cutoff\nDefault 72.0')
 @click.option('--noenergy', is_flag=True, help='Flag for miranda -noenergy option')
 @click.option('--verbose', is_flag=True, help='''Output additional information to
 	the console''')
