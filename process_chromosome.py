@@ -20,7 +20,7 @@ def cli(refflat, reportfile, snpfile, output, verbose):
 		REPORTFILE (chr_N.txt) - INPUT chromosome report file containing SNP 
 			reference information. 
 			See ftp://ftp.ncbi.nlm.nih.gov/snp/00readme.txt 
-		SNPFILE (rs_chrN.fas) - INPUT SNP sequence files by chromosome in fasta 
+		SNPFILE (rs_chN.fas) - INPUT SNP sequence files by chromosome in fasta 
 			format. See ftp://ftp.ncbi.nlm.nih.gov/snp/00readme.txt 
 		OUTPUT (proc_chrN.fasta) - processed fasta formatted file 
 			containing entries with sequences for each validated SNP. 
