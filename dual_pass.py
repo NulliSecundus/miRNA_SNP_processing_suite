@@ -449,12 +449,29 @@ def appendOutput(out):
 def printSnp():
 	print("Printing SNP File")
 	
+	n = 0
+	c = 1
+	snpPrintList = []
+	
+	for sublist in procSnpArray :
+		if (c%10==0) :
+			printSubSnp(snpPrintList, n)
+			snpPrintList = []
+			n += 1
+			
+		for entry in sublist[1:] :
+			snpPrintList.append(entry)
+			
+		c += 1
+		
+	'''
 	length = len(procSnpArray)
 	
 	# Loop through procSnpArray
 	for n in range(length):
 		sublist = procSnpArray[n]
 		printSubSnp(sublist, n)
+	'''
 	
 def printSubSnp(sublist, n):
 	tempSnpFileName = dir + sigID + "_snp_" + str(n) + ".fasta"
