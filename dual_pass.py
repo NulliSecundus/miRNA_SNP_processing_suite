@@ -476,7 +476,7 @@ def printSnp():
 def printSubSnp(sublist, n):
 	tempSnpFileName = dir + sigID + "_snp_" + str(n) + ".fasta"
 	with open(tempSnpFileName, "w") as text_file:
-		for entry in sublist[1:]:
+		for entry in sublist:
 			header = entry[1]
 			alleleList = entry[3:]
 			for allele in alleleList:
