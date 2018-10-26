@@ -102,7 +102,7 @@ def loadReport(chromReport):
 				int(lineSplit[4]), # Total number of contigs hit
 				int(lineSplit[5]), # Total number of hits to genome
 				lineSplit[12], # Genes at this same position on the chromosome 
-				float(lineSplit[15]), # Maximum reported probability that RefSNP is real
+				lineSplit[15], # Maximum reported probability that RefSNP is real
 				int(lineSplit[16]) # Validated status (0 == no validation information) 
 			]
 			print("here")
