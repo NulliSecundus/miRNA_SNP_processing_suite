@@ -450,10 +450,11 @@ def printSnp():
 	print("Printing SNP File")
 	
 	n = 0
-	c = 1
+	c = 0
 	snpPrintList = []
 	
 	for sublist in procSnpArray :
+		c += 1
 		if (c%10==0) :
 			printSubSnp(snpPrintList, n)
 			snpPrintList = []
@@ -462,7 +463,10 @@ def printSnp():
 		for entry in sublist[1:] :
 			snpPrintList.append(entry)
 			
-		c += 1
+	if (c%10!=0) :
+		printSubSnp(snpPrintList, n)
+		snpPrintList = []
+		n += 1
 		
 	'''
 	length = len(procSnpArray)
