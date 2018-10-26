@@ -163,10 +163,11 @@ def procSNP(snpFasta, outputFile, v):
 				alleles = alleles.replace('\"','')
 				alleles = alleles.split('/') # List of SNP alleles 
 				alleleNum = len(alleles) # Total number of SNP alleles 
+				alVal = (alleleNum == 2) # Number of alleles must equal 2
 				
 			elif line[0]=="\n":
 				# Newline indicates moving to next SNP 
-				if validateGene(rsNum) and stdSNP and (pos>25):
+				if validateGene(rsNum) and alVal and stdSNP and (pos>25):
 					# If prev SNP satisfies criteria
 					# Begin formatting for printing 
 					
