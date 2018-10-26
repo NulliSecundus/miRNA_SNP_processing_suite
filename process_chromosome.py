@@ -103,6 +103,7 @@ def loadReport(chromReport):
 				float(lineSplit[15]), # Maximum reported probability that RefSNP is real
 				int(lineSplit[16]) # Validated status (0 == no validation information) 
 			]
+			print("here")
 			refInfo.append(tempLine)
 			print(tempLine)
 			num += 1
