@@ -107,7 +107,6 @@ def loadReport(chromReport):
 				int(lineSplit[18]), # Linkout available to submitter website for further data on the RefSNP
 				lineSplit[25].replace('\n', '') # Global Minor Allele Frequency (GMAF)
 			]
-			print("here")
 			refInfo.append(tempLine)
 			print(tempLine)
 			num += 1
@@ -150,17 +149,6 @@ def procSNP(snpFasta, outputFile, v):
 				rs = headerSplt[2].split(" ")
 				rsNum = int(rs[0][2:]) # Extract rs number (INT)
 
-				tempLine = rsSearch(rsNum) # Search for rs num, return info
-				if tempLine == None :
-					# Terminate program if nothing is found
-					print("Error")
-					return
-				else:
-					# Otherwise assign values and continue 
-					unique = (tempLine[1]==2)
-					gene = str(tempLine[2])
-					g = (len(gene)>1)
-
 				pos = headerSplt[3]
 				pos = int(pos[4:]) # Position of SNP in sequence 
 
@@ -176,7 +164,7 @@ def procSNP(snpFasta, outputFile, v):
 				
 			elif line[0]=="\n":
 				# Newline indicates moving to next SNP 
-				if validateGene(unique, gene) and stdSNP and (pos>25):
+				if validateGene(rsNum) and stdSNP and (pos>25):
 					# If prev SNP satisfies criteria
 					# Begin formatting for printing 
 					
@@ -231,9 +219,19 @@ def rsSearch(rsNumber):
 			return refInfo[n] # Return whole dataline 
 	return None
 	
-def validateGene(unique, gene):
+def validateGene(rsNum):
 	global refGenes
 	global chromosome
+	
+	tempLine = rsSearch(rsNum) # Search for rs num, return info
+	if tempLine == None :
+		# Terminate program if nothing is found
+		print("Error")
+		return
+	else:
+		# Otherwise assign values and continue 
+		unique = (tempLine[1]==2)
+		gene = str(tempLine[6])
 	
 	if not unique:
 		# SNP must be unique (mapped to single location in chromosome)
@@ -244,6 +242,25 @@ def validateGene(unique, gene):
 		# SNP must be mapped to a gene
 		# If not, return False
 		return False
+		
+	if s:
+		# Strict filtering section
+		if (tempLine[2]!=0):
+			return False
+		if (tempLine[3]!=1):
+			return False
+		if (tempLine[4]!=1):
+			return False
+		if (tempLine[5]!=1):
+			return False
+		if (tempLine[7]==0):
+			return False
+		if (tempLine[8]!=1):
+			return False
+		if (tempLine[9]!=1):
+			return False
+		if (len(tempLine[10])<5):
+			return False
 	
 	if gene in refGenes[chromosome]:
 		# Mapped gene must be in refGenes list
