@@ -4,15 +4,17 @@ refInfo = []
 refGenes = []
 index = 0
 chromosome = -1
+s = False
 
 @click.command()
 @click.argument('refflat')
 @click.argument('reportfile')
 @click.argument('snpfile')
 @click.argument('output')
+@click.option('--strict', is_flag=True, help='''Strict filtering''')
 @click.option('--verbose', is_flag=True, help='''Output additional information to
 	the console''')
-def cli(refflat, reportfile, snpfile, output, verbose):
+def cli(refflat, reportfile, snpfile, output, strict, verbose):
 	"""
 	\b
 	Arguments: 
@@ -28,9 +30,12 @@ def cli(refflat, reportfile, snpfile, output, verbose):
 	Extracts validated SNPs with a unique genomic position located within 
 	the 5' or 3' UTR or CDS of any gene. Trims rs_chrN.fas entries to 25 bp
 	each side of SNP and creates separate FASTA entries for each allele."""
+	if strict:
+		s = True
 	try:
 		loadRef(refflat)
 		loadReport(reportfile)
+		return
 		procSNP(snpfile, output, verbose)
 		print("Success")
 	except:
@@ -82,16 +87,28 @@ def loadReport(chromReport):
 		for x in range(7):
 			next(f)
 			
+		num = 0
 		# Starting at line 8
 		for line in f:
 			lineSplit = line.split("\t") # Split line by tabs
-			lineSplit = lineSplit[:13] # Keep parts 0-12 only 
+			#lineSplit = lineSplit[:13] # Keep parts 0-12 only 
 			tempLine = [
 				int(lineSplit[0]), # rs number
 				int(lineSplit[1]), # Map (2 == mapped to single location in genome)
+				int(lineSplit[2]), # SNP Type (0 == not withdrawn)
+				int(lineSplit[3]), # Total number of chromosomes hit
+				int(lineSplit[4]), # Total number of contigs hit
+				int(lineSplit[5]), # Total number of hits to genome
 				lineSplit[12] # Genes at this same position on the chromosome 
+				float(lineSplit[15]), # Maximum reported probability that RefSNP is real
+				int(lineSplit[16]), # Validated status (0 == no validation information) 
 			]
 			refInfo.append(tempLine)
+			print(tempLine)
+			num += 1
+			if (num%11==0):
+				return
+			
 			
 	chr = lineSplit[6]
 	if chr == "X":
