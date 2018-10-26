@@ -105,7 +105,7 @@ def loadReport(chromReport):
 				int(lineSplit[16]), # Validated status (0 == no validation information) 
 				int(lineSplit[17]), # Genotypes available in dbSNP for this RefSNP
 				int(lineSplit[18]), # Linkout available to submitter website for further data on the RefSNP
-				lineSplit[25] # Global Minor Allele Frequency (GMAF)
+				lineSplit[25].replace('\n', '') # Global Minor Allele Frequency (GMAF)
 			]
 			print("here")
 			refInfo.append(tempLine)
