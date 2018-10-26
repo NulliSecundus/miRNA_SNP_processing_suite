@@ -38,8 +38,10 @@ def cli(refflat, reportfile, snpfile, output, strict, verbose):
 		return
 		procSNP(snpfile, output, verbose)
 		print("Success")
-	except:
-		print("Error")
+	except Exception as error:
+		toPrint = "Error: " + str(error)
+		print(toPrint)
+		return
 		
 # Function for loading refFlat.txt
 def loadRef(refFlat):
