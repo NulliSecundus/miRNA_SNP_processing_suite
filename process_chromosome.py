@@ -35,7 +35,6 @@ def cli(refflat, reportfile, snpfile, output, strict, verbose):
 	try:
 		loadRef(refflat)
 		loadReport(reportfile)
-		return
 		procSNP(snpfile, output, verbose)
 		print("Success")
 	except Exception as error:
@@ -108,10 +107,12 @@ def loadReport(chromReport):
 				lineSplit[25].replace('\n', '') # Global Minor Allele Frequency (GMAF)
 			]
 			refInfo.append(tempLine)
+			'''
 			print(tempLine)
 			num += 1
 			if (num%16==0):
 				return
+			'''
 			
 			
 	chr = lineSplit[6]
