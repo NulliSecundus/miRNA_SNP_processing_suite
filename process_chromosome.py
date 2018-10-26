@@ -102,14 +102,16 @@ def loadReport(chromReport):
 				int(lineSplit[4]), # Total number of contigs hit
 				int(lineSplit[5]), # Total number of hits to genome
 				lineSplit[12], # Genes at this same position on the chromosome 
-				lineSplit[15], # Maximum reported probability that RefSNP is real
 				int(lineSplit[16]) # Validated status (0 == no validation information) 
+				int(lineSplit[17]) # Genotypes available in dbSNP for this RefSNP
+				int(lineSplit[18]) # Linkout available to submitter website for further data on the RefSNP
+				lineSplit[25], # Global Minor Allele Frequency (GMAF)
 			]
 			print("here")
 			refInfo.append(tempLine)
 			print(tempLine)
 			num += 1
-			if (num%11==0):
+			if (num%16==0):
 				return
 			
 			
