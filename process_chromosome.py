@@ -247,7 +247,7 @@ def validateGene(rsNum):
 		
 	if s:
 		# Strict filtering section
-		if (tempLine[2]==0):
+		if (tempLine[2]!=0):
 			return False
 		if (tempLine[3]!=1):
 			return False
