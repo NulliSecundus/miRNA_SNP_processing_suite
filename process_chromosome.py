@@ -30,6 +30,7 @@ def cli(refflat, reportfile, snpfile, output, strict, verbose):
 	Extracts validated SNPs with a unique genomic position located within 
 	the 5' or 3' UTR or CDS of any gene. Trims rs_chrN.fas entries to 25 bp
 	each side of SNP and creates separate FASTA entries for each allele."""
+	global s
 	if strict:
 		s = True
 	try:
