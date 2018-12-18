@@ -63,6 +63,24 @@ Primary Commands:
 			OUTPUT - fully processed second pass miRanda output 
 		
 		Parses the miranda output for the second pass.
+		
+	dualpass [OPTIONS] PROCSNPFILE MIRNAFILE OUTPUT
+		Arguments: 
+			PROCSNPFILE (proc_chrN.fasta), 
+			MIRNAFILE (mirna_mature_human.fasta)
+			OUTPUT (strict_refFlat_dualpass_chrN.txt)
+			
+		Wrapper interface for running a miranda dual pass. 
+		For the given procSnpFileand mirnaFile iteratively runs miranda in 
+		parallel on small subsections of the input files and combines the 
+		outputs to a final processed output file.
+		
+	procdualpass [OPTIONS] MIRANDAFILE OUTPUT
+		Arguments: 
+			MIRANDAFILE (refFlat_pass1_scXXX_chrN.txt)
+			OUTPUT (chrN.sqlite)
+			
+		Combines the output from a miranda dual pass into a single sqlite file.
 
 Utility Commands: 
 
