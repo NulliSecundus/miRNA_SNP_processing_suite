@@ -467,15 +467,6 @@ def printSnp():
 		printSubSnp(snpPrintList, n)
 		snpPrintList = []
 		n += 1
-		
-	'''
-	length = len(procSnpArray)
-	
-	# Loop through procSnpArray
-	for n in range(length):
-		sublist = procSnpArray[n]
-		printSubSnp(sublist, n)
-	'''
 	
 def printSubSnp(sublist, n):
 	tempSnpFileName = dir + sigID + "_snp_" + str(n) + ".fasta"
