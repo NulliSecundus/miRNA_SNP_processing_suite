@@ -27,6 +27,20 @@ noEnergy = False # miranda no energy option
 @click.option('-stop', default=0, help='Limits run to the specified number of SNP subsections')
 @click.option('--noenergy', is_flag=True, help='Flag for miranda -noenergy option')
 def cli(snpfile, mirnafile, output, score, snp, rna, stop, noenergy):
+
+	"""
+	\b
+	Arguments:
+		SNPFILE - INPUT fasta-formatted processed chromosomal SNP file 
+		MIRNAFILE - INPUT fasta-formatted mature miRNA file 
+		OUTPUT - final processed file from first pass miRanda
+		SCORE - score threshold parameter for miRanda 
+	
+	Wrapper interface for running a miranda first pass. For the given 
+	snpFile, mirnaFile, and score threshold, iteratively runs miranda in 
+	parallel on small subsections of the input files and combines the 
+	outputs to a final processed output file."""
+
 	global sc 
 	global snpSplit
 	global rnaSplit
@@ -77,7 +91,7 @@ def genSig(snpFile, mirnaFile, out):
 		print("{}".format(out), file=text_file)
 		print("{}".format(sc), file=text_file)
 
-# Loads the SNP file into memory and splits it every 3 million entries
+# Loads the SNP file into memory and splits it every 2 million entries
 # Outputs each split section as a temp file for miranda 	
 def loadsnp(snpFile):
 	global snpList
@@ -106,7 +120,7 @@ def loadsnp(snpFile):
 	if count%snpSplit!=0:
 		outputSnp(fileNum)
 	
-# Loads the miRNA file into memory and splits it every 200 entries 
+# Loads the miRNA file into memory and splits it every 80 entries 
 # Outputs each split section as a temp file for miranda 
 def loadrna(mirnaFile):
 	global rnaList

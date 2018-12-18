@@ -11,7 +11,9 @@ setup(
 		'first_pass', 
 		'proc_first_pass',
 		'second_pass',
-		'proc_second_pass'
+		'proc_second_pass',
+		'dual_pass',
+		'proc_dual_pass'
 	],
 	install_requires=[
 		'Click',
@@ -27,5 +29,7 @@ setup(
 		procfirstpass=proc_first_pass:cli
 		secondpass=second_pass:cli
 		procsecondpass=proc_second_pass:cli
+		dualpass=dual_pass:cli
+		procdualpass=proc_dual_pass:cli
 	''',
 )

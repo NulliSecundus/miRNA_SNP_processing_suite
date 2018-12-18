@@ -6,80 +6,65 @@ import math
 import io
 from multiprocessing import Pool
 
-procSnpArray = []
-procRnaArray = []
-topList = []
-topListLen = 0
-bottomList = []
-bottomRnaList = []
-bulkRnaList = []
-bottomSnpList = []
-bulkSnpList = []
+procSnpArray = [] # List to hold SNP entries
+procRnaArray = [] # List to hold miRNA entries
 tempFileList = []
-rnaFileList = []
-snpFileList = []
+rnaFileList = [] # List to hold names of miRNA temp files 
+snpFileList = [] # List to hold names of SNP temp files 
 mirandaList = [] # Ordered parameters to iterate miranda
 outputFileList = [] # List to hold names of temp miranda output files
 noEnergy = False # miranda no energy option 
 v = False
-sigID = None
-dir = None 
-outputFileName = None 
+sigID = None # Unique signature ID for naming temp files and folder 
+dir = None # Directory for temp file storage 
+outputFileName = None
+upperThreshold = 0.0 # Upper score threshold cutoff 
+lowerThreshold = 0.0 # Lower score threshold cutoff
 
 @click.command()
-@click.argument('mirandafile')
 @click.argument('procsnpfile')
 @click.argument('mirnafile')
 @click.argument('output')
+@click.option('-ut', default=102.0, help='Upper score threshold cutoff\nDefault 102.0')
+@click.option('-lt', default=72.0, help='Lower score threshold cutoff\nDefault 72.0')
 @click.option('--noenergy', is_flag=True, help='Flag for miranda -noenergy option')
 @click.option('--verbose', is_flag=True, help='''Output additional information to
 	the console''')
-def cli(mirandafile, procsnpfile, mirnafile, output, noenergy, verbose):
+def cli(procsnpfile, mirnafile, output, ut, lt, noenergy, verbose):
 
 	"""
 	\b 
 	Arguments:
-		MIRANDAFILE - INPUT processed output from procfirstpass script 
 		PROCSNPFILE - INPUT processed SNP file from procchrom script 
 		MIRNAFILE - INPUT fasta-formatted mature miRNA file 
-		OUTPUT - processed output from second pass of miRanda 
+		OUTPUT - processed output from dual pass of miranda
 	
-	Wrapper interface for running a miranda second pass."""
+	Wrapper interface for running a miranda dual pass."""
 
 	global v
 	global outputFileName
+	global upperThreshold
+	global lowerThreshold
 	
 	v = verbose
 	outputFileName = output
 	noEnergy = noenergy
+	upperThreshold = ut
+	lowerThreshold = lt
 	
 	try:
-		genSig(mirandafile, procsnpfile, mirnafile)
+		genSig(procsnpfile, mirnafile)
 		loadsnp(procsnpfile)
 		loadrna(mirnafile)
-		'''
-		print(len(procSnpArray))
-		print(len(procSnpArray[0]))
-		print(len(procSnpArray[1]))
-		print(len(procSnpArray[143]))
-		print(procSnpArray[0][1])
-		print(procRnaArray[0])
-		'''
-		loadTopList(mirandafile)
-		buildBottomList()
 		iterateMiranda()
 		print("Success")
 	except Exception as error:
 		toPrint = "Error: " + str(error)
 		print(toPrint)
-		'''
-		print("Error")
-		print(error)
-		'''
 		return
 	
 # Generates a unique signature ID to be used in file naming
-def genSig(mirandaFile, snpFile, mirnaFile):
+def genSig(snpFile, mirnaFile):
 	global sigID
 	global dir 
 	
@@ -94,19 +79,25 @@ def genSig(mirandaFile, snpFile, mirnaFile):
 	# Create output file and add timestamp
 	with open(outputFileName, 'w') as o:
 		localtime = "# Start: " + time.asctime(time.localtime(time.time()))
+		thresholdText = "# Upper score threshold: " + str(upperThreshold)
+		thresholdText += " Lower score threshold: " + str(lowerThreshold)
 		print("{}".format(localtime), file=o)
+		print("{}".format(thresholdText), file=o)
 	
 	# Create README info file in the temp folder
 	infoFile = dir + "README" + ".txt"
 	with open(infoFile, "w") as text_file:
-		header = "Second Pass\nInput Parameters: "
+		header = "Dual Pass\nInput Parameters: "
+		ut = "Upper score threshold: " + str(upperThreshold)
+		lt = "Lower score threshold: " + str(lowerThreshold)
 		
 		# Print to file 
 		print("{}".format(header), file=text_file)
-		print("{}".format(mirandaFile), file=text_file)
 		print("{}".format(snpFile), file=text_file)
 		print("{}".format(mirnaFile), file=text_file)
 		print("{}".format(outputFileName), file=text_file)
+		print("{}".format(ut), file=text_file)
+		print("{}".format(lt), file=text_file)
 	
 # Loads the SNP sequence file into memory 
 def loadsnp(procSnpFasta):
@@ -228,125 +219,6 @@ def loadrna(miRNA):
 				count = count+1
 				
 	printRna()
-
-# Populates the list of top hit pairs
-def loadTopList(mirandaFile):
-	global topList
-	
-	print('Loading list of top hits from miranda file')
-	
-	# Determine the number of lines in mirandaFile
-	toRun = [
-		"wc", 
-		"-l", 
-		mirandaFile, 
-	]
-	completedProcess = subprocess.run(toRun, stdout=subprocess.PIPE, encoding="utf-8")
-	stdOutText = completedProcess.stdout
-	textArray = stdOutText.split(" ")
-	numLines = int(textArray[0])
-	topSplit = int( math.floor(float(numLines) / 30.0 ) )
-	
-	# For each line in processed miranda output
-	# Populate the top list with the miRNA and SNP rsNum pair
-	
-	subTopList = []
-	count = 0
-	
-	with open(mirandaFile) as f:
-		for line in f:
-			if line[0]==">":
-				lineSplit = line.split("\t")
-				
-				mirnaName = lineSplit[0]
-				
-				refName = lineSplit[1]
-				refSplit = refName.split("|")
-				rsNum = int(refSplit[2].replace("rs", ""))
-				
-				allele = refSplit[4]
-				
-				# Insert information into topList 
-				insertTopList(rsNum, allele, mirnaName)
-				
-				count +=1
-				'''
-				if count%100==0:
-					break
-				'''
-				
-				'''
-				rsEntry = searchTopRs(rsNum, allele, mirnaName)
-				
-				if rsEntry == None:
-					temp = [rsNum, allele, mirnaName]
-					topList.append(temp)
-				
-				
-				temp = [mirnaName, rsNum, allele]
-				subTopList.append(temp)
-				count += 1
-				
-				if count%topSplit==0:
-					topList.append(subTopList)
-					subTopList = []
-				'''
-	
-	if v:
-		toPrint = "Total data lines processed: " + str(count)
-		print(toPrint)
-	'''
-	for entry in topList[0:10]:
-		print(entry)
-	
-	for entry in topList[10000:10010]:
-		print(entry)
-	
-	for entry in topList[-10:-1]:
-		print(entry)
-	'''
-	validateTopListOrder()
-	
-	toPrint = "Length of topList: " + str(topListLen)
-	#print(toPrint)
-	
-# Populates the list of pairs to process with miranda
-def buildBottomList():
-	global topList
-	global bottomList
-	
-	if v:
-		toPrint = "Length of topList: " + str(len(topList))
-		print(toPrint)
-	
-	print("Building list of entries to process (may take a few minutes)")
-	
-	# For each SNP-miRNA entry in the top list
-	# Search the processed SNP list for alternative SNP alleles ID
-	# Add the alternative alleles to the bottom list for processing
-	for entry in topList:
-		rsNum = entry[0]
-		snpLine = snpSearch(rsNum)
-		bottomLine = [rsNum]
-		
-		for alleleList in entry[1:]:
-			topAllele = alleleList[0]
-			for checkAlleleList in snpLine[3:]:
-				checkAllele = checkAlleleList[0]
-				if checkAllele != topAllele:
-					bottomAlleleList = [checkAllele] + alleleList[1:]
-					bottomLine.append(bottomAlleleList)
-		bottomList.append(bottomLine)
-		'''
-		print(bottomList)
-		return
-		'''
-		
-	if v:
-		toPrint = "Length of bottomList: " + str(len(bottomList))
-		print(toPrint)
-		toPrint = bottomList[0]
-		print(toPrint)
 
 # Iteratively runs miranda on the list of SNP-miRNA pairs to be processed 
 def iterateMiranda():
@@ -515,191 +387,91 @@ def parseMiranda(n):
 		
 # Utility function for appending each compressed temp output to final
 def appendOutput(out):
+	upperContainer = []
+	lowerContainer = []
+	cmpContainer = []
+	cmpRs = 0
+	cmpAlleleNum = 10
+	
 	for entry in outputFileList:
 		cmpOut = entry.replace('.txt', '_cmp.txt')
-		with open(cmpOut) as f:
-			with open(out, 'a') as o:
-				for line in f:
-					print('{}'.format(line.replace('\n', '')), file=o)
+		with open(cmpOut) as f, open(out, 'a') as o:
+			for line in f:
+				lineSplit = line.split("\t")
+				
+				mirnaName = lineSplit[0]
+				refName = lineSplit[1]
+				refScore = float(lineSplit[2])
+				refEn = float(lineSplit[3])
+				
+				refSplit = refName.split("|")
+				rsNum = int(refSplit[2].replace("rs", ""))
+				alleleNum = int(refSplit[3])
+				allele = refSplit[4]
+				
+				if rsNum == cmpRs :
+					# add to container
+					tempLine = [line, refScore]
+					cmpContainer.append(tempLine)
+				else:
+					# if rsNum is diff than cmpRs
+					# count num in container to verify all present
+					if len(cmpContainer) == cmpAlleleNum:
+						for entry in cmpContainer:
+							# pass lines above upperThreshold to upperContainer
+							if entry[1] >= upperThreshold:
+								upperContainer.append(entry[0])
+							# pass lines below lowerThreshold to lowerContainer
+							if entry[1] <= lowerThreshold:
+								lowerContainer.append(entry[0])
+					if (len(upperContainer) > 0) and (len(lowerContainer) > 0):
+						# if upperContainer and lowerContainer both contain entries		
+						# write upperContainer and lowerContainer to output
+						for upperLine in upperContainer:
+							print('{}'.format(upperLine.replace('\n', '')), file=o)
+						for lowerLine in lowerContainer:
+							print('{}'.format(lowerLine.replace('\n', '')), file=o)
+						
+					# start new container 
+					cmpContainer = []
+					tempLine = [line, refScore]
+					cmpContainer.append(tempLine)
+					
+					cmpRs = rsNum
+					cmpAlleleNum = alleleNum
+					upperContainer = []
+					lowerContainer = []
 		
 		# Delete compressed temp output files
 		toRun = ["rm", cmpOut]
 		subprocess.run(toRun, check=True)
 	
-def genInput(sublist, n):
-	tempSnpFileName = dir + sigID + "_snp_" + str(n) + ".fasta"
-	tempRnaFileName = dir + sigID + "_mirna_" + str(n) + ".fasta"
-	
-	with open(tempRnaFileName, "w") as r, open(tempSnpFileName, "w") as s:
-		for entry in sublist:
-			rnaHeader = entry[0]
-			rnaSequence = entry[1] + "\n"
-			snpHeader = entry[2]
-			snpSequence = entry[3] + "\n"
-			
-			# Print to file 
-			print("{}".format(rnaHeader), file=r)
-			print("{}".format(rnaSequence), file=r)
-			print("{}".format(snpHeader), file=s)
-			print("{}".format(snpSequence), file=s)
-	
-	tempFileList.append([tempRnaFileName, tempSnpFileName])
-	
-def searchBottomRna(rna):
-	# True means the miRNA was not found
-	# False means the miRNA was found
-	
-	# if the list is empty return False
-	if len(bottomRnaList)==0:
-		return True
-		
-	# if the list is not empty then perform search
-	for entry in bottomRnaList:
-		if entry == rna:
-			# return True if found
-			return False
-			
-		# return False if not found 
-	return True
-	
-def searchTopSublist(rsNum, allele, rna, topStart, topStop):
-	# Search in order
-	index = 0
-	for entry in topList[topStart:topStop]:
-		cmpNum = entry[0]
-		if rsNum < cmpNum:
-			temp = [rsNum, [allele, rna]]
-			topList.insert(topStart + index, temp)
-			return
-		elif rsNum == cmpNum:
-			# If a matching rsNum is found
-			# Check the allele(s)
-			for alleleList in entry[1:]:
-				cmpAllele = alleleList[0]
-				if cmpAllele == allele:
-					alleleList.append(rna)
-					return
-			temp = [allele, rna]
-			entry.append(temp)
-			return
-		index += 1
-	
-	# If new rsNum is higher than all entries in list 
-	# Then append to end of the list 
-	temp = [rsNum, [allele, rna]]
-	topList.insert(topStart + index, temp)
-	
-def insertTopList(rsNum, allele, rna):
-	global topListLen
-	topListLen = len(topList)
-	
-	topStart = 0
-	topStop = 0
-	
-	if topListLen==0:
-		temp = [rsNum, [allele, rna]]
-		topList.append(temp)
-		return
-		
-	elif topListLen < 10:
-		searchTopSublist(rsNum, allele, rna, 0, topListLen)
-		return
-		
-	# First check if rsNum is less than first entry in topList
-	cmpNum = topList[0][0]
-	if rsNum < cmpNum:
-		temp = [rsNum, [allele, rna]]
-		topList.insert(0, temp)
-		return
-		
-	# Check if rsNum is greater than last entry in topList
-	cmpNum = topList[-1][0]
-	if rsNum > cmpNum:
-		temp = [rsNum, [allele, rna]]
-		topList.append(temp)
-		return
-	
-	# Define increment value as sqrt of topListLen
-	topSqrt = math.sqrt(topListLen)
-	topListInc = int(math.ceil(topSqrt))
-	topListIncSize = int(math.ceil(topSqrt))
-		
-	for x in range(topListIncSize):
-		topStop = topStart + topListInc
-		
-		# If sublist is the last section of topList 
-		# Special case search 
-		if topStop > topListLen-1:
-			searchTopSublist(rsNum, allele, rna, topStart, topListLen)
-			return
-			
-		# Determine sublist boundaries
-		topStartRs = topList[topStart][0]
-		topStopRs = topList[topStop][0]
-		
-		# If rsNum falls between the boundaries
-		if rsNum >= topStartRs and rsNum < topStopRs:
-			# Search the sublist 
-			#sublist = topList[topStart:topStop]
-			searchTopSublist(rsNum, allele, rna, topStart, topStop)
-			return
-		
-		# Otherwise, move to the next sublist 
-		topStart = topStop
-		
-	'''
-	# If rsNum is higher than all entries in list
-	# Then append to end of topList 
-	temp = [rsNum, [allele, rna]]
-	topList.append(temp)
-	'''
-	
-	print("Failed")
-	print(rsNum)
-	print(allele)
-	print(rna)
-	
-# DEBUG: utility method for verify that topList is correctly sorted 
-def validateTopListOrder():
-	length = len(topList)
-	
-	for x in range(1, length-1):
-		pre = topList[x-1][0]
-		cur = topList[x][0]
-		post = topList[x+1][0]
-		if cur <= pre:
-			print("Failed")
-			toPrint = "Pre: " + str(pre)
-			toPrint += " Cur: " + str(cur)
-			toPrint += " Post: " + str(post)
-			toPrint += " X: " + str(x)
-			print(toPrint)
-			return
-		elif cur >= post:
-			print("Failed")
-			toPrint = "Pre: " + str(pre)
-			toPrint += " Cur: " + str(cur)
-			toPrint += " Post: " + str(post)
-			toPrint += " X: " + str(x)
-			print(toPrint)
-			return
-			
-	print("Validated")
-	
 def printSnp():
 	print("Printing SNP File")
 	
-	length = len(procSnpArray)
+	n = 0
+	c = 0
+	snpPrintList = []
 	
-	# Loop through procSnpArray
-	for n in range(length):
-		sublist = procSnpArray[n]
-		printSubSnp(sublist, n)
+	for sublist in procSnpArray :
+		c += 1
+		if (c%10==0) :
+			printSubSnp(snpPrintList, n)
+			snpPrintList = []
+			n += 1
+			
+		for entry in sublist[1:] :
+			snpPrintList.append(entry)
+			
+	if (c%10!=0) :
+		printSubSnp(snpPrintList, n)
+		snpPrintList = []
+		n += 1
 	
 def printSubSnp(sublist, n):
 	tempSnpFileName = dir + sigID + "_snp_" + str(n) + ".fasta"
 	with open(tempSnpFileName, "w") as text_file:
-		for entry in sublist[1:]:
+		for entry in sublist:
 			header = entry[1]
 			alleleList = entry[3:]
 			for allele in alleleList:

@@ -10,6 +10,17 @@ Default: 20\n
 ''')
 @click.option('--debug', is_flag=True, help='Show debug messages')
 def cli(mirandafile, output, stop, debug):
+
+	"""
+	\b
+	Arguments:
+		MIRANDAFILE - INPUT processed final output from firstpass script
+		OUTPUT - fully processed first pass miRanda output
+	
+	Parses a miranda output file for a given chromosome and only retains 
+	entries that have at least one, but not all, SNP alleles for a given 
+	SNP ID in the upper 80th percentile."""
+
 	try:
 		parsemir(mirandafile, output, stop, debug)
 		print("Success")
